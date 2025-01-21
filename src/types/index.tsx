@@ -7,6 +7,7 @@ import { StartDateType } from "@/constants/enums/start-type.enum";
 import { SalaryCurrency } from "@/constants/enums/currency.enum";
 import { CompanyStatus } from "@/constants/enums/company-status.enum";
 import { CompanySize } from "@/constants/enums/company-size.enum";
+import { StaticImageData } from "next/image";
 
 export type Country = {
   name: string;
@@ -281,3 +282,13 @@ export type NavItem = {
 export type Role = {
   permissions: { name: Permission }[];
 };
+
+// Define the type for each object in the array
+type LanguageItem = {
+  id: string | number;
+  title: string;
+  src: StaticImageData;
+};
+
+// Define the type for the array of LanguageItem objects
+export type CommonLangouge = LanguageItem[];

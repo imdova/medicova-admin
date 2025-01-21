@@ -16,6 +16,8 @@ html {
   --primary-transparent: #2ba149e5;
   --text-main: #161439;
   --text-secondary: #6d6c80;
+  --border-main: #f3f3f3ee;
+  --hover-link: #f7f7f7ee;
 }
 
 /* Apply global font family */

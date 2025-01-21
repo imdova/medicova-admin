@@ -17,6 +17,8 @@ module.exports = {
         "light-primary-transparent": "var(--light-primary-transparent)",
         main: "var(--text-main)",
         secondary: "var(--text-secondary)",
+        "main-border": "var(--border-main)",
+        "hover-link": "var(--hover-link)",
       },
       scale: {
         102: "1.02",
