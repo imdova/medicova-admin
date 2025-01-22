@@ -42,6 +42,9 @@ html,
   .btn-login {
     @apply bg-primary text-primary-foreground hover:bg-primary-foreground hover:text-primary;
   }
+  .box-content {
+    @apply shadow-baseShadow rounded-md bg-white p-4;
+  }
 }
 
 @layer utilities {

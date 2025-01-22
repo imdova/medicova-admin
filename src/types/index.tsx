@@ -292,3 +292,6 @@ type LanguageItem = {
 
 // Define the type for the array of LanguageItem objects
 export type CommonLangouge = LanguageItem[];
+
+// Define the type for Status of Employers
+export type StateType = "Active" | "Inactive" | "Processing";

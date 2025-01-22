@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^5.16.7",
-    "@mui/material": "^5.16.7",
+    "@mui/material": "^5.16.14",
+    "@mui/x-charts": "^7.24.0",
     "@mui/x-date-pickers": "^7.23.2",
     "@reduxjs/toolkit": "^2.5.0",
     "@tiptap/extension-text-align": "^2.11.0",
