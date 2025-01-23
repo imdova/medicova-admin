@@ -33,6 +33,7 @@ import { useState } from "react";
 import { Search } from "@mui/icons-material";
 import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
+import ChartStatistics from "@/components/UI/Charts/ChartStatistics";
 
 const OvarviewPage: React.FC = () => {
   const [value, setValue] = useState(0);
@@ -136,45 +137,7 @@ const OvarviewPage: React.FC = () => {
             </div>
           </div>
           <div className="relative mt-3 box-content">
-            <div className="absolute left-5 top-5 p-2">
-              <span className="mb-2 text-secondary">Statistics</span>
-              <h2>Employer Report</h2>
-            </div>
-            <LineChart
-              margin={{ top: 80, bottom: 100 }}
-              xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-              slotProps={{
-                legend: {
-                  direction: "row",
-                  position: { vertical: "bottom", horizontal: "middle" },
-                },
-              }} //  Positions the legend at the bottom-middle and aligns it in a row.
-              series={[
-                {
-                  curve: "linear",
-                  data: [0, 5, 2, 6, 3, 9.3],
-                  label: "New Employers",
-                },
-                {
-                  curve: "linear",
-                  data: [6, 3, 7, 9.5, 4, 2],
-                  label: "Apply For job",
-                },
-              ]}
-              height={400}
-              grid={{ horizontal: true }}
-              sx={{
-                ".MuiChartsAxis-line": {
-                  display: "none",
-                },
-                ".MuiChartsAxis-tick": {
-                  display: "none",
-                },
-                ".MuiChartsLegend-mark": {
-                  borderRadius: 100,
-                },
-              }}
-            />
+            <ChartStatistics />
           </div>
         </div>
         <div className="flex flex-col">
@@ -407,7 +370,7 @@ const OvarviewPage: React.FC = () => {
       </div>
       <div className="mt-3 box-content !p-0">
         {/* start content table Employers  */}
-        <div className="flex flex-wrap items-center justify-between overflow-hidden px-1 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-4 overflow-hidden px-1 py-3 md:flex-nowrap">
           <Box
             sx={{
               maxWidth: { xs: 320, sm: 480 },
@@ -429,11 +392,7 @@ const OvarviewPage: React.FC = () => {
             </Tabs>
           </Box>
           <SearchInput />
-          <ExportButton
-            data="Name,Age\nJohn,30\nJane,25"
-            fileName="users.csv"
-            fileType="text/csv"
-          />
+          <ExportButton data="Name,Age\nJohn,30\nJane,25" />
         </div>
         <TableContainer component={Paper}>
           <Table

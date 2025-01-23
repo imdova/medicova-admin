@@ -3,6 +3,7 @@ import { Box, Button, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import OvarviewPage from "./Ovarview";
+import EmployerList from "./EmployerList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -42,7 +43,7 @@ const page = () => {
 
   return (
     <div>
-      <div className="box-content flex flex-col items-start justify-between gap-5 md:flex-row">
+      <div className="box-content flex flex-col items-start justify-between gap-5 sm:flex-row">
         <Box
           sx={{
             // Styles for the selected tab
@@ -100,7 +101,7 @@ const page = () => {
         <OvarviewPage />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Employers List
+        <EmployerList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Setting

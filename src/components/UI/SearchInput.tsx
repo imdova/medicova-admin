@@ -6,7 +6,7 @@ const SearchInput: React.FC = () => {
   // this is quary data of search
   const [SearchQuery, setSearchQuery] = useState<string>("");
   return (
-    <form className="relative hidden h-[35px] w-[300px] justify-center lg:flex">
+    <form className="relative hidden h-[35px] w-3/4 justify-center lg:flex">
       <TextField
         id="no-border-textfield"
         className="flex w-full justify-center rounded-lg bg-gray-100 pl-12"
