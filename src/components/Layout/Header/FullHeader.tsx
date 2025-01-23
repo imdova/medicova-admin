@@ -21,9 +21,8 @@ import SearchInput from "@/components/UI/SearchInput";
 
 const FullHeader: React.FC<BaseHeaderProps> = ({ user, pathname }) => {
   const links = getNavLinks(user?.type, pathname);
-  const [langSelectedValue, setLangSelectedValue] =
-    useState<string>("Eng (US)");
-  // Correctly type the event parameter as SelectChangeEvent<string>
+  const [langSelectedValue, setLangSelectedValue] = useState("Eng (US)");
+  // Correctly type the event parameter as SelectChangeEvent
   const handleChange = (event: SelectChangeEvent<string>) => {
     setLangSelectedValue(event.target.value); // Now the target value is typed as string
   };

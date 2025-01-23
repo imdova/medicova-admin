@@ -1,12 +1,12 @@
 import { TextField } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
+import { Search } from "@mui/icons-material";
 
 const SearchInput: React.FC = () => {
   // this is quary data of search
   const [SearchQuery, setSearchQuery] = useState<string>("");
   return (
-    <form className="relative hidden h-[35px] w-[400px] justify-center lg:flex">
+    <form className="relative hidden h-[35px] w-[300px] justify-center lg:flex">
       <TextField
         id="no-border-textfield"
         className="flex w-full justify-center rounded-lg bg-gray-100 pl-12"
@@ -25,7 +25,7 @@ const SearchInput: React.FC = () => {
         }}
       />
 
-      <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 fill-primary" />
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 fill-primary" />
     </form>
   );
 };
