@@ -140,7 +140,7 @@ const UserMassegeDrop: React.FC = () => {
               </div>
             </Link>
           </MenuItem>
-          <div className="flex w-full justify-center px-2">
+          <div className="mt-3 flex w-full justify-center px-2">
             <Button className="w-full" variant="outlined">
               Veiw All
             </Button>

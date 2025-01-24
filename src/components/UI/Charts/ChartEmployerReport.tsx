@@ -1,30 +1,17 @@
-import {
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import { useState } from "react";
 import NestedMenu from "../NestedMenu";
-import CalendarWithSelect from "../NestedMenu";
-
-const ChartStatistics: React.FC = () => {
+const ChartEmployerReport: React.FC = () => {
   return (
     <>
-      <div className="flex w-full justify-between">
-        <div className="">
+      <div className="flex w-full items-center justify-between p-4">
+        <div>
           <span className="mb-2 text-secondary">Statistics</span>
           <h2>Employer Report</h2>
         </div>
-        <CalendarWithSelect />
+        <NestedMenu />
       </div>
       <LineChart
-        margin={{ top: 20, bottom: 100 }}
+        margin={{ top: 30, bottom: 100 }}
         xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
         slotProps={{
           legend: {
@@ -62,4 +49,4 @@ const ChartStatistics: React.FC = () => {
   );
 };
 
-export default ChartStatistics;
+export default ChartEmployerReport;

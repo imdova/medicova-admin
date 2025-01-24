@@ -49,7 +49,7 @@ const ExportButton = ({ data }: ExportOptions) => {
         startIcon={<FileDownloadIcon className="text-xs" />}
         endIcon={<ExpandMoreIcon />}
         onClick={handleClickButton}
-        className="h-10 w-52 text-[10px]"
+        className="h-10 w-full text-[10px] md:w-44"
       >
         Export
       </Button>

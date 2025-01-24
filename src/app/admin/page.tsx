@@ -2,8 +2,9 @@
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import OvarviewPage from "./Ovarview";
-import EmployerList from "./EmployerList";
+
+import EmployerList from "./dashboard/EmployerList";
+import OvarviewPage from "./dashboard/Ovarview";
 
 interface TabPanelProps {
   children?: React.ReactNode;
