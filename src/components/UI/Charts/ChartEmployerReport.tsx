@@ -1,6 +1,13 @@
 import { LineChart } from "@mui/x-charts";
 import NestedMenu from "../NestedMenu";
-const ChartEmployerReport: React.FC = () => {
+type ChartEmployersProps = {
+  labelX: string;
+  labelY: string;
+};
+const ChartEmployerReport: React.FC<ChartEmployersProps> = ({
+  labelX,
+  labelY,
+}) => {
   return (
     <>
       <div className="flex w-full items-center justify-between p-4">
@@ -23,12 +30,14 @@ const ChartEmployerReport: React.FC = () => {
           {
             curve: "linear",
             data: [0, 5, 2, 6, 3, 9.3],
-            label: "New Employers",
+            label: labelX,
+            color: "#FF8743",
           },
           {
             curve: "linear",
             data: [6, 3, 7, 9.5, 4, 2],
-            label: "Apply For job",
+            label: labelY,
+            color: "#0884FF",
           },
         ]}
         height={400}

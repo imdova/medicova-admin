@@ -2,10 +2,8 @@
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-
-import EmployerList from "./dashboard/EmployerList";
-import OvarviewPage from "./dashboard/Ovarview";
-import Link from "next/link";
+import OvarviewJobs from "./OverviewJobs";
+import JobList from "./JobList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,7 +35,7 @@ function aProps(index: number) {
   };
 }
 
-const page = () => {
+const JobsPage: React.FC = () => {
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -86,29 +84,24 @@ const page = () => {
           >
             {/* Individual tabs */}
             <Tab label="Overview" {...aProps(0)} /> {/* Tab 1 */}
-            <Tab label="Employers List" {...aProps(1)} /> {/* Tab 2 */}
+            <Tab label="Jobs List" {...aProps(1)} /> {/* Tab 2 */}
             <Tab label="Setting" {...aProps(2)} /> {/* Tab 3 */}
           </Tabs>
         </Box>
         <Button
-          className="rounded-md bg-primary p-2"
+          className="flex gap-3 rounded-md bg-primary p-2"
           size="small"
           variant="contained"
         >
-          <Link
-            className="flex items-center gap-3"
-            href={"/admin/add-employer"}
-          >
-            <AddCircleOutlineIcon />
-            <span className="text-xs">New Employer</span>
-          </Link>
+          <AddCircleOutlineIcon />
+          <span className="text-xs">New Job</span>
         </Button>
       </div>
       <CustomTabPanel value={value} index={0}>
-        <OvarviewPage />
+        <OvarviewJobs />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <EmployerList />
+        <JobList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Setting
@@ -117,4 +110,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default JobsPage;

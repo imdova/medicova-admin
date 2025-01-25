@@ -27,82 +27,62 @@ import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
 import { useState } from "react";
-import { RowDataEmployer, StateType } from "@/types";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { DateField } from "@mui/x-date-pickers/DateField";
+import { RowDataJobs, StateType } from "@/types";
 import { Tune } from "@mui/icons-material";
+import { DateField } from "@mui/x-date-pickers/DateField";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
-interface OverviewEmployersTableProps {
+interface OverviewJobsTableProps {
   Filtring?: boolean; // `Filtring` is optional
 }
-const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
+const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
   Filtring = false,
 }) => {
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
 
   // Sample data
-  const rows: RowDataEmployer[] = [
+  const rows: RowDataJobs[] = [
     {
       id: 1,
-      name: "John Doe",
-      email: "suadiger@gmail.com",
-      avatar:
-        "https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__",
+      job_title: "Consultannt Cardiiology",
+      employer_name: "John Doe",
       reg_date: "13 July, 2021",
-      phone: "+201144789587",
       country: "egypt",
-      type: "X clinic",
-      Sector: "general",
-      Plan: "Plan",
-      job: 12,
+      view: 12,
+      applicant: 55,
       status: "Active",
     },
     {
       id: 2,
-      name: "John Doe",
-      email: "suadiger@gmail.com",
-      avatar:
-        "https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__",
+      job_title: "Consultannt Cardiiology",
+      employer_name: "John Doe",
       reg_date: "13 July, 2021",
-      phone: "+201144789587",
       country: "egypt",
-      type: "X clinic",
-      Sector: "general",
-      Plan: "Plan",
-      job: 12,
+      view: 12,
+      applicant: 55,
       status: "Active",
     },
     {
       id: 3,
-      name: "John Doe",
-      email: "suadiger@gmail.com",
-      avatar:
-        "https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__",
+      job_title: "Consultannt Cardiiology",
+      employer_name: "John Doe",
       reg_date: "13 July, 2021",
-      phone: "+201144789587",
       country: "egypt",
-      type: "X clinic",
-      Sector: "general",
-      Plan: "Plan",
-      job: 12,
+      view: 12,
+      applicant: 55,
       status: "Active",
     },
     {
       id: 4,
-      name: "John Doe",
-      email: "suadiger@gmail.com",
-      avatar:
-        "https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__",
+      job_title: "Consultannt Cardiiology",
+      employer_name: "John Doe",
       reg_date: "13 July, 2021",
-      phone: "+201144789587",
       country: "egypt",
-      type: "X clinic",
-      Sector: "general",
-      Plan: "Plan",
-      job: 12,
+      view: 12,
+      applicant: 55,
       status: "Active",
     },
   ];
@@ -188,7 +168,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
       <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
         {Filtring ? (
           <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
-            Total Employrs : 19
+            Total Jobs : 19
           </Typography>
         ) : (
           <Box
@@ -205,13 +185,14 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               scrollButtons={false}
               aria-label="scrollable prevent tabs example"
             >
-              <Tab className="text-xs" label="New Employers" />
-              <Tab className="text-xs" label="Top Employers" />
-              <Tab className="text-xs" label="Active Employers" />
-              <Tab className="text-xs" label="Inactive Employers" />
+              <Tab className="text-xs" label="New Jobs" />
+              <Tab className="text-xs" label="Top Jobs" />
+              <Tab className="text-xs" label="Active Jobs" />
+              <Tab className="text-xs" label="Inactive Jobs" />
             </Tabs>
           </Box>
         )}
+
         <SearchInput />
         <ExportButton data="Name,Age\nJohn,30\nJane,25" />
       </div>
@@ -428,7 +409,6 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
       ) : (
         ""
       )}
-
       <TableContainer component={Paper}>
         <Table
           sx={{ minWidth: 1100, width: "100%" }}
@@ -451,34 +431,31 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
                   onChange={handleSelectAll}
                 />
               </StyledTableCell>
-              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Job ID</StyledTableCell>
               <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" /> Reg Date
+                <UnfoldMoreIcon className="text-sm" /> Job Title
               </StyledTableCell>
               <StyledTableCell>
                 <UnfoldMoreIcon className="text-sm" />
-                Phone
+                Date
               </StyledTableCell>
               <StyledTableCell>
                 <UnfoldMoreIcon className="text-sm" />
-                Country
+                Employer
               </StyledTableCell>
               <StyledTableCell>
                 <UnfoldMoreIcon className="text-sm" />
-                Type
+                Location
               </StyledTableCell>
               <StyledTableCell>
                 <UnfoldMoreIcon className="text-sm" />
-                Sector
+                View
               </StyledTableCell>
               <StyledTableCell>
                 <UnfoldMoreIcon className="text-sm" />
-                Plan
+                Applicant
               </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Jobs
-              </StyledTableCell>
+
               <StyledTableCell>Status</StyledTableCell>
               <StyledTableCell>Action</StyledTableCell>
             </TableRow>
@@ -496,34 +473,27 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
                     />
                   </TableCell>
 
-                  <StyledTableCell component="th" scope="row">
-                    <div className="flex items-center gap-2">
-                      <Avatar
-                        src={row.avatar}
-                        alt="Ralph Edwards"
-                        sx={{ width: 32, height: 32, mr: 2 }}
-                      />
-                      <div>
-                        <h3 className="text-xs">{row.name}</h3>
-                        <p className="text-[10px]">{row.email}</p>
-                      </div>
-                    </div>
+                  <StyledTableCell align="center" component="th" scope="row">
+                    {row.id}
                   </StyledTableCell>
+                  <StyledTableCell>{row.job_title}</StyledTableCell>
                   <StyledTableCell align="center">
                     {row.reg_date}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{row.phone}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {row.employer_name}
+                  </StyledTableCell>
                   <StyledTableCell align="center">
                     {row.country}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{row.type}</StyledTableCell>
-                  <StyledTableCell align="center">{row.Sector}</StyledTableCell>
-                  <StyledTableCell align="center">{row.Plan}</StyledTableCell>
-                  <StyledTableCell align="center">{row.job}</StyledTableCell>
+                  <StyledTableCell align="center">{row.view}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {row.applicant}
+                  </StyledTableCell>
                   <StyledTableCell align="center">
                     {handleState(row.status)}
                   </StyledTableCell>
-                  <StyledTableCell>
+                  <StyledTableCell align="center">
                     <Switch />
                   </StyledTableCell>
                 </StyledTableRow>
@@ -536,4 +506,4 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   );
 };
 
-export default OverviewEmployersTable;
+export default OverveiwJobTable;

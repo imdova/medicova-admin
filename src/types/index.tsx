@@ -295,3 +295,36 @@ export type CommonLangouge = LanguageItem[];
 
 // Define the type for Status of Employers
 export type StateType = "Active" | "Inactive" | "Processing";
+
+export interface RowDataEmployer {
+  id: number;
+  name: string;
+  email: string;
+  avatar: string;
+  reg_date: string;
+  phone: number | string;
+  country: string;
+  type: string;
+  Sector: string;
+  Plan: string;
+  job: number;
+  status: "Active" | "Inactive" | "Processing";
+}
+export interface RowDataJobs {
+  id: number;
+  job_title: string;
+  employer_name: string;
+  reg_date: string;
+  country: string;
+  view: number;
+  applicant: number;
+  status: "Active" | "Inactive" | "Processing";
+}
+export interface RowDataCountry {
+  id: number;
+  avatar_country: string;
+  country: string;
+  job: number;
+  Employers_jobs: number;
+  revenue: string | number;
+}

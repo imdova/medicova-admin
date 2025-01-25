@@ -70,7 +70,14 @@ const ExportButton = ({ data }: ExportOptions) => {
       >
         <div className="p-3">
           <div className="mb-2">
-            <FormControl>
+            <FormControl
+              sx={{
+                ".css-j204z7-MuiFormControlLabel-root .MuiFormControlLabel-label":
+                  {
+                    fontSize: 11,
+                  },
+              }}
+            >
               <FormLabel id="demo-radio-buttons-group-label">
                 Please Choose:
               </FormLabel>
@@ -81,6 +88,7 @@ const ExportButton = ({ data }: ExportOptions) => {
                 onChange={handleChange}
               >
                 <FormControlLabel
+                  className="text-xs"
                   value="text/csv"
                   control={<Radio />}
                   label="Download in Excel"

@@ -1,22 +1,5 @@
 "use client";
-import {
-  Avatar,
-  Box,
-  Checkbox,
-  Paper,
-  styled,
-  Switch,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
-  tableCellClasses,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -27,10 +10,10 @@ import icon2 from "@/icons/icon-2.png";
 import icon3 from "@/icons/icon-3.png";
 import Image from "next/image";
 import ChartEmployerReport from "@/components/UI/Charts/ChartEmployerReport";
-import OverviewEmployersTable from "@/components/UI/Tables/OverviewEmployersTable";
 import CountiresTable from "@/components/UI/Tables/CountiresTable";
+import OverveiwJobTable from "@/components/UI/Tables/OverveiwJobTable";
 
-const OvarviewPage: React.FC = () => {
+const OvarviewJobs: React.FC = () => {
   return (
     <>
       {/* start Overveiw page */}
@@ -40,7 +23,7 @@ const OvarviewPage: React.FC = () => {
             <div className="box-content flex items-center justify-between gap-3">
               <div>
                 <span className="mb-2 block text-sm text-secondary">
-                  Total Employers
+                  All Jobs
                 </span>
                 <h2 className="mb-2">2,420</h2>
                 <span className="flex items-center text-[8px] text-primary">
@@ -55,7 +38,7 @@ const OvarviewPage: React.FC = () => {
             <div className="box-content flex items-center justify-between gap-3">
               <div>
                 <span className="mb-2 block text-sm text-secondary">
-                  Active Employers
+                  Active Jobs
                 </span>
                 <h2 className="mb-2">1,517</h2>
                 <span className="flex items-center text-[8px] text-primary">
@@ -70,7 +53,7 @@ const OvarviewPage: React.FC = () => {
             <div className="box-content flex items-center justify-between gap-3">
               <div>
                 <span className="mb-2 block text-sm text-secondary">
-                  Inactive Employers
+                  Inactive Jobs
                 </span>
                 <h2 className="mb-2">2,420</h2>
                 <span className="flex items-center text-[8px] text-[#F81D1D]">
@@ -84,17 +67,14 @@ const OvarviewPage: React.FC = () => {
             </div>
           </div>
           <div className="relative mt-3 box-content">
-            <ChartEmployerReport
-              labelX="new employers"
-              labelY="apply for job"
-            />
+            <ChartEmployerReport labelX="new" labelY="Apply for a job" />
           </div>
         </div>
         <div className="flex flex-col">
           <div className="box-content">
             <div className="mb-3 flex justify-between gap-8 border-b pb-2">
               <Typography>
-                Performance Overview
+                Top Employers
                 <span className="ml-1 text-xs text-secondary">(Revenue)</span>
               </Typography>
               <button>
@@ -243,9 +223,9 @@ const OvarviewPage: React.FC = () => {
         </div>
       </div>
       <div className="mt-3 box-content !p-0">
-        <OverviewEmployersTable />
+        <OverveiwJobTable />
       </div>
     </>
   );
 };
-export default OvarviewPage;
+export default OvarviewJobs;
