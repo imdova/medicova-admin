@@ -1,11 +1,10 @@
 "use client";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-
 import EmployerList from "./dashboard/EmployerList";
 import OvarviewPage from "./dashboard/Ovarview";
-import Link from "next/link";
+import AddNewEmployer from "./dashboard/add-employer";
+import { Add } from "@mui/icons-material";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -41,6 +40,26 @@ const page = () => {
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Function to open the modal
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Function to close the modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Function to handle form submission
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Add employer logic here (e.g., API call)
+    console.log("Employer added");
+    handleCloseModal();
   };
 
   return (
@@ -91,18 +110,19 @@ const page = () => {
           </Tabs>
         </Box>
         <Button
-          className="rounded-md bg-primary p-2"
+          onClick={handleOpenModal}
+          className="flex items-center gap-2 rounded-md bg-primary p-2"
           size="small"
           variant="contained"
         >
-          <Link
-            className="flex items-center gap-3"
-            href={"/admin/add-employer"}
-          >
-            <AddCircleOutlineIcon />
-            <span className="text-xs">New Employer</span>
-          </Link>
+          <Add />
+          <span className="text-xs">New Employer</span>
         </Button>
+
+        <AddNewEmployer
+          isModalOpen={isModalOpen}
+          handleCloseModal={handleCloseModal}
+        />
       </div>
       <CustomTabPanel value={value} index={0}>
         <OvarviewPage />

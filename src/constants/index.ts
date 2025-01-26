@@ -1,5 +1,11 @@
-import { NotificationItem } from "@/types";
-import { Book, Build, CheckCircleOutline, Edit, Search } from "@mui/icons-material";
+import { CountryPhone, NotificationItem } from "@/types";
+import {
+  Book,
+  Build,
+  CheckCircleOutline,
+  Edit,
+  Search,
+} from "@mui/icons-material";
 
 const now = new Date();
 const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
@@ -83,4 +89,12 @@ export const notifications: NotificationItem[] = [
       "https://i.iheart.com/v3/re/new_assets/66844a33690c77c14847c03c?ops=contain(1480,0)",
     readTime: november11th2024,
   },
+];
+export const countries: CountryPhone[] = [
+  { code: "US", label: "United States", phone: "+1" },
+  { code: "GB", label: "United Kingdom", phone: "+44" },
+  { code: "IN", label: "India", phone: "+91" },
+  { code: "AU", label: "Australia", phone: "+61" },
+  { code: "CA", label: "Canada", phone: "+1" },
+  { code: "FR", label: "France", phone: "+33" },
 ];

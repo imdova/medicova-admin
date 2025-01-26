@@ -127,3 +127,33 @@ html,
   scrollbar-width: none;
   /* Firefox */
 }
+
+/* style Table Grid  */
+.table-data-tree th,
+.table-data-tree td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 12px;
+}
+.table-data-tree .p-paginator-bottom.p-paginator.p-component {
+  gap: 5px;
+}
+.table-data-tree .p-dropdown {
+  display: flex;
+  align-items: center;
+  border: 1px solid #eee;
+  padding: 5px;
+  outline: none;
+}
+.table-data-tree .p-treetable-toggler {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  border-radius: 100%;
+  background: #eee;
+}
+.table-data-tree .p-treetable-toggler svg {
+  width: 10px;
+  height: 10px;
+}
+/* style Table Grid  */

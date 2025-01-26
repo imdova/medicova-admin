@@ -2,161 +2,179 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
   FormControl,
   MenuItem,
-  Paper,
   Select,
   SelectChangeEvent,
-  styled,
   Switch,
   Tab,
-  Table,
-  TableBody,
-  TableCell,
-  tableCellClasses,
-  TableContainer,
-  TableHead,
-  TableRow,
   Tabs,
   Typography,
 } from "@mui/material";
 
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
-
 import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
 import { useState } from "react";
-import { RowDataJobs, StateType } from "@/types";
-import { Tune } from "@mui/icons-material";
-import { DateField } from "@mui/x-date-pickers/DateField";
+import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { DateField } from "@mui/x-date-pickers/DateField";
+import { Tune } from "@mui/icons-material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import * as React from "react";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
-interface OverviewJobsTableProps {
+// handel function status of Employers
+const handleState = (state: StateType) => {
+  const stateStyles: Record<StateType, string> = {
+    Active:
+      "bg-green-50 text-green-700 ring-green-600/20 dark:border-green-500 dark:bg-inputDark dark:text-green-500",
+    Inactive:
+      "bg-red-50 text-red-700 ring-red-600/10 dark:border-red-500 dark:bg-inputDark dark:text-red-500",
+    Processing:
+      "bg-orange-50 text-orange-700 ring-orange-600/10 dark:border-orange-500 dark:bg-inputDark dark:text-orange-500",
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
+        stateStyles[state]
+      }`}
+    >
+      {state}
+    </span>
+  );
+};
+
+const columns: GridColDef[] = [
+  {
+    field: "id",
+    headerName: "Job Id",
+    width: 80,
+    editable: false,
+    type: "number",
+  },
+  {
+    field: "JobTitle",
+    headerName: "Job Title",
+    width: 170,
+    editable: true,
+    type: "string",
+  },
+  {
+    field: "Date",
+    headerName: "Date",
+    width: 120,
+    editable: true,
+    type: "string",
+  },
+  {
+    field: "Employer",
+    headerName: "Employer",
+    sortable: true,
+    width: 120,
+    type: "string",
+  },
+
+  {
+    field: "Location",
+    headerName: "Location",
+    sortable: true,
+    width: 110,
+    type: "string",
+  },
+
+  {
+    field: "Veiws",
+    headerName: "Veiws",
+    sortable: true,
+    width: 110,
+    type: "number",
+  },
+
+  {
+    field: "Applicants",
+    headerName: "Applicants",
+    sortable: true,
+    width: 80,
+    type: "number",
+  },
+  {
+    field: "Status",
+    headerName: "Status",
+    description: "This column has a value getter and is not sortable.",
+    sortable: false,
+    width: 110,
+    renderCell: (params) => handleState(params.row.Status),
+  },
+
+  {
+    field: "Action",
+    headerName: "Action",
+    description: "This column has a value getter and is not sortable.",
+    sortable: false,
+    width: 110,
+    renderCell: () => <Switch />,
+  },
+];
+
+const rows = [
+  {
+    id: 2546,
+    JobTitle: "Consultannt Cardiiology",
+    Date: "13 July, 2021",
+    Employer: "Saudi German",
+    Location: "Egypt",
+    Veiws: "123",
+    Applicants: "12",
+    Status: "Active",
+  },
+  {
+    id: 2546,
+    JobTitle: "Consultannt Cardiiology",
+    Date: "13 July, 2021",
+    Employer: "Saudi German",
+    Location: "Egypt",
+    Veiws: "123",
+    Applicants: "12",
+    Status: "Active",
+  },
+  {
+    id: 2546,
+    JobTitle: "Consultannt Cardiiology",
+    Date: "13 July, 2021",
+    Employer: "Saudi German",
+    Location: "Egypt",
+    Veiws: "123",
+    Applicants: "12",
+    Status: "Active",
+  },
+  {
+    id: 2546,
+    JobTitle: "Consultannt Cardiiology",
+    Date: "13 July, 2021",
+    Employer: "Saudi German",
+    Location: "Egypt",
+    Veiws: "123",
+    Applicants: "12",
+    Status: "Active",
+  },
+];
+
+interface OverviewEmployersTableProps {
   Filtring?: boolean; // `Filtring` is optional
 }
-const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
+const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
 }) => {
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
 
-  // Sample data
-  const rows: RowDataJobs[] = [
-    {
-      id: 1,
-      job_title: "Consultannt Cardiiology",
-      employer_name: "John Doe",
-      reg_date: "13 July, 2021",
-      country: "egypt",
-      view: 12,
-      applicant: 55,
-      status: "Active",
-    },
-    {
-      id: 2,
-      job_title: "Consultannt Cardiiology",
-      employer_name: "John Doe",
-      reg_date: "13 July, 2021",
-      country: "egypt",
-      view: 12,
-      applicant: 55,
-      status: "Active",
-    },
-    {
-      id: 3,
-      job_title: "Consultannt Cardiiology",
-      employer_name: "John Doe",
-      reg_date: "13 July, 2021",
-      country: "egypt",
-      view: 12,
-      applicant: 55,
-      status: "Active",
-    },
-    {
-      id: 4,
-      job_title: "Consultannt Cardiiology",
-      employer_name: "John Doe",
-      reg_date: "13 July, 2021",
-      country: "egypt",
-      view: 12,
-      applicant: 55,
-      status: "Active",
-    },
-  ];
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  // Handle checkbox change
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      setSelected(rows.map((row) => row.id));
-    } else {
-      setSelected([]);
-    }
-  };
 
-  const handleSelectRow = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: number,
-  ) => {
-    setSelected((prevSelected) =>
-      event.target.checked
-        ? [...prevSelected, id]
-        : prevSelected.filter((rowId) => rowId !== id),
-    );
-  };
-
-  // Check if a row is selected
-  const isSelected = (id: number) => selected.includes(id);
-  // start styling table
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#2ba149",
-      color: theme.palette.common.white,
-      fontSize: 12,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 10,
-    },
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-
-  // handel function status of Employers
-  const handleState = (state: StateType) => {
-    const stateStyles: Record<StateType, string> = {
-      Active:
-        "bg-green-50 text-green-700 ring-green-600/20 dark:border-green-500 dark:bg-inputDark dark:text-green-500",
-      Inactive:
-        "bg-red-50 text-red-700 ring-red-600/10 dark:border-red-500 dark:bg-inputDark dark:text-red-500",
-      Processing:
-        "bg-orange-50 text-orange-700 ring-orange-600/10 dark:border-orange-500 dark:bg-inputDark dark:text-orange-500",
-    };
-
-    return (
-      <span
-        className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
-          stateStyles[state]
-        }`}
-      >
-        {state}
-      </span>
-    );
-  };
   //   values of Filters inputs
-
   const [Country, setCountry] = useState("");
 
   const handleChangeCountry = (event: SelectChangeEvent) => {
@@ -168,7 +186,7 @@ const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
       <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
         {Filtring ? (
           <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
-            Total Jobs : 19
+            Total Employrs : 19
           </Typography>
         ) : (
           <Box
@@ -409,99 +427,38 @@ const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
       ) : (
         ""
       )}
-      <TableContainer component={Paper}>
-        <Table
-          sx={{ minWidth: 1100, width: "100%" }}
-          aria-label="customized table"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell padding="checkbox">
-                <Checkbox
-                  sx={{
-                    color: "white",
-                    "&.Mui-checked": {
-                      color: "white",
-                    },
-                  }}
-                  checked={selected.length === rows.length && rows.length > 0}
-                  indeterminate={
-                    selected.length > 0 && selected.length < rows.length
-                  }
-                  onChange={handleSelectAll}
-                />
-              </StyledTableCell>
-              <StyledTableCell>Job ID</StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" /> Job Title
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Date
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Employer
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Location
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                View
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Applicant
-              </StyledTableCell>
-
-              <StyledTableCell>Status</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => {
-              const isItemSelected = isSelected(row.id);
-              return (
-                <StyledTableRow key={row.id}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isItemSelected}
-                      onChange={(event) => handleSelectRow(event, row.id)}
-                      color="success"
-                    />
-                  </TableCell>
-
-                  <StyledTableCell align="center" component="th" scope="row">
-                    {row.id}
-                  </StyledTableCell>
-                  <StyledTableCell>{row.job_title}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.reg_date}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.employer_name}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.country}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{row.view}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.applicant}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {handleState(row.status)}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Switch />
-                  </StyledTableCell>
-                </StyledTableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box sx={{ height: 400, minWidth: "800px" }}>
+        <DataGrid
+          sx={{
+            borderRadius: "8px",
+            border: "1px solid rgba(0, 0, 0, 0.12)",
+            "& .MuiDataGrid-container--top [role=row]": {
+              background: "#2ba149", // Custom header background color
+              color: "#ffffff", // Custom header text color
+              fontSize: "16px", // Optional: Larger header font
+            },
+            "& .MuiDataGrid-columnHeaderTitle": {
+              fontWeight: "bold", // Optional: Bold header text
+            },
+            "& .MuiDataGrid-cell": {
+              fontSize: "12px", // Row font size
+              textAlign: "center",
+            },
+          }}
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          pageSizeOptions={[5]}
+          checkboxSelection
+          disableRowSelectionOnClick
+        />
+      </Box>
     </>
   );
 };

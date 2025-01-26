@@ -1,7 +1,10 @@
 import { Button, Menu, MenuItem } from "@mui/material";
-import { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import DiscountIcon from "@mui/icons-material/Discount";
 import Link from "next/link";
+import { notifications } from "@/constants";
+import { format } from "date-fns";
+
 const UserAlertDrop: React.FC = () => {
   const [anchorElAlert, setAnchorElAlert] = useState<null | HTMLElement>(null);
   const openAlert = Boolean(anchorElAlert);
@@ -11,6 +14,7 @@ const UserAlertDrop: React.FC = () => {
   const handleCloseAlert = () => {
     setAnchorElAlert(null);
   };
+
   return (
     <>
       {/* alert content menu */}
@@ -50,66 +54,37 @@ const UserAlertDrop: React.FC = () => {
             horizontal: "left",
           }}
         >
-          <MenuItem onClick={handleCloseAlert}>
-            <Link
-              className="flex items-center gap-2 p-1 hover:bg-hover-link"
-              href="#"
-            >
-              <DiscountIcon className="text-primary" />
-              <div className="flex flex-col">
-                <div className="text-xs">Discount available</div>
-                <div className="text-xs text-secondary">
-                  Morbi sapien massa, ultricies at rhoncus at, ullamcorper nec
-                  diam
-                </div>
-              </div>
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={handleCloseAlert}>
-            <Link
-              className="flex items-center gap-2 p-1 hover:bg-hover-link"
-              href="#"
-            >
-              <DiscountIcon className="text-primary" />
-              <div className="flex flex-col">
-                <div className="text-xs">Discount available</div>
-                <div className="text-xs text-secondary">
-                  Morbi sapien massa, ultricies at rhoncus at, ullamcorper nec
-                  diam
-                </div>
-              </div>
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={handleCloseAlert}>
-            <Link
-              className="flex items-center gap-2 p-1 hover:bg-hover-link"
-              href="#"
-            >
-              <DiscountIcon className="text-primary" />
-              <div className="flex flex-col">
-                <div className="text-xs">Discount available</div>
-                <div className="text-xs text-secondary">
-                  Morbi sapien massa, ultricies at rhoncus at, ullamcorper nec
-                  diam
-                </div>
-              </div>
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={handleCloseAlert}>
-            <Link
-              className="flex items-center gap-2 p-1 hover:bg-hover-link"
-              href="#"
-            >
-              <DiscountIcon className="text-primary" />
-              <div className="flex flex-col">
-                <div className="text-xs">Discount available</div>
-                <div className="text-xs text-secondary">
-                  Morbi sapien massa, ultricies at rhoncus at, ullamcorper nec
-                  diam
-                </div>
-              </div>
-            </Link>
-          </MenuItem>
+          {notifications.map((alert) => {
+            const formattedDate = format(
+              new Date(alert.timeStamp),
+              "MMMM dd, yyyy HH:mm",
+            );
+            return (
+              <MenuItem key={alert.title} onClick={handleCloseAlert}>
+                <Link
+                  className="flex items-center gap-2 p-1 hover:bg-hover-link"
+                  href="#"
+                >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary">
+                    {alert.icon &&
+                      React.createElement(alert.icon, {
+                        style: { color: "white", fontSize: "15px" },
+                      })}
+                  </div>
+
+                  <div className="flex flex-col">
+                    <div className="text-xs">{alert.title}</div>
+                    <div className="text-xs text-secondary">
+                      {alert.description}
+                    </div>
+                    <div className="text-[10px] text-secondary">
+                      {formattedDate}
+                    </div>
+                  </div>
+                </Link>
+              </MenuItem>
+            );
+          })}
           <div className="mt-3 flex w-full justify-center px-2">
             <Button className="w-full" variant="outlined">
               Veiw All

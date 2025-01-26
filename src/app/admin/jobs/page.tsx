@@ -4,6 +4,7 @@ import { useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import OvarviewJobs from "./OverviewJobs";
 import JobList from "./JobList";
+import SettingPage from "./setting";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -104,7 +105,7 @@ const JobsPage: React.FC = () => {
         <JobList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Setting
+        <SettingPage />
       </CustomTabPanel>
     </div>
   );
