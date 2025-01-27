@@ -4,14 +4,24 @@ import PaginatorTemplateDemo from "@/components/UI/Tables/TreeDataCategorytable"
 import { Add, FilterAltOutlined, Search } from "@mui/icons-material";
 import { Box, Button, Tab, Tabs, TextField } from "@mui/material";
 import { useState } from "react";
+import AddNewCategory from "./AddNewCategory";
 
 const SettingPage: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [value, setValue] = useState(0);
   const [SearchQuery, setSearchQuery] = useState<string>("");
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+  // Function to open the modal
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
 
+  // Function to close the modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="box-content">
       <div className="mb-4 flex flex-col items-center justify-between md:flex-row">
@@ -37,6 +47,7 @@ const SettingPage: React.FC = () => {
           </Tabs>
         </Box>
         <Button
+          onClick={handleOpenModal}
           className="flex h-10 w-full min-w-[140px] gap-3 rounded-md bg-primary p-2 md:w-fit"
           size="small"
           variant="contained"
@@ -44,6 +55,10 @@ const SettingPage: React.FC = () => {
           <Add />
           <span className="text-xs">New Category</span>
         </Button>
+        <AddNewCategory
+          isModalOpen={isModalOpen}
+          handleCloseModal={handleCloseModal}
+        />
       </div>
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-4">

@@ -19,13 +19,18 @@ import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateField } from "@mui/x-date-pickers/DateField";
-import { Tune } from "@mui/icons-material";
+import {
+  Tune,
+  VerticalAlignBottomOutlined,
+  VisibilityOutlined,
+} from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 interface OverviewEmployersTableProps {
   Filtring?: boolean; // `Filtring` is optional
+  MainTabs?: boolean; // `Filtring` is optional
 }
 
 // handel function status of Employers
@@ -52,10 +57,30 @@ const handleState = (state: StateType) => {
 
 const columns: GridColDef[] = [
   {
-    field: "Name",
-    headerName: "Name",
-    width: 180,
+    field: "Date",
+    headerName: "Date",
+    flex: 1,
     editable: false,
+  },
+  {
+    field: "Invoice",
+    headerName: "Invoice",
+    flex: 1,
+    editable: true,
+    type: "string",
+  },
+  {
+    field: "Plane",
+    headerName: "Plane",
+    flex: 1,
+    editable: true,
+    type: "string",
+  },
+  {
+    field: "Employer",
+    headerName: "Employer",
+    sortable: true,
+    width: 180,
     renderCell: (params) => (
       <div className="flex h-full items-center gap-2">
         <Avatar
@@ -65,64 +90,28 @@ const columns: GridColDef[] = [
         />
         <div>
           <h3 className="mb-2 text-xs">{params.row.Name}</h3>
-          <p className="text-[8px] leading-none">{params.row.Email}</p>
         </div>
       </div>
     ),
   },
+
   {
-    field: "RegDate",
-    headerName: "Reg Date",
-    flex: 1,
-    editable: true,
-    type: "string",
-  },
-  {
-    field: "Phone",
-    headerName: "Phone",
-    flex: 1,
-    editable: true,
-    type: "number",
-  },
-  {
-    field: "Country",
-    headerName: "Country",
+    field: "Payment",
+    headerName: "Payment",
     sortable: true,
     flex: 1,
     type: "string",
   },
 
   {
-    field: "Type",
-    headerName: "Type",
+    field: "Amount",
+    headerName: "Amount",
     sortable: true,
     flex: 1,
     type: "string",
+    renderCell: (params) => <div>${params.row.Amount}</div>,
   },
 
-  {
-    field: "Sector",
-    headerName: "Sector",
-    sortable: true,
-    flex: 1,
-    type: "string",
-  },
-
-  {
-    field: "Plane",
-    headerName: "Plane",
-    sortable: true,
-    flex: 1,
-    type: "string",
-  },
-  {
-    field: "Jobs",
-    headerName: "Jobs",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    flex: 1,
-    type: "number",
-  },
   {
     field: "Status",
     headerName: "Status",
@@ -131,74 +120,83 @@ const columns: GridColDef[] = [
     flex: 1,
     renderCell: (params) => handleState(params.row.Status),
   },
-
+  {
+    field: "Recipt",
+    headerName: "Recipt",
+    sortable: true,
+    flex: 1,
+    type: "string",
+    renderCell: (params) => <div>${params.row.Recipt}</div>,
+  },
   {
     field: "Action",
     headerName: "Action",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
     flex: 1,
-    renderCell: () => <Switch />,
+    renderCell: () => (
+      <div className="flex h-full items-center gap-2">
+        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-[#0061C9] text-white hover:bg-black">
+          <VisibilityOutlined />
+        </button>
+        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-primary text-white hover:bg-black">
+          <VerticalAlignBottomOutlined />
+        </button>
+      </div>
+    ),
   },
 ];
 
 const rows = [
   {
     id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plane: "Premium",
+    Date: "13 July, 2021",
+    Invoice: 12,
+    Plane: "Basic",
+    Name: "Jack",
+    Payment: "VISA",
+    Amount: 8.12,
     Status: "Active",
-    Jobs: 25,
+    Recipt: 209,
   },
   {
     id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plane: "Premium",
+    Date: "13 July, 2021",
+    Invoice: 12,
+    Plane: "Basic",
+    Name: "Jack",
+    Payment: "VISA",
+    Amount: 8.12,
     Status: "Active",
-    Jobs: 25,
+    Recipt: 209,
   },
   {
     id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plane: "Premium",
+    Date: "13 July, 2021",
+    Invoice: 12,
+    Plane: "Basic",
+    Name: "Jack",
+    Payment: "VISA",
+    Amount: 8.12,
     Status: "Active",
-    Jobs: 25,
+    Recipt: 209,
   },
   {
     id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plane: "Premium",
+    Date: "13 July, 2021",
+    Invoice: 12,
+    Plane: "Basic",
+    Name: "Jack",
+    Payment: "VISA",
+    Amount: 8.12,
     Status: "Active",
-    Jobs: 25,
+    Recipt: 209,
   },
 ];
 
-const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
+const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
+  MainTabs = false,
 }) => {
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
@@ -218,11 +216,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
     <>
       {/* start content table Employers  */}
       <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
-        {Filtring ? (
-          <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
-            Total Employrs : 19
-          </Typography>
-        ) : (
+        {MainTabs ? (
           <Box
             sx={{
               bgcolor: "background.paper",
@@ -243,6 +237,10 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               <Tab className="text-xs" label="Inactive Employers" />
             </Tabs>
           </Box>
+        ) : (
+          <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
+            Tranactions
+          </Typography>
         )}
         <SearchInput />
         <ExportButton data="Name,Age\nJohn,30\nJane,25" />
@@ -475,7 +473,6 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
             },
             "& .MuiDataGrid-cell": {
               fontSize: "12px", // Row font size
-              textAlign: "center",
             },
           }}
           rows={rows}
@@ -496,4 +493,4 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   );
 };
 
-export default OverviewEmployersTable;
+export default OverviewBillingTable;

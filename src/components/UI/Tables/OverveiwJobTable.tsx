@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   FormControl,
@@ -50,21 +49,21 @@ const columns: GridColDef[] = [
   {
     field: "id",
     headerName: "Job Id",
-    width: 80,
+    flex: 1,
     editable: false,
     type: "number",
   },
   {
     field: "JobTitle",
     headerName: "Job Title",
-    width: 170,
+    flex: 1,
     editable: true,
     type: "string",
   },
   {
     field: "Date",
     headerName: "Date",
-    width: 120,
+    flex: 1,
     editable: true,
     type: "string",
   },
@@ -72,7 +71,7 @@ const columns: GridColDef[] = [
     field: "Employer",
     headerName: "Employer",
     sortable: true,
-    width: 120,
+    flex: 1,
     type: "string",
   },
 
@@ -80,7 +79,7 @@ const columns: GridColDef[] = [
     field: "Location",
     headerName: "Location",
     sortable: true,
-    width: 110,
+    flex: 1,
     type: "string",
   },
 
@@ -88,7 +87,7 @@ const columns: GridColDef[] = [
     field: "Veiws",
     headerName: "Veiws",
     sortable: true,
-    width: 110,
+    flex: 1,
     type: "number",
   },
 
@@ -96,7 +95,7 @@ const columns: GridColDef[] = [
     field: "Applicants",
     headerName: "Applicants",
     sortable: true,
-    width: 80,
+    flex: 1,
     type: "number",
   },
   {
@@ -104,7 +103,7 @@ const columns: GridColDef[] = [
     headerName: "Status",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
-    width: 110,
+    flex: 1,
     renderCell: (params) => handleState(params.row.Status),
   },
 
@@ -113,7 +112,7 @@ const columns: GridColDef[] = [
     headerName: "Action",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
-    width: 110,
+    flex: 1,
     renderCell: () => <Switch />,
   },
 ];

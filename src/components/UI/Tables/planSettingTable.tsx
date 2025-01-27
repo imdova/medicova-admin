@@ -1,31 +1,28 @@
 import {
-  Avatar,
   Box,
   Button,
   FormControl,
   MenuItem,
   Select,
   SelectChangeEvent,
-  Switch,
   Tab,
   Tabs,
   Typography,
 } from "@mui/material";
 
-import SearchInput from "@/components/UI/SearchInput";
-import ExportButton from "@/components/UI/ExportButton";
 import { useState } from "react";
 import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateField } from "@mui/x-date-pickers/DateField";
-import { Tune } from "@mui/icons-material";
+import { CreateOutlined, DeleteOutline, Tune } from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
-interface OverviewEmployersTableProps {
+interface PlanSettingTable {
   Filtring?: boolean; // `Filtring` is optional
+  MainTabs?: boolean; // `Filtring` is optional
 }
 
 // handel function status of Employers
@@ -52,153 +49,104 @@ const handleState = (state: StateType) => {
 
 const columns: GridColDef[] = [
   {
-    field: "Name",
-    headerName: "Name",
-    width: 180,
+    field: "Features",
+    headerName: "Features",
+    flex: 1,
     editable: false,
-    renderCell: (params) => (
-      <div className="flex h-full items-center gap-2">
-        <Avatar
-          src="https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__"
-          alt="Ralph Edwards"
-          sx={{ width: 32, height: 32, mr: 2 }}
-        />
-        <div>
-          <h3 className="mb-2 text-xs">{params.row.Name}</h3>
-          <p className="text-[8px] leading-none">{params.row.Email}</p>
-        </div>
-      </div>
-    ),
   },
   {
-    field: "RegDate",
-    headerName: "Reg Date",
+    field: "Basic",
+    headerName: "Orders",
     flex: 1,
     editable: true,
     type: "string",
   },
   {
-    field: "Phone",
-    headerName: "Phone",
+    field: "Pro",
+    headerName: "Pro",
+    sortable: true,
     flex: 1,
-    editable: true,
-    type: "number",
   },
   {
-    field: "Country",
-    headerName: "Country",
+    field: "Gold",
+    headerName: "Gold",
     sortable: true,
     flex: 1,
     type: "string",
   },
 
   {
-    field: "Type",
-    headerName: "Type",
-    sortable: true,
-    flex: 1,
-    type: "string",
-  },
-
-  {
-    field: "Sector",
-    headerName: "Sector",
-    sortable: true,
-    flex: 1,
-    type: "string",
-  },
-
-  {
-    field: "Plane",
-    headerName: "Plane",
-    sortable: true,
-    flex: 1,
-    type: "string",
-  },
-  {
-    field: "Jobs",
-    headerName: "Jobs",
+    field: "Platinum",
+    headerName: "Platinum",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
     flex: 1,
-    type: "number",
   },
-  {
-    field: "Status",
-    headerName: "Status",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    flex: 1,
-    renderCell: (params) => handleState(params.row.Status),
-  },
-
   {
     field: "Action",
     headerName: "Action",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
     flex: 1,
-    renderCell: () => <Switch />,
+    renderCell: () => (
+      <div className="flex h-full items-center gap-2">
+        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-primary text-white hover:bg-black">
+          <CreateOutlined />
+        </button>
+        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-[#FBC1BC] text-[#FF0000]">
+          <DeleteOutline />
+        </button>
+      </div>
+    ),
   },
 ];
 
 const rows = [
   {
     id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plane: "Premium",
-    Status: "Active",
-    Jobs: 25,
+    Features: "Price",
+    Basic: "$3.733",
+    Pro: "$5.533",
+    Gold: "$8.533",
+    Platinum: "$209",
   },
   {
     id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plane: "Premium",
-    Status: "Active",
-    Jobs: 25,
+    Features: "Price",
+    Basic: "$3.733",
+    Pro: "$5.533",
+    Gold: "$8.533",
+    Platinum: "$209",
   },
   {
     id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plane: "Premium",
-    Status: "Active",
-    Jobs: 25,
+    Features: "Price",
+    Basic: "$3.733",
+    Pro: "$5.533",
+    Gold: "$8.533",
+    Platinum: "$209",
   },
   {
     id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plane: "Premium",
-    Status: "Active",
-    Jobs: 25,
+    Features: "Price",
+    Basic: "$3.733",
+    Pro: "$5.533",
+    Gold: "$8.533",
+    Platinum: "$209",
+  },
+  {
+    id: 1,
+    Features: "Price",
+    Basic: "$3.733",
+    Pro: "$5.533",
+    Gold: "$8.533",
+    Platinum: "$209",
   },
 ];
 
-const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
+const PlanSettingTable: React.FC<PlanSettingTable> = ({
   Filtring = false,
+  MainTabs = false,
 }) => {
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
@@ -218,11 +166,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
     <>
       {/* start content table Employers  */}
       <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
-        {Filtring ? (
-          <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
-            Total Employrs : 19
-          </Typography>
-        ) : (
+        {MainTabs ? (
           <Box
             sx={{
               bgcolor: "background.paper",
@@ -243,9 +187,11 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               <Tab className="text-xs" label="Inactive Employers" />
             </Tabs>
           </Box>
+        ) : (
+          <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
+            Plan Setting
+          </Typography>
         )}
-        <SearchInput />
-        <ExportButton data="Name,Age\nJohn,30\nJane,25" />
       </div>
       {Filtring ? (
         <div className="my-4 flex flex-col items-center gap-4 px-2 lg:flex-row">
@@ -460,7 +406,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
       ) : (
         ""
       )}
-      <Box sx={{ height: 400, minWidth: "800px" }}>
+      <Box sx={{ height: 400, minWidth: "100px" }}>
         <DataGrid
           sx={{
             borderRadius: "8px",
@@ -475,7 +421,6 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
             },
             "& .MuiDataGrid-cell": {
               fontSize: "12px", // Row font size
-              textAlign: "center",
             },
           }}
           rows={rows}
@@ -496,4 +441,4 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   );
 };
 
-export default OverviewEmployersTable;
+export default PlanSettingTable;

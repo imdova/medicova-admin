@@ -80,7 +80,7 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 26,
       icon: HomeOutlined,
       label: "Billing& Subscriptions",
-      path: "#",
+      path: "/admin/plans",
     },
     {
       id: 27,

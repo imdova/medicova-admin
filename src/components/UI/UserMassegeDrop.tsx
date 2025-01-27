@@ -1,7 +1,8 @@
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Avatar, Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 
 import Link from "next/link";
+import Image from "next/image";
 const UserMassegeDrop: React.FC = () => {
   const [anchorElMessage, setAnchorElMessage] = useState<null | HTMLElement>(
     null,
@@ -57,13 +58,10 @@ const UserMassegeDrop: React.FC = () => {
               className="flex items-center gap-2 p-1 hover:bg-hover-link"
               href="#"
             >
-              <span className="h-8 w-8 overflow-hidden rounded-full">
-                <img
-                  src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-                  alt=""
-                  className="h-full w-full"
-                />
-              </span>
+              <Avatar
+                alt="Remy Sharp"
+                src="https://mui.com/static/images/avatar/3.jpg"
+              />
               <div className="flex flex-1 flex-col">
                 <a className="text-sm" href="#">
                   Ralph Edwards
@@ -79,13 +77,10 @@ const UserMassegeDrop: React.FC = () => {
               className="flex items-center gap-2 p-1 hover:bg-hover-link"
               href="#"
             >
-              <span className="h-8 w-8 overflow-hidden rounded-full">
-                <img
-                  src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-                  alt=""
-                  className="h-full w-full"
-                />
-              </span>
+              <Avatar
+                alt="Remy Sharp"
+                src="https://mui.com/static/images/avatar/3.jpg"
+              />
               <div className="flex flex-1 flex-col">
                 <a className="text-sm" href="#">
                   Ralph Edwards
@@ -101,13 +96,10 @@ const UserMassegeDrop: React.FC = () => {
               className="flex items-center gap-2 p-1 hover:bg-hover-link"
               href="#"
             >
-              <span className="h-8 w-8 overflow-hidden rounded-full">
-                <img
-                  src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-                  alt=""
-                  className="h-full w-full"
-                />
-              </span>
+              <Avatar
+                alt="Remy Sharp"
+                src="https://mui.com/static/images/avatar/3.jpg"
+              />
               <div className="flex flex-1 flex-col">
                 <a className="text-sm" href="#">
                   Ralph Edwards
@@ -123,13 +115,10 @@ const UserMassegeDrop: React.FC = () => {
               className="flex items-center gap-2 p-1 hover:bg-hover-link"
               href="#"
             >
-              <span className="h-8 w-8 overflow-hidden rounded-full">
-                <img
-                  src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-                  alt=""
-                  className="h-full w-full"
-                />
-              </span>
+              <Avatar
+                alt="Remy Sharp"
+                src="https://mui.com/static/images/avatar/3.jpg"
+              />
               <div className="flex flex-1 flex-col">
                 <a className="text-sm" href="#">
                   Ralph Edwards

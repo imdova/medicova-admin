@@ -1,35 +1,30 @@
 "use client";
-import { countries } from "@/constants";
-import { CountryPhone } from "@/types";
 import {
-  Box,
   Button,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   FormControl,
-  InputAdornment,
-  InputBase,
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
-  styled,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-
+import "react-quill/dist/quill.snow.css"; // Import Quill's default styling
+import ReactQuill from "react-quill";
+import DynamicKeywordContent from "@/components/UI/DynamicKeyword";
 // Define the form data types
 interface FormData {
   name: string;
+  slug: string;
   email: string;
-  password: string | number;
+  metaTitle: string;
+  metaDescription: string;
   LocationId: string;
   SectorId: string;
   TypeId: string;
@@ -50,7 +45,7 @@ interface AddNewEmployerProps {
   isModalOpen: boolean; // State to control the modal's visibility
 }
 
-const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
+const AddNewCategory: React.FC<AddNewEmployerProps> = ({
   handleCloseModal,
   isModalOpen,
 }) => {
@@ -88,7 +83,7 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
   function clearErrors(arg0: string) {
     throw new Error("Function not implemented.");
   }
-
+  const [value, setValue] = useState("");
   return (
     <Dialog
       open={isModalOpen}
@@ -101,16 +96,16 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
         variant="h6"
         gutterBottom
       >
-        Add New Employer
+        Add New Category
       </Typography>
 
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="my-5 flex flex-col items-center gap-3 border-b pb-5 md:flex-row">
+          <div className="my-5 flex flex-col items-center gap-3 border-b pb-5 md:flex-row-reverse">
             <div className="w-full md:w-fit">
               <label
                 htmlFor="dropzone-file"
-                className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:border-primary hover:text-primary md:h-52 md:w-52"
+                className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:border-primary hover:text-primary md:h-52 md:w-52"
               >
                 <div className="flex flex-col items-center justify-center pb-6 pt-5">
                   <svg
@@ -170,180 +165,19 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
             </div>
             <div className="w-full">
               <div className="mb-3">
-                <InputLabel className="text-sm">Company Name</InputLabel>
+                <InputLabel className="text-sm">Name</InputLabel>
                 <TextField
                   fullWidth
                   className="mt-2"
                   {...register("name", {
-                    required: "Company Name is required",
+                    required: "Name is required",
                   })}
                   error={!!errors.name}
                   helperText={errors.name?.message}
                 />
               </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <div className="w-full">
-                  <InputLabel className="text-sm">Email</InputLabel>
-                  <TextField
-                    type="email"
-                    fullWidth
-                    className="mt-2"
-                    {...register("email", {
-                      required: "Email is required",
-                      pattern: {
-                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        message: "Enter a valid email address",
-                      },
-                    })}
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
-                  />
-                </div>
-                <div className="w-full">
-                  <InputLabel className="text-sm">Password</InputLabel>
-                  <TextField
-                    fullWidth
-                    type="password"
-                    className="mt-2"
-                    {...register("password", {
-                      required: "password is required",
-                    })}
-                    error={!!errors.password}
-                    helperText={errors.password?.message}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-2 flex flex-col gap-3 md:flex-row">
-            <div className="w-full">
-              <InputLabel className="relative mb-2 text-sm">
-                Phone Number
-              </InputLabel>
-              <Box
-                sx={{
-                  mb: 1,
-                  "& .PhoneInput": {
-                    display: "flex",
-                    border: errors.phone ? "1px solid red" : "1px solid #ccc",
-                    height: "50px",
-                    borderRadius: "10px",
-                    alignItems: "center", // Ensures proper alignment
-                    padding: "0 10px", // Adds padding inside the input
-                  },
-                }}
-              >
-                <Controller
-                  control={control}
-                  name="phone"
-                  rules={{ required: "Phone number is required" }}
-                  render={({ field }) => (
-                    <PhoneInput
-                      {...field}
-                      defaultCountry="EG"
-                      value={field.value || ""}
-                      placeholder="Enter phone number"
-                      onChange={(value) => {
-                        clearErrors("phone");
-                        field.onChange(value ?? ""); // Update the field value
-                      }}
-                      international
-                    />
-                  )}
-                />
-                {errors.phone && (
-                  <Typography sx={{ color: "red", fontSize: "12px", mt: 1 }}>
-                    {errors.phone.message}
-                  </Typography>
-                )}
-              </Box>
-            </div>
-            <div className="w-full">
-              <div className="min-w-[150px] flex-1">
-                <InputLabel className="relative mb-2 text-sm">
-                  Location
-                </InputLabel>
-                <Controller
-                  name="LocationId"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Location is required" }}
-                  render={({ field }) => (
-                    <FormControl error={Boolean(errors.LocationId)} fullWidth>
-                      <Select
-                        {...field}
-                        displayEmpty
-                        MenuProps={{
-                          disableScrollLock: true,
-                        }}
-                        renderValue={(selected) => {
-                          return selected || <em>Select Location</em>;
-                        }}
-                      >
-                        <MenuItem value="" disabled>
-                          <em>Select Location</em>
-                        </MenuItem>
-                        <MenuItem value="1">Location 1</MenuItem>
-                        <MenuItem value="2">Location 2</MenuItem>
-                        <MenuItem value="3">Location 3</MenuItem>
-                      </Select>
-                      {errors.LocationId && (
-                        <p className="mt-2 text-sm text-red-500">
-                          {errors.LocationId.message}
-                        </p>
-                      )}
-                    </FormControl>
-                  )}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3 md:flex-row">
-            <div className="w-full">
-              <InputLabel className="relative mb-2 text-sm">
-                Sector Company
-              </InputLabel>
-              <Controller
-                name="SectorId"
-                control={control}
-                defaultValue=""
-                rules={{ required: "Sector is required" }}
-                render={({ field }) => (
-                  <FormControl error={Boolean(errors.SectorId)} fullWidth>
-                    <Select
-                      {...field}
-                      displayEmpty
-                      MenuProps={{
-                        disableScrollLock: true,
-                      }}
-                      renderValue={(selected) => {
-                        return selected || <em>Select Sector</em>;
-                      }}
-                    >
-                      <MenuItem value="" disabled>
-                        <em>Select Sector</em>
-                      </MenuItem>
-                      <MenuItem value="1">Sector 1</MenuItem>
-                      <MenuItem value="2">Sector 2</MenuItem>
-                      <MenuItem value="3">Sector 3</MenuItem>
-                    </Select>
-                    {errors.SectorId && (
-                      <p className="mt-2 text-sm text-red-500">
-                        {errors.SectorId.message}
-                      </p>
-                    )}
-                  </FormControl>
-                )}
-              />
-            </div>
-            <div className="w-full">
-              <div className="min-w-[150px] flex-1">
-                <InputLabel className="relative mb-2 text-sm">
-                  Type Company
-                </InputLabel>
+              <div className="mb-3 w-full">
+                <InputLabel className="relative mb-2 text-sm">Type</InputLabel>
                 <Controller
                   name="TypeId"
                   control={control}
@@ -377,9 +211,69 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
                   )}
                 />
               </div>
+              <div className="mb-3">
+                <InputLabel className="text-sm">Slug</InputLabel>
+                <TextField
+                  fullWidth
+                  className="mt-2"
+                  {...register("slug", {
+                    required: "slug is required",
+                  })}
+                  error={!!errors.slug}
+                  helperText={errors.slug?.message}
+                />
+              </div>
             </div>
           </div>
 
+          <div className="relative flex h-full min-h-[420px] flex-col gap-2">
+            <InputLabel className="py-2 text-sm">Job Description</InputLabel>
+            <ReactQuill
+              theme="snow"
+              value={value}
+              onChange={setValue}
+              style={{
+                height: "300px", // Adjust the height here
+                borderRadius: "10px",
+                backgroundColor: "#fff",
+              }}
+              modules={{
+                toolbar: [
+                  ["bold", "italic", "underline"], // Text formatting options
+                  [{ list: "ordered" }, { list: "bullet" }], // Lists
+                  ["link", "clean"], // Links and clean formatting
+                ],
+              }}
+            />
+          </div>
+
+          <div className="">
+            <div className="mb-3">
+              <InputLabel className="text-sm">Meta Title</InputLabel>
+              <TextField
+                fullWidth
+                className="mt-2"
+                {...register("metaTitle", {
+                  required: "Meta Title is required",
+                })}
+                error={!!errors.metaTitle}
+                helperText={errors.metaTitle?.message}
+              />
+            </div>
+            <div className="mb-3">
+              <InputLabel className="text-sm">Meta Description</InputLabel>
+              <TextField
+                fullWidth
+                className="mt-2"
+                {...register("metaDescription", {
+                  required: "Meta Title is required",
+                })}
+                error={!!errors.metaDescription}
+                helperText={errors.metaDescription?.message}
+              />
+            </div>
+          </div>
+          <DynamicKeywordContent />
           <DialogActions className="mt-4 flex flex-col items-center gap-5 md:flex-row md:items-start">
             <Button
               type="submit"
@@ -408,4 +302,4 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
   );
 };
 
-export default AddNewEmployer;
+export default AddNewCategory;

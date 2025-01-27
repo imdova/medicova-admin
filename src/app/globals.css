@@ -43,7 +43,7 @@ html,
     @apply bg-primary text-primary-foreground hover:bg-primary-foreground hover:text-primary;
   }
   .box-content {
-    @apply overflow-hidden rounded-md bg-white p-4 shadow-baseShadow;
+    @apply overflow-hidden rounded-md bg-white p-2 shadow-baseShadow md:p-4;
   }
 }
 

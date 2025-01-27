@@ -2,9 +2,8 @@
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import OvarviewJobs from "./OverviewJobs";
-import JobList from "./JobList";
-import SettingPage from "./setting";
+import SubscriptionPlansPage from "./SubscriptionPlansPage";
+import OvarviewBilling from "./OverviewBilling";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -36,7 +35,7 @@ function aProps(index: number) {
   };
 }
 
-const JobsPage: React.FC = () => {
+const BillingPage: React.FC = () => {
   const [value, setValue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -95,8 +94,9 @@ const JobsPage: React.FC = () => {
           >
             {/* Individual tabs */}
             <Tab label="Overview" {...aProps(0)} /> {/* Tab 1 */}
-            <Tab label="Jobs List" {...aProps(1)} /> {/* Tab 2 */}
-            <Tab label="Setting" {...aProps(2)} /> {/* Tab 3 */}
+            <Tab label="Tranactions" {...aProps(1)} /> {/* Tab 2 */}
+            <Tab label="Plans" {...aProps(2)} /> {/* Tab 2 */}
+            <Tab label="Setting" {...aProps(3)} /> {/* Tab 3 */}
           </Tabs>
         </Box>
         <Button
@@ -105,20 +105,23 @@ const JobsPage: React.FC = () => {
           variant="contained"
         >
           <AddCircleOutlineIcon />
-          <span className="text-xs">New Job</span>
+          <span className="text-xs">invoice</span>
         </Button>
       </div>
       <CustomTabPanel value={value} index={0}>
-        <OvarviewJobs />
+        <OvarviewBilling />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <JobList />
+        list
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <SettingPage />
+        <SubscriptionPlansPage />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        setting
       </CustomTabPanel>
     </div>
   );
 };
 
-export default JobsPage;
+export default BillingPage;

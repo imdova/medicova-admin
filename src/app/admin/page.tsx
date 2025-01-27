@@ -24,7 +24,7 @@ function CustomTabPanel(props: TabPanelProps) {
       {...other}
     >
       {/* Render children only when the panel is active */}
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ pt: 2 }}>{children}</Box>}
     </div>
   );
 }
@@ -36,14 +36,12 @@ function aProps(index: number) {
   };
 }
 
-const page = () => {
+const Page = () => {
   const [value, setValue] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   // Function to open the modal
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -54,17 +52,9 @@ const page = () => {
     setIsModalOpen(false);
   };
 
-  // Function to handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Add employer logic here (e.g., API call)
-    console.log("Employer added");
-    handleCloseModal();
-  };
-
   return (
     <div>
-      <div className="box-content flex flex-col items-start justify-between gap-5 sm:flex-row">
+      <div className="box-content flex flex-col items-center justify-between gap-5 sm:flex-row md:items-start">
         <Box
           sx={{
             // Styles for the selected tab
@@ -81,10 +71,6 @@ const page = () => {
             // Styles for the Tabs container
             ".css-5i28le-MuiTabs-root": {
               minHeight: 0, // Remove extra height from tabs container
-            },
-            // Styles for the Tabs container
-            ".MuiBox-root": {
-              padding: 0, // Remove extra height from tabs container
             },
           }}
         >
@@ -137,4 +123,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
