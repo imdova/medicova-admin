@@ -1,10 +1,9 @@
 import { Button, Menu, MenuItem } from "@mui/material";
-import React, { ReactNode, useState } from "react";
-import DiscountIcon from "@mui/icons-material/Discount";
+import React, { useState } from "react";
 import Link from "next/link";
 import { notifications } from "@/constants";
-import { format } from "date-fns";
 
+import { getFullLastEdit } from "@/util";
 const UserAlertDrop: React.FC = () => {
   const [anchorElAlert, setAnchorElAlert] = useState<null | HTMLElement>(null);
   const openAlert = Boolean(anchorElAlert);
@@ -54,37 +53,31 @@ const UserAlertDrop: React.FC = () => {
             horizontal: "left",
           }}
         >
-          {notifications.map((alert) => {
-            const formattedDate = format(
-              new Date(alert.timeStamp),
-              "MMMM dd, yyyy HH:mm",
-            );
-            return (
-              <MenuItem key={alert.title} onClick={handleCloseAlert}>
-                <Link
-                  className="flex items-center gap-2 p-1 hover:bg-hover-link"
-                  href="#"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary">
-                    {alert.icon &&
-                      React.createElement(alert.icon, {
-                        style: { color: "white", fontSize: "15px" },
-                      })}
-                  </div>
+          {notifications.map((alert) => (
+            <MenuItem key={alert.title} onClick={handleCloseAlert}>
+              <Link
+                className="flex items-center gap-2 p-1 hover:bg-hover-link"
+                href="#"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary">
+                  {alert.icon &&
+                    React.createElement(alert.icon, {
+                      style: { color: "white", fontSize: "15px" },
+                    })}
+                </div>
 
-                  <div className="flex flex-col">
-                    <div className="text-xs">{alert.title}</div>
-                    <div className="text-xs text-secondary">
-                      {alert.description}
-                    </div>
-                    <div className="text-[10px] text-secondary">
-                      {formattedDate}
-                    </div>
+                <div className="flex flex-col">
+                  <div className="text-xs">{alert.title}</div>
+                  <div className="text-xs text-secondary">
+                    {alert.description}
                   </div>
-                </Link>
-              </MenuItem>
-            );
-          })}
+                  <div className="text-[10px] text-secondary">
+                    {getFullLastEdit(alert.timeStamp)}
+                  </div>
+                </div>
+              </Link>
+            </MenuItem>
+          ))}
           <div className="mt-3 flex w-full justify-center px-2">
             <Button className="w-full" variant="outlined">
               Veiw All

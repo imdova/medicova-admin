@@ -1,10 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { TreeTable } from "primereact/treetable";
-import { Column } from "primereact/column";
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-
-import "primereact/resources/primereact.min.css"; // Core styles
 import { Button } from "@mui/material";
 import { DeleteOutlineOutlined, EditOutlined } from "@mui/icons-material";
 
@@ -163,7 +157,7 @@ export default function PaginatorBasicDemo() {
 
   return (
     <div className="card table-data-tree mt-3">
-      <TreeTable
+      {/* <TreeTable
         value={nodes}
         paginator
         rows={5}
@@ -176,7 +170,7 @@ export default function PaginatorBasicDemo() {
         <Column field="type" header="Type" />
         <Column field="jobs" header="Jobs" />
         <Column field="action" header="Action" />
-      </TreeTable>
+      </TreeTable> */}
     </div>
   );
 }
