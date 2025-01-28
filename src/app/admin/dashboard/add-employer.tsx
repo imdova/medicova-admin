@@ -8,15 +8,10 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   FormControl,
-  InputAdornment,
-  InputBase,
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
-  styled,
   TextField,
   Typography,
 } from "@mui/material";
@@ -172,6 +167,7 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
               <div className="mb-3">
                 <InputLabel className="text-sm">Company Name</InputLabel>
                 <TextField
+                  placeholder="Example"
                   fullWidth
                   className="mt-2"
                   {...register("name", {
@@ -187,6 +183,7 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
                   <InputLabel className="text-sm">Email</InputLabel>
                   <TextField
                     type="email"
+                    placeholder="Example@gmail.com"
                     fullWidth
                     className="mt-2"
                     {...register("email", {
@@ -203,6 +200,7 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
                 <div className="w-full">
                   <InputLabel className="text-sm">Password</InputLabel>
                   <TextField
+                    placeholder="Enter your Password"
                     fullWidth
                     type="password"
                     className="mt-2"

@@ -18,7 +18,7 @@ import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateField } from "@mui/x-date-pickers/DateField";
-import { Tune } from "@mui/icons-material";
+import { MoreVert, Tune } from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -51,28 +51,24 @@ const columns: GridColDef[] = [
     headerName: "Job Id",
     flex: 1,
     editable: false,
-    type: "number",
   },
   {
     field: "JobTitle",
     headerName: "Job Title",
     flex: 1,
     editable: true,
-    type: "string",
   },
   {
     field: "Date",
     headerName: "Date",
     flex: 1,
     editable: true,
-    type: "string",
   },
   {
     field: "Employer",
     headerName: "Employer",
     sortable: true,
     flex: 1,
-    type: "string",
   },
 
   {
@@ -80,7 +76,6 @@ const columns: GridColDef[] = [
     headerName: "Location",
     sortable: true,
     flex: 1,
-    type: "string",
   },
 
   {
@@ -88,7 +83,6 @@ const columns: GridColDef[] = [
     headerName: "Veiws",
     sortable: true,
     flex: 1,
-    type: "number",
   },
 
   {
@@ -96,7 +90,6 @@ const columns: GridColDef[] = [
     headerName: "Applicants",
     sortable: true,
     flex: 1,
-    type: "number",
   },
   {
     field: "Status",
@@ -113,7 +106,14 @@ const columns: GridColDef[] = [
     description: "This column has a value getter and is not sortable.",
     sortable: false,
     flex: 1,
-    renderCell: () => <Switch />,
+    renderCell: () => (
+      <div className="flex items-center gap-2">
+        <Switch />
+        <button>
+          <MoreVert />
+        </button>
+      </div>
+    ),
   },
 ];
 
@@ -184,8 +184,12 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
       {/* start content table Employers  */}
       <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
         {Filtring ? (
-          <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
-            Total Employrs : 19
+          <Typography
+            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
+            variant="h6"
+            gutterBottom
+          >
+            Total Jobs : 19
           </Typography>
         ) : (
           <Box
@@ -426,18 +430,15 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
       ) : (
         ""
       )}
-      <Box sx={{ height: 400, minWidth: "800px" }}>
+      <Box sx={{ height: 400, overflowX: "auto" }}>
         <DataGrid
           sx={{
-            borderRadius: "8px",
+            minWidth: "1000px",
             border: "1px solid rgba(0, 0, 0, 0.12)",
             "& .MuiDataGrid-container--top [role=row]": {
               background: "#2ba149", // Custom header background color
               color: "#ffffff", // Custom header text color
               fontSize: "16px", // Optional: Larger header font
-            },
-            "& .MuiDataGrid-columnHeaderTitle": {
-              fontWeight: "bold", // Optional: Bold header text
             },
             "& .MuiDataGrid-cell": {
               fontSize: "12px", // Row font size

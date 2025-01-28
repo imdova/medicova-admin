@@ -2,8 +2,8 @@
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import SubscriptionPlansPage from "./SubscriptionPlansPage";
-import OvarviewBilling from "./OverviewBilling";
+import OvarviewUsers from "./OverviewUsers";
+import UserList from "./UserList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -95,9 +95,8 @@ const BillingPage: React.FC = () => {
           >
             {/* Individual tabs */}
             <Tab label="Overview" {...aProps(0)} /> {/* Tab 1 */}
-            <Tab label="Tranactions" {...aProps(1)} /> {/* Tab 2 */}
-            <Tab label="Plans" {...aProps(2)} /> {/* Tab 2 */}
-            <Tab label="Setting" {...aProps(3)} /> {/* Tab 3 */}
+            <Tab label="Users List" {...aProps(1)} /> {/* Tab 2 */}
+            <Tab label="Setting" {...aProps(2)} /> {/* Tab 2 */}
           </Tabs>
         </Box>
         <Button
@@ -106,19 +105,16 @@ const BillingPage: React.FC = () => {
           variant="contained"
         >
           <AddCircleOutlineIcon />
-          <span className="text-xs">invoice</span>
+          <span className="text-xs">New User</span>
         </Button>
       </div>
       <CustomTabPanel value={value} index={0}>
-        <OvarviewBilling />
+        <OvarviewUsers />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        list
+        <UserList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <SubscriptionPlansPage />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
         setting
       </CustomTabPanel>
     </div>

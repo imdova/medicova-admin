@@ -167,6 +167,7 @@ const AddNewCategory: React.FC<AddNewEmployerProps> = ({
               <div className="mb-3">
                 <InputLabel className="text-sm">Name</InputLabel>
                 <TextField
+                  placeholder="Example"
                   fullWidth
                   className="mt-2"
                   {...register("name", {
@@ -214,6 +215,7 @@ const AddNewCategory: React.FC<AddNewEmployerProps> = ({
               <div className="mb-3">
                 <InputLabel className="text-sm">Slug</InputLabel>
                 <TextField
+                  placeholder="Example"
                   fullWidth
                   className="mt-2"
                   {...register("slug", {
@@ -229,6 +231,7 @@ const AddNewCategory: React.FC<AddNewEmployerProps> = ({
           <div className="relative flex h-full min-h-[420px] flex-col gap-2">
             <InputLabel className="py-2 text-sm">Job Description</InputLabel>
             <ReactQuill
+              placeholder="Job Description ...."
               theme="snow"
               value={value}
               onChange={setValue}
@@ -251,6 +254,7 @@ const AddNewCategory: React.FC<AddNewEmployerProps> = ({
             <div className="mb-3">
               <InputLabel className="text-sm">Meta Title</InputLabel>
               <TextField
+                placeholder="Enter Meta Title"
                 fullWidth
                 className="mt-2"
                 {...register("metaTitle", {
@@ -263,6 +267,7 @@ const AddNewCategory: React.FC<AddNewEmployerProps> = ({
             <div className="mb-3">
               <InputLabel className="text-sm">Meta Description</InputLabel>
               <TextField
+                placeholder="Enter Meta Description"
                 fullWidth
                 className="mt-2"
                 {...register("metaDescription", {

@@ -56,7 +56,7 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 22,
       icon: PeopleOutline,
       label: "Users",
-      path: "#",
+      path: "/admin/users",
     },
     {
       id: 23,

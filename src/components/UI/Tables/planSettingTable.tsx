@@ -59,7 +59,6 @@ const columns: GridColDef[] = [
     headerName: "Orders",
     flex: 1,
     editable: true,
-    type: "string",
   },
   {
     field: "Pro",
@@ -72,7 +71,6 @@ const columns: GridColDef[] = [
     headerName: "Gold",
     sortable: true,
     flex: 1,
-    type: "string",
   },
 
   {
@@ -188,7 +186,11 @@ const PlanSettingTable: React.FC<PlanSettingTable> = ({
             </Tabs>
           </Box>
         ) : (
-          <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
+          <Typography
+            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
+            variant="h6"
+            gutterBottom
+          >
             Plan Setting
           </Typography>
         )}
@@ -350,7 +352,6 @@ const PlanSettingTable: React.FC<PlanSettingTable> = ({
               sx={{
                 width: "100%", // Ensure the container is full-width
                 overflow: "visible",
-
                 paddingTop: 0,
                 position: "relative",
                 "& > :not(style) ~ :not(style)": {
@@ -406,19 +407,17 @@ const PlanSettingTable: React.FC<PlanSettingTable> = ({
       ) : (
         ""
       )}
-      <Box sx={{ height: 400, minWidth: "100px" }}>
+      <Box sx={{ height: 400, overflowX: "auto" }}>
         <DataGrid
           sx={{
-            borderRadius: "8px",
+            minWidth: "800px",
             border: "1px solid rgba(0, 0, 0, 0.12)",
             "& .MuiDataGrid-container--top [role=row]": {
               background: "#2ba149", // Custom header background color
               color: "#ffffff", // Custom header text color
               fontSize: "16px", // Optional: Larger header font
             },
-            "& .MuiDataGrid-columnHeaderTitle": {
-              fontWeight: "bold", // Optional: Bold header text
-            },
+
             "& .MuiDataGrid-cell": {
               fontSize: "12px", // Row font size
             },

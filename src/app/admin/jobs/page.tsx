@@ -67,6 +67,7 @@ const JobsPage: React.FC = () => {
             ".css-o37pu0-MuiButtonBase-root-MuiTab-root": {
               minHeight: 0, // Remove extra height from tabs
               fontSize: 10,
+              minWidth: 60,
             },
             // Styles for the Tabs container
             ".css-5i28le-MuiTabs-root": {
@@ -100,7 +101,7 @@ const JobsPage: React.FC = () => {
           </Tabs>
         </Box>
         <Button
-          className="flex gap-3 rounded-md bg-primary p-2"
+          className="flex w-full gap-2 rounded-md bg-primary p-2 sm:w-fit"
           size="small"
           variant="contained"
         >

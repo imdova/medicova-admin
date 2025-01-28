@@ -67,14 +67,12 @@ const columns: GridColDef[] = [
     headerName: "Invoice",
     flex: 1,
     editable: true,
-    type: "string",
   },
   {
     field: "Plane",
     headerName: "Plane",
     flex: 1,
     editable: true,
-    type: "string",
   },
   {
     field: "Employer",
@@ -100,7 +98,6 @@ const columns: GridColDef[] = [
     headerName: "Payment",
     sortable: true,
     flex: 1,
-    type: "string",
   },
 
   {
@@ -108,7 +105,7 @@ const columns: GridColDef[] = [
     headerName: "Amount",
     sortable: true,
     flex: 1,
-    type: "string",
+
     renderCell: (params) => <div>${params.row.Amount}</div>,
   },
 
@@ -125,7 +122,7 @@ const columns: GridColDef[] = [
     headerName: "Recipt",
     sortable: true,
     flex: 1,
-    type: "string",
+
     renderCell: (params) => <div>${params.row.Recipt}</div>,
   },
   {
@@ -238,7 +235,11 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
             </Tabs>
           </Box>
         ) : (
-          <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
+          <Typography
+            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
+            variant="h6"
+            gutterBottom
+          >
             Tranactions
           </Typography>
         )}
@@ -458,19 +459,17 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
       ) : (
         ""
       )}
-      <Box sx={{ height: 400, minWidth: "800px" }}>
+      <Box sx={{ height: 400, overflowX: "auto" }}>
         <DataGrid
           sx={{
-            borderRadius: "8px",
+            minWidth: "1000px",
             border: "1px solid rgba(0, 0, 0, 0.12)",
             "& .MuiDataGrid-container--top [role=row]": {
               background: "#2ba149", // Custom header background color
               color: "#ffffff", // Custom header text color
               fontSize: "16px", // Optional: Larger header font
             },
-            "& .MuiDataGrid-columnHeaderTitle": {
-              fontWeight: "bold", // Optional: Bold header text
-            },
+
             "& .MuiDataGrid-cell": {
               fontSize: "12px", // Row font size
             },

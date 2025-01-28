@@ -52,6 +52,12 @@ const ChartEmployerReport: React.FC<ChartEmployersProps> = ({
           ".MuiChartsLegend-mark": {
             borderRadius: 100,
           },
+          ".MuiChartsAxis-tickLabel tspan": {
+            fontSize: "10px",
+          },
+          ".css-1u0lry5-MuiChartsLegend-root tspan": {
+            fontSize: "10px",
+          },
         }}
       />
     </>

@@ -112,7 +112,7 @@ const SubscriptionPlansPage: React.FC = () => {
 
       {/* Access Buttons */}
       <Box
-        className="bg-primary-100"
+        className="flex-col bg-primary-100 md:flex-row"
         sx={{
           display: "flex",
           justifyContent: "center", // Centers horizontally

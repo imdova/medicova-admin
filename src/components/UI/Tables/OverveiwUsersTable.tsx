@@ -1,6 +1,5 @@
 import {
   Avatar,
-  AvatarGroup,
   Box,
   Button,
   FormControl,
@@ -20,19 +19,11 @@ import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateField } from "@mui/x-date-pickers/DateField";
-import {
-  Tune,
-  VerticalAlignBottomOutlined,
-  VisibilityOutlined,
-} from "@mui/icons-material";
+import { MoreVert, Tune } from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-
-interface OverviewEmployersTableProps {
-  Filtring?: boolean; // `Filtring` is optional
-  MainTabs?: boolean; // `Filtring` is optional
-}
+import { idID } from "@mui/material/locale";
 
 // handel function status of Employers
 const handleState = (state: StateType) => {
@@ -59,70 +50,83 @@ const handleState = (state: StateType) => {
 const columns: GridColDef[] = [
   {
     field: "Name",
-    headerName: "Plan Name",
-    flex: 1,
+    headerName: "Name",
+    width: 160,
     editable: false,
+    renderCell: (params) => (
+      <div className="flex h-full items-center gap-2">
+        <Avatar
+          src="https://s3-alpha-sig.figma.com/img/3d5c/b72f/ae1e058c2ed75ab981a9f8bb62e96a13?Expires=1739145600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=a18VE~FGFT~v8D9-O~88JSK~y9SE~MefKeuzvSlS0w4mGSL22pIspT3NCxcrlQRWIA7Jm9l5T06ss0sTIxZvYVNnjXZsXNS6-vJjjzvlei5he8HJx4rRgyI3A7IhiSRow90EBIWTjk-SHnh0pZ2M6UurtH5ydxPtGDJyLGaG8vjZo86gmxyeJoYXYIHXsyn5~ILsGVMSiXohp5M0oSdpiR4TTYuPpycTV-qtUMqaq9bjDVZNHP9hfy5Ekip9IInRsI8MfB5jJJ-GCtMirfH0lO2s8IX9GjvtB1aSEuV7rcdHolzjeWoLX3KQeTFwAbDCkNZ5NWDVsYYEvhw91DyaJw__"
+          alt="Ralph Edwards"
+          sx={{ width: 32, height: 32, mr: 2 }}
+        />
+        <div>
+          <h3 className="mb-2 text-xs">{params.row.Name}</h3>
+          <p className="text-[8px] leading-none">{params.row.Email}</p>
+        </div>
+      </div>
+    ),
   },
   {
-    field: "Orders",
-    headerName: "Orders",
+    field: "ApplyDay",
+    headerName: "Applied Day",
     flex: 1,
     editable: true,
   },
   {
-    field: "Employers",
-    headerName: "Employers",
-    sortable: true,
+    field: "Phone",
+    headerName: "Phone",
     flex: 1,
-    renderCell: (params) => (
-      <AvatarGroup
-        className="flex h-full items-center justify-center"
-        sx={{
-          "& .MuiAvatar-root": {
-            width: 30,
-            height: 30,
-          },
-        }}
-        max={4}
-      >
-        <Avatar
-          alt="Remy Sharp"
-          src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-        />
-        <Avatar
-          alt="Travis Howard"
-          src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-        />
-        <Avatar
-          alt="Cindy Baker"
-          src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-        />
-        <Avatar
-          alt="Agnes Walker"
-          src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-        />
-        <Avatar
-          alt="Trevor Henderson"
-          src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-        />
-      </AvatarGroup>
-    ),
+    editable: true,
   },
   {
-    field: "Revenue",
-    headerName: "Revenue",
+    field: "Location",
+    headerName: "Location",
     sortable: true,
     flex: 1,
   },
 
   {
-    field: "Status",
-    headerName: "Status",
+    field: "Category",
+    headerName: "Category",
+    sortable: true,
+    flex: 1,
+  },
+
+  {
+    field: "Specialty",
+    headerName: "Specialty ",
+    sortable: true,
+    flex: 1,
+  },
+
+  {
+    field: "CareerLevel",
+    headerName: "CareerLevel",
+    sortable: true,
+    flex: 1,
+  },
+  {
+    field: "Education",
+    headerName: "Education",
+    sortable: true,
+    flex: 1,
+  },
+  {
+    field: "Age",
+    headerName: "Age",
+    sortable: true,
+    flex: 1,
+    width: 60,
+  },
+  {
+    field: "Experience",
+    headerName: "Experience",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
     flex: 1,
-    renderCell: (params) => handleState(params.row.Status),
   },
+
   {
     field: "Action",
     headerName: "Action",
@@ -130,13 +134,9 @@ const columns: GridColDef[] = [
     sortable: false,
     flex: 1,
     renderCell: () => (
-      <div className="flex h-full items-center gap-2">
-        <Switch />
-        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-[#0061C9] text-white hover:bg-black">
-          <VisibilityOutlined />
-        </button>
-        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-primary text-white hover:bg-black">
-          <VerticalAlignBottomOutlined />
+      <div className="flex items-center gap-2">
+        <button>
+          <MoreVert />
         </button>
       </div>
     ),
@@ -146,45 +146,63 @@ const columns: GridColDef[] = [
 const rows = [
   {
     id: 1,
-    Orders: "2",
-    Name: "Jack",
-    Revenue: "25,000K",
-    Amount: 8.12,
-    Status: "Active",
-    Recipt: 209,
+    Name: "said ahmed",
+    ApplyDay: "13 July, 2021",
+    Phone: "+201144789587",
+    Location: "Egypt",
+    Category: "Doctor",
+    Specialty: "Cardiology",
+    CareerLevel: "General",
+    Education: "Bachelor of Medicine",
+    Age: 30,
+    Experience: "2v",
   },
   {
     id: 1,
-    Orders: "2",
-    Name: "Jack",
-    Revenue: "25,000K",
-    Amount: 8.12,
-    Status: "Active",
-    Recipt: 209,
+    Name: "said ahmed",
+    ApplyDay: "13 July, 2021",
+    Phone: "+201144789587",
+    Location: "Egypt",
+    Category: "Doctor",
+    Specialty: "Cardiology",
+    CareerLevel: "General",
+    Education: "Bachelor of Medicine",
+    Age: 30,
+    Experience: "2v",
   },
   {
     id: 1,
-    Orders: "2",
-    Name: "Jack",
-    Revenue: "25,000K",
-    Amount: 8.12,
-    Status: "Active",
-    Recipt: 209,
+    Name: "said ahmed",
+    ApplyDay: "13 July, 2021",
+    Phone: "+201144789587",
+    Location: "Egypt",
+    Category: "Doctor",
+    Specialty: "Cardiology",
+    CareerLevel: "General",
+    Education: "Bachelor of Medicine",
+    Age: 30,
+    Experience: "2v",
   },
   {
     id: 1,
-    Orders: "2",
-    Name: "Jack",
-    Revenue: "25,000K",
-    Amount: 8.12,
-    Status: "Active",
-    Recipt: 209,
+    Name: "said ahmed",
+    ApplyDay: "13 July, 2021",
+    Phone: "+201144789587",
+    Location: "Egypt",
+    Category: "Doctor",
+    Specialty: "Cardiology",
+    CareerLevel: "General",
+    Education: "Bachelor of Medicine",
+    Age: 30,
+    Experience: "2v",
   },
 ];
 
-const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
+interface OverviewEmployersTableProps {
+  Filtring?: boolean; // `Filtring` is optional
+}
+const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
-  MainTabs = false,
 }) => {
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
@@ -194,7 +212,6 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
   };
 
   //   values of Filters inputs
-
   const [Country, setCountry] = useState("");
 
   const handleChangeCountry = (event: SelectChangeEvent) => {
@@ -203,8 +220,16 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
   return (
     <>
       {/* start content table Employers  */}
-      <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
-        {MainTabs ? (
+      <div className="flex flex-col items-center justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
+        {Filtring ? (
+          <Typography
+            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
+            variant="h6"
+            gutterBottom
+          >
+            Total Users : 19
+          </Typography>
+        ) : (
           <Box
             sx={{
               bgcolor: "background.paper",
@@ -219,21 +244,14 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
               scrollButtons={false}
               aria-label="scrollable prevent tabs example"
             >
-              <Tab className="text-xs" label="New Employers" />
-              <Tab className="text-xs" label="Top Employers" />
-              <Tab className="text-xs" label="Active Employers" />
-              <Tab className="text-xs" label="Inactive Employers" />
+              <Tab className="text-xs" label="New Jobs" />
+              <Tab className="text-xs" label="Top Jobs" />
+              <Tab className="text-xs" label="Active Jobs" />
+              <Tab className="text-xs" label="Inactive Jobs" />
             </Tabs>
           </Box>
-        ) : (
-          <Typography
-            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
-            variant="h6"
-            gutterBottom
-          >
-            Total Plans: 4
-          </Typography>
         )}
+
         <SearchInput />
         <ExportButton data="Name,Age\nJohn,30\nJane,25" />
       </div>
@@ -459,13 +477,11 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
               background: "#2ba149", // Custom header background color
               color: "#ffffff", // Custom header text color
               fontSize: "16px", // Optional: Larger header font
+              textAlign: "center",
             },
-
             "& .MuiDataGrid-cell": {
               fontSize: "12px", // Row font size
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              columnSpacing: 2, // Add spacing between column headers
+              textAlign: "center",
             },
           }}
           rows={rows}
@@ -486,4 +502,4 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
   );
 };
 
-export default TotalPlansTable;
+export default OverveiwUsersTable;

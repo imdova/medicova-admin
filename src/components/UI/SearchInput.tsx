@@ -6,10 +6,11 @@ const SearchInput: React.FC = () => {
   // this is quary data of search
   const [SearchQuery, setSearchQuery] = useState<string>("");
   return (
-    <form className="relative hidden h-[35px] w-3/4 justify-center lg:flex">
+    <form className="hidden h-[35px] w-4/5 items-center justify-center rounded-lg bg-gray-100 px-4 lg:flex">
+      <Search className="text-primary" />
       <TextField
         id="no-border-textfield"
-        className="flex w-full justify-center rounded-lg bg-gray-100 pl-12"
+        className="w-full p-2"
         variant="standard" // Use "standard" or "outlined" as needed
         onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
           setSearchQuery(e.target.value);
@@ -24,8 +25,6 @@ const SearchInput: React.FC = () => {
           px: 1, // Optional padding
         }}
       />
-
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 fill-primary" />
     </form>
   );
 };

@@ -63,10 +63,12 @@ const Page = () => {
               borderRadius: "30px", // Rounded corners
               color: "white", // White text for selected tab
             },
+
             // General styles for all tabs
             ".css-o37pu0-MuiButtonBase-root-MuiTab-root": {
               minHeight: 0, // Remove extra height from tabs
               fontSize: 10,
+              minWidth: 60,
             },
             // Styles for the Tabs container
             ".css-5i28le-MuiTabs-root": {
@@ -97,7 +99,7 @@ const Page = () => {
         </Box>
         <Button
           onClick={handleOpenModal}
-          className="flex items-center gap-2 rounded-md bg-primary p-2"
+          className="flex w-full gap-2 rounded-md bg-primary p-2 sm:w-fit"
           size="small"
           variant="contained"
         >
