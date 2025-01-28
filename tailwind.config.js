@@ -17,12 +17,17 @@ module.exports = {
         "light-primary-transparent": "var(--light-primary-transparent)",
         main: "var(--text-main)",
         secondary: "var(--text-secondary)",
+        "main-border": "var(--border-main)",
+        "hover-link": "var(--hover-link)",
       },
       scale: {
         102: "1.02",
       },
       borderRadius: {
         base: "10px",
+      },
+      boxShadow: {
+        baseShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
       },
     },
   },

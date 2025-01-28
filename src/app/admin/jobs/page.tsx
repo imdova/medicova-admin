@@ -1,10 +1,10 @@
 "use client";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import EmployerList from "./dashboard/EmployerList";
-import OvarviewPage from "./dashboard/Ovarview";
-import AddNewEmployer from "./dashboard/add-employer";
-import { Add } from "@mui/icons-material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import OvarviewJobs from "./OverviewJobs";
+import JobList from "./JobList";
+import SettingPage from "./setting";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -36,12 +36,13 @@ function aProps(index: number) {
   };
 }
 
-const Page = () => {
+const JobsPage: React.FC = () => {
   const [value, setValue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
   // Function to open the modal
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -51,7 +52,6 @@ const Page = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-
   return (
     <div>
       <div className="box-content flex flex-col items-center justify-between gap-5 sm:flex-row md:items-start">
@@ -72,6 +72,10 @@ const Page = () => {
             ".css-5i28le-MuiTabs-root": {
               minHeight: 0, // Remove extra height from tabs container
             },
+            // Styles for the Tabs container
+            ".MuiBox-root": {
+              padding: 0, // Remove extra height from tabs container
+            },
           }}
         >
           {/* Tabs container */}
@@ -91,36 +95,30 @@ const Page = () => {
           >
             {/* Individual tabs */}
             <Tab label="Overview" {...aProps(0)} /> {/* Tab 1 */}
-            <Tab label="Employers List" {...aProps(1)} /> {/* Tab 2 */}
+            <Tab label="Jobs List" {...aProps(1)} /> {/* Tab 2 */}
             <Tab label="Setting" {...aProps(2)} /> {/* Tab 3 */}
           </Tabs>
         </Box>
         <Button
-          onClick={handleOpenModal}
-          className="flex items-center gap-2 rounded-md bg-primary p-2"
+          className="flex gap-3 rounded-md bg-primary p-2"
           size="small"
           variant="contained"
         >
-          <Add />
-          <span className="text-xs">New Employer</span>
+          <AddCircleOutlineIcon />
+          <span className="text-xs">New Job</span>
         </Button>
-
-        <AddNewEmployer
-          isModalOpen={isModalOpen}
-          handleCloseModal={handleCloseModal}
-        />
       </div>
       <CustomTabPanel value={value} index={0}>
-        <OvarviewPage />
+        <OvarviewJobs />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <EmployerList />
+        <JobList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Setting
+        <SettingPage />
       </CustomTabPanel>
     </div>
   );
 };
 
-export default Page;
+export default JobsPage;

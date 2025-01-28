@@ -150,8 +150,9 @@ const CollapseTab = ({
       onClick={toggleCollapse}
       label={
         <div className="flex w-full flex-row items-center justify-between gap-2">
-          <div className="flex flex-row items-center gap-2 text-left normal-case">
-            {IconComponent && <IconComponent />} <span>{item.label}</span>
+          <div className="flex flex-row items-center gap-2 text-left text-xs normal-case">
+            {IconComponent && <IconComponent />}{" "}
+            <span className="text-[12px]">{item.label}</span>
           </div>
           <KeyboardArrowDown
             className={`${isOpen ? "rotate-180" : ""} transition-transform duration-300`}
