@@ -535,7 +535,7 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           {rows.map((e) => {
-            return <CardEmployees />;
+            return <CardEmployees key={e.id} />;
           })}
         </div>
       )}
