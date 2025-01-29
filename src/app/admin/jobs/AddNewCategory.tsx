@@ -15,9 +15,8 @@ import {
 import React, { useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import "react-phone-number-input/style.css";
-import "react-quill/dist/quill.snow.css"; // Import Quill's default styling
-import ReactQuill from "react-quill";
 import DynamicKeywordContent from "@/components/UI/DynamicKeyword";
+import TextEditor from "@/components/editor/editor";
 // Define the form data types
 interface FormData {
   name: string;
@@ -230,23 +229,9 @@ const AddNewCategory: React.FC<AddNewEmployerProps> = ({
 
           <div className="relative flex h-full min-h-[420px] flex-col gap-2">
             <InputLabel className="py-2 text-sm">Job Description</InputLabel>
-            <ReactQuill
-              placeholder="Job Description ...."
-              theme="snow"
-              value={value}
-              onChange={setValue}
-              style={{
-                height: "300px", // Adjust the height here
-                borderRadius: "10px",
-                backgroundColor: "#fff",
-              }}
-              modules={{
-                toolbar: [
-                  ["bold", "italic", "underline"], // Text formatting options
-                  [{ list: "ordered" }, { list: "bullet" }], // Lists
-                  ["link", "clean"], // Links and clean formatting
-                ],
-              }}
+            <TextEditor
+              value={value || "<p>Job Description ....</p>"}
+              onChange={(e) => setValue(e)}
             />
           </div>
 

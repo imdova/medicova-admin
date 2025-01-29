@@ -74,7 +74,7 @@ export default function DynamicSideBar({
         if (item.type === "profile" && user) {
           return (
             <ProfileTab
-              key={item.id}
+              key={item.id + index}
               user={user}
               activeTab={activeTab}
               onTabChange={setActiveTab}
@@ -82,17 +82,20 @@ export default function DynamicSideBar({
           );
         }
         if (item.type === "divider")
-          return <Divider key={item.id} className="mt-2" />;
+          return <Divider key={item.id + index} className="mt-2" />;
         if (item.type === "text")
           return (
-            <p key={item.id} className="p-4 text-sm normal-case text-gray-800">
+            <p
+              key={item.id + index}
+              className="p-4 text-sm normal-case text-gray-800"
+            >
               {item.section}
             </p>
           );
         if (item.type === "collapse") {
           return (
             <CollapseTab
-              key={item.id}
+              key={item.id + index}
               item={item}
               index={index}
               activeTab={activeTab}
@@ -102,7 +105,7 @@ export default function DynamicSideBar({
         }
         return (
           <LinkTab
-            key={item.id}
+            key={item.id + index}
             item={item}
             index={index}
             activeTab={activeTab}
@@ -128,6 +131,7 @@ const CollapseTab = ({
   setLinks: React.Dispatch<React.SetStateAction<NavItem[]>>;
 }) => {
   const isActive = activeTab === index;
+  console.log("🚀 ~ isActive:", isActive);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const IconComponent = item.icon;
 
@@ -143,7 +147,12 @@ const CollapseTab = ({
   // import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
   return (
     <Tab
-      className={`transition-color mx-4 my-1 flex h-[45px] min-h-[40px] flex-row justify-start rounded-[10px] duration-300 ease-in-out ${isActive ? "bg-light-primary text-white opacity-100" : "text-gray-800"}`}
+      className={`transition-color mx-4 my-1 flex h-[45px] min-h-[40px] flex-row justify-start rounded-[10px] duration-300 ease-in-out`}
+      sx={{
+        backgroundColor: isActive ? "bg-light-primary" : "text-gray-800",
+        color: isActive ? "text-white" : "text-gray-800",
+        opacity: isActive ? 1 : 0.5,
+      }}
       id={`vertical-tab-${index}`}
       aria-controls={`vertical-tabpanel-${index}`}
       value={index}
