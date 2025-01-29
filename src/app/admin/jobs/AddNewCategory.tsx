@@ -82,7 +82,7 @@ const AddNewCategory: React.FC<AddNewEmployerProps> = ({
   function clearErrors(arg0: string) {
     throw new Error("Function not implemented.");
   }
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("<p>Job Description ....</p>");
   return (
     <Dialog
       open={isModalOpen}
@@ -227,15 +227,14 @@ const AddNewCategory: React.FC<AddNewEmployerProps> = ({
             </div>
           </div>
 
-          <div className="relative flex h-full min-h-[420px] flex-col gap-2">
-            <InputLabel className="py-2 text-sm">Job Description</InputLabel>
-            <TextEditor
-              value={value || "<p>Job Description ....</p>"}
-              onChange={(e) => setValue(e)}
-            />
+          <div className="mb-3">
+            <InputLabel className="mb-3 py-2 text-sm">
+              Job Description
+            </InputLabel>
+            <TextEditor value={value} onChange={(e) => setValue(e)} />
           </div>
 
-          <div className="">
+          <div>
             <div className="mb-3">
               <InputLabel className="text-sm">Meta Title</InputLabel>
               <TextField
