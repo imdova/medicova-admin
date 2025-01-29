@@ -1,22 +1,5 @@
 "use client";
-import {
-  Avatar,
-  Box,
-  Checkbox,
-  Paper,
-  styled,
-  Switch,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
-  tableCellClasses,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import MoreVertIcon from "@mui/icons-material/MoreVert";

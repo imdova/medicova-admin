@@ -23,9 +23,9 @@ interface FormData {
   name: string;
   email: string;
   password: string | number;
-  LocationId: string;
-  SectorId: string;
-  TypeId: string;
+  StatusId: string;
+  TitleId: string;
+  DepartmentId: string;
   phone: string;
 }
 
@@ -38,12 +38,12 @@ const submitFormData = async (data: FormData) => {
   });
   return response.json();
 };
-interface AddNewEmployerProps {
+interface AddNewEmployeeProps {
   handleCloseModal: () => void; // Function to close the modal
   isModalOpen: boolean; // State to control the modal's visibility
 }
 
-const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
+const AddNewEmployee: React.FC<AddNewEmployeeProps> = ({
   handleCloseModal,
   isModalOpen,
 }) => {
@@ -94,7 +94,7 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
         variant="h6"
         gutterBottom
       >
-        Add New Employer
+        Add New Employee
       </Typography>
 
       <DialogContent>
@@ -163,7 +163,7 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
             </div>
             <div className="w-full">
               <div className="mb-3">
-                <InputLabel className="text-sm">Company Name</InputLabel>
+                <InputLabel className="text-sm">Full Name</InputLabel>
                 <TextField
                   placeholder="Example"
                   fullWidth
@@ -259,15 +259,15 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
             <div className="w-full">
               <div className="min-w-[150px] flex-1">
                 <InputLabel className="relative mb-2 text-sm">
-                  Location
+                  Status
                 </InputLabel>
                 <Controller
-                  name="LocationId"
+                  name="StatusId"
                   control={control}
                   defaultValue=""
-                  rules={{ required: "Location is required" }}
+                  rules={{ required: "Status is required" }}
                   render={({ field }) => (
-                    <FormControl error={Boolean(errors.LocationId)} fullWidth>
+                    <FormControl error={Boolean(errors.StatusId)} fullWidth>
                       <Select
                         {...field}
                         displayEmpty
@@ -275,19 +275,19 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
                           disableScrollLock: true,
                         }}
                         renderValue={(selected) => {
-                          return selected || <em>Select Location</em>;
+                          return selected || <em>Select Status</em>;
                         }}
                       >
                         <MenuItem value="" disabled>
-                          <em>Select Location</em>
+                          <em>Select Status</em>
                         </MenuItem>
-                        <MenuItem value="1">Location 1</MenuItem>
-                        <MenuItem value="2">Location 2</MenuItem>
-                        <MenuItem value="3">Location 3</MenuItem>
+                        <MenuItem value="1">Active</MenuItem>
+                        <MenuItem value="2">Active</MenuItem>
+                        <MenuItem value="3">Active</MenuItem>
                       </Select>
-                      {errors.LocationId && (
+                      {errors.StatusId && (
                         <p className="mt-2 text-sm text-red-500">
-                          {errors.LocationId.message}
+                          {errors.StatusId.message}
                         </p>
                       )}
                     </FormControl>
@@ -299,16 +299,14 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
 
           <div className="flex flex-col gap-3 md:flex-row">
             <div className="w-full">
-              <InputLabel className="relative mb-2 text-sm">
-                Sector Company
-              </InputLabel>
+              <InputLabel className="relative mb-2 text-sm">Title</InputLabel>
               <Controller
-                name="SectorId"
+                name="TitleId"
                 control={control}
                 defaultValue=""
-                rules={{ required: "Sector is required" }}
+                rules={{ required: "Title is required" }}
                 render={({ field }) => (
-                  <FormControl error={Boolean(errors.SectorId)} fullWidth>
+                  <FormControl error={Boolean(errors.TitleId)} fullWidth>
                     <Select
                       {...field}
                       displayEmpty
@@ -316,37 +314,37 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
                         disableScrollLock: true,
                       }}
                       renderValue={(selected) => {
-                        return selected || <em>Select Sector</em>;
+                        return selected || <em>Select Title</em>;
                       }}
                     >
                       <MenuItem value="" disabled>
-                        <em>Select Sector</em>
+                        <em>Select Title</em>
                       </MenuItem>
-                      <MenuItem value="1">Sector 1</MenuItem>
-                      <MenuItem value="2">Sector 2</MenuItem>
-                      <MenuItem value="3">Sector 3</MenuItem>
+                      <MenuItem value="1">Title 1</MenuItem>
+                      <MenuItem value="2">Title 2</MenuItem>
+                      <MenuItem value="3">Title 3</MenuItem>
                     </Select>
-                    {errors.SectorId && (
+                    {errors.TitleId && (
                       <p className="mt-2 text-sm text-red-500">
-                        {errors.SectorId.message}
+                        {errors.TitleId.message}
                       </p>
                     )}
                   </FormControl>
                 )}
               />
             </div>
-            <div className="w-full">
+            <div className="mb-3 w-full">
               <div className="min-w-[150px] flex-1">
                 <InputLabel className="relative mb-2 text-sm">
-                  Type Company
+                  Department
                 </InputLabel>
                 <Controller
-                  name="TypeId"
+                  name="DepartmentId"
                   control={control}
                   defaultValue=""
-                  rules={{ required: "Type is required" }}
+                  rules={{ required: "Department is required" }}
                   render={({ field }) => (
-                    <FormControl error={Boolean(errors.TypeId)} fullWidth>
+                    <FormControl error={Boolean(errors.DepartmentId)} fullWidth>
                       <Select
                         {...field}
                         displayEmpty
@@ -354,19 +352,19 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
                           disableScrollLock: true,
                         }}
                         renderValue={(selected) => {
-                          return selected || <em>Select Type</em>;
+                          return selected || <em>Select Department</em>;
                         }}
                       >
                         <MenuItem value="" disabled>
-                          <em>Select Type</em>
+                          <em>Select Department</em>
                         </MenuItem>
-                        <MenuItem value="1">Type 1</MenuItem>
-                        <MenuItem value="2">Type 2</MenuItem>
-                        <MenuItem value="3">Type 3</MenuItem>
+                        <MenuItem value="1">Department 1</MenuItem>
+                        <MenuItem value="2">Department 2</MenuItem>
+                        <MenuItem value="3">Department 3</MenuItem>
                       </Select>
-                      {errors.TypeId && (
+                      {errors.DepartmentId && (
                         <p className="mt-2 text-sm text-red-500">
-                          {errors.TypeId.message}
+                          {errors.DepartmentId.message}
                         </p>
                       )}
                     </FormControl>
@@ -375,7 +373,23 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
               </div>
             </div>
           </div>
-
+          <InputLabel className="relative mb-2 text-sm">
+            Permision/ Rule
+          </InputLabel>
+          <div className="flex flex-col gap-4 md:flex-row">
+            <button className="flex h-12 w-full items-center justify-center border text-secondary">
+              Full Permision
+            </button>
+            <button className="flex h-12 w-full items-center justify-center border text-secondary">
+              Full Permision
+            </button>
+            <button className="flex h-12 w-full items-center justify-center border text-secondary">
+              Full Permision
+            </button>
+            <button className="flex h-12 w-full items-center justify-center border text-secondary">
+              Full Permision
+            </button>
+          </div>
           <DialogActions className="mt-4 flex flex-col items-center gap-5 md:flex-row md:items-start">
             <Button
               type="submit"
@@ -404,4 +418,4 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
   );
 };
 
-export default AddNewEmployer;
+export default AddNewEmployee;

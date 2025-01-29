@@ -13,7 +13,7 @@ const ChartEmployerReport: React.FC<ChartEmployersProps> = ({
       <div className="flex w-full items-center justify-between p-4">
         <div>
           <span className="mb-2 text-secondary">Statistics</span>
-          <h2>Employer Report</h2>
+          <h2>User Report</h2>
         </div>
         <NestedMenu />
       </div>

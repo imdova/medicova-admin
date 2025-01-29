@@ -1,10 +1,9 @@
 "use client";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import OvarviewJobs from "./OverviewJobs";
-import JobList from "./JobList";
-import SettingPage from "./setting";
 import { Add } from "@mui/icons-material";
+import EmployeesTableList from "@/components/UI/Tables/EmployeesTableList";
+import AddNewEmployee from "./AddNewEmployee";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -36,13 +35,12 @@ function aProps(index: number) {
   };
 }
 
-const JobsPage: React.FC = () => {
+const EmployessPage: React.FC = () => {
   const [value, setValue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
   // Function to open the modal
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -52,6 +50,7 @@ const JobsPage: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
   return (
     <div>
       <div className="box-content flex flex-col items-center justify-between gap-5 sm:flex-row md:items-start">
@@ -63,6 +62,7 @@ const JobsPage: React.FC = () => {
               borderRadius: "30px", // Rounded corners
               color: "white", // White text for selected tab
             },
+
             // General styles for all tabs
             ".css-o37pu0-MuiButtonBase-root-MuiTab-root": {
               minHeight: 0, // Remove extra height from tabs
@@ -72,10 +72,6 @@ const JobsPage: React.FC = () => {
             // Styles for the Tabs container
             ".css-5i28le-MuiTabs-root": {
               minHeight: 0, // Remove extra height from tabs container
-            },
-            // Styles for the Tabs container
-            ".MuiBox-root": {
-              padding: 0, // Remove extra height from tabs container
             },
           }}
         >
@@ -95,31 +91,34 @@ const JobsPage: React.FC = () => {
             }}
           >
             {/* Individual tabs */}
-            <Tab label="Overview" {...aProps(0)} /> {/* Tab 1 */}
-            <Tab label="Jobs List" {...aProps(1)} /> {/* Tab 2 */}
-            <Tab label="Setting" {...aProps(2)} /> {/* Tab 3 */}
+            <Tab label="Employees List" {...aProps(0)} /> {/* Tab 1 */}
+            <Tab label="Setting" {...aProps(1)} /> {/* Tab 2 */}
           </Tabs>
         </Box>
         <Button
+          onClick={handleOpenModal}
           className="flex w-full gap-2 rounded-md bg-primary p-2 sm:w-fit"
           size="small"
           variant="contained"
         >
           <Add />
-          <span className="text-xs">New Job</span>
+          <span className="text-xs">New Employee</span>
         </Button>
+        <AddNewEmployee
+          isModalOpen={isModalOpen}
+          handleCloseModal={handleCloseModal}
+        />
       </div>
       <CustomTabPanel value={value} index={0}>
-        <OvarviewJobs />
+        <div className="box-content">
+          <EmployeesTableList Filtring={true} />
+        </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <JobList />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <SettingPage />
+        Setting
       </CustomTabPanel>
     </div>
   );
 };
 
-export default JobsPage;
+export default EmployessPage;

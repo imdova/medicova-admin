@@ -1,8 +1,5 @@
 "use client";
 import { Typography } from "@mui/material";
-import NorthIcon from "@mui/icons-material/North";
-import SouthIcon from "@mui/icons-material/South";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RoomIcon from "@mui/icons-material/Room";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import icon1 from "@/icons/icon-1.png";
@@ -12,6 +9,12 @@ import Image from "next/image";
 import ChartEmployerReport from "@/components/UI/Charts/ChartEmployerReport";
 import CountiresTable from "@/components/UI/Tables/CountiresTable";
 import OverveiwJobTable from "@/components/UI/Tables/OverveiwJobTable";
+import {
+  LocationOnOutlined,
+  MoreVert,
+  North,
+  South,
+} from "@mui/icons-material";
 
 const OvarviewJobs: React.FC = () => {
   return (
@@ -27,7 +30,7 @@ const OvarviewJobs: React.FC = () => {
                 </span>
                 <h2 className="mb-2">2,420</h2>
                 <span className="flex items-center text-[8px] text-primary">
-                  <NorthIcon className="text-xs" />
+                  <North className="text-xs" />
                   20%
                 </span>
               </div>
@@ -42,7 +45,7 @@ const OvarviewJobs: React.FC = () => {
                 </span>
                 <h2 className="mb-2">1,517</h2>
                 <span className="flex items-center text-[8px] text-primary">
-                  <NorthIcon className="text-xs" />
+                  <North className="text-xs" />
                   20%
                 </span>
               </div>
@@ -57,7 +60,7 @@ const OvarviewJobs: React.FC = () => {
                 </span>
                 <h2 className="mb-2">2,420</h2>
                 <span className="flex items-center text-[8px] text-[#F81D1D]">
-                  <SouthIcon className="text-xs" />
+                  <South className="text-xs" />
                   10%
                 </span>
               </div>
@@ -78,7 +81,7 @@ const OvarviewJobs: React.FC = () => {
                 <span className="ml-1 text-xs text-secondary">(Revenue)</span>
               </Typography>
               <button>
-                <MoreVertIcon />
+                <MoreVert />
               </button>
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -93,7 +96,7 @@ const OvarviewJobs: React.FC = () => {
                   <div>
                     <Typography variant="subtitle1">Linkedin</Typography>
                     <p className="text-xs text-secondary">
-                      <RoomIcon className="text-lg" /> New Yourk ,us
+                      <LocationOnOutlined className="text-lg" /> New Yourk ,us
                     </p>
                   </div>
                 </div>
@@ -215,7 +218,7 @@ const OvarviewJobs: React.FC = () => {
                 <span className="ml-1 text-xs text-secondary">(Revenue)</span>
               </Typography>
               <button>
-                <MoreVertIcon />
+                <MoreVert />
               </button>
             </div>
             <CountiresTable />

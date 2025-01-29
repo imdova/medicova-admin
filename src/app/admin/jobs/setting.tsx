@@ -1,6 +1,6 @@
+"use client";
 import ExportButton from "@/components/UI/ExportButton";
 import PaginatorTemplateDemo from "@/components/UI/Tables/TreeDataCategorytable";
-
 import { Add, FilterAltOutlined, Search } from "@mui/icons-material";
 import { Box, Button, Tab, Tabs, TextField } from "@mui/material";
 import { useState } from "react";
