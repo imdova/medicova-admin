@@ -16,6 +16,7 @@
     "@mui/x-charts": "^7.24.0",
     "@mui/x-data-grid": "^7.24.1",
     "@mui/x-date-pickers": "^7.23.2",
+    "@mui/x-tree-view": "^7.24.1",
     "@reduxjs/toolkit": "^2.5.0",
     "@tiptap/extension-text-align": "^2.11.0",
     "@tiptap/extension-underline": "^2.11.0",

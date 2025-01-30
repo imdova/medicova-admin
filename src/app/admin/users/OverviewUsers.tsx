@@ -2,14 +2,12 @@
 import { Avatar, Badge, Rating, styled, Typography } from "@mui/material";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import icon1 from "@/icons/icon-1.png";
 import icon2 from "@/icons/icon-2.png";
 import icon3 from "@/icons/icon-3.png";
 import Image from "next/image";
 import CountiresTable from "@/components/UI/Tables/CountiresTable";
-import OverviewBillingTable from "@/components/UI/Tables/OverviewBillingTable";
-import { LocationOnOutlined } from "@mui/icons-material";
+import { LocationOnOutlined, MoreVert } from "@mui/icons-material";
 import ChartUserReport from "@/components/UI/Charts/ChartUserReport";
 import OverveiwUsersTable from "@/components/UI/Tables/OverveiwUsersTable";
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -103,7 +101,7 @@ const OvarviewUsers: React.FC = () => {
             <div className="mb-3 flex justify-between gap-8 border-b pb-2">
               <Typography>Top Candidates</Typography>
               <button>
-                <MoreVertIcon />
+                <MoreVert />
               </button>
             </div>
             <div>
@@ -220,7 +218,7 @@ const OvarviewUsers: React.FC = () => {
                 <span className="ml-1 text-xs text-secondary">(Revenue)</span>
               </Typography>
               <button>
-                <MoreVertIcon />
+                <MoreVert />
               </button>
             </div>
             <CountiresTable />

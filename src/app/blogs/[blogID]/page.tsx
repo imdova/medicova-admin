@@ -6,7 +6,6 @@ import { ShareOutlined } from "@mui/icons-material";
 import Footer from "@/assets/images/Footer.png";
 import {
   Avatar,
-  Button,
   Card,
   CardContent,
   CardMedia,
