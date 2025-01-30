@@ -27,8 +27,8 @@ export const commonLinks: CommonLinks = {
       url: "/admin",
     },
     {
-      title: "Admin",
-      url: "/admin",
+      title: "Blogs",
+      url: "/blogs",
     },
     {
       title: "Admin",

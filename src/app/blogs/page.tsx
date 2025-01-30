@@ -11,7 +11,7 @@ import { Avatar, Button } from "@mui/material";
 
 const BlogPage: React.FC = () => {
   return (
-    <>
+    <main className="bg-[#F7F7FC]">
       {/* Landing Section  */}
       <section className="mb-5">
         <div className="relative">
@@ -70,7 +70,7 @@ const BlogPage: React.FC = () => {
           </div>
         </div>
       </section>
-      <section className="py-16">
+      <section className="bg-[#F7F7FC] py-16">
         <div className="container mx-auto px-6 lg:max-w-[1170px]">
           <h1 className="my-2 mb-8 border-l-4 border-primary pl-2 font-sans text-2xl font-bold uppercase md:text-3xl">
             Latest Post
@@ -349,7 +349,7 @@ const BlogPage: React.FC = () => {
           </div>
         </div>
       </footer>
-    </>
+    </main>
   );
 };
 export default BlogPage;
