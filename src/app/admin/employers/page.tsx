@@ -1,11 +1,10 @@
 "use client";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import SubscriptionPlansPage from "./SubscriptionPlansPage";
-import OvarviewBilling from "./OverviewBilling";
-import TranactionsPage from "./TranactionsPage";
-import AddNewPlan from "./AddNewPlan";
+import { Add } from "@mui/icons-material";
+import EmployerList from "./EmployerList";
+import OvarviewPage from "./Ovarview";
+import AddNewEmployer from "./add-employer";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,13 +36,12 @@ function aProps(index: number) {
   };
 }
 
-const BillingPage: React.FC = () => {
+const EmployersPage: React.FC = () => {
   const [value, setValue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
   // Function to open the modal
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -53,6 +51,7 @@ const BillingPage: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
   return (
     <div>
       <div className="box-content flex flex-col items-center justify-between gap-5 sm:flex-row md:items-start">
@@ -64,6 +63,7 @@ const BillingPage: React.FC = () => {
               borderRadius: "30px", // Rounded corners
               color: "white", // White text for selected tab
             },
+
             // General styles for all tabs
             ".css-o37pu0-MuiButtonBase-root-MuiTab-root": {
               minHeight: 0, // Remove extra height from tabs
@@ -73,10 +73,6 @@ const BillingPage: React.FC = () => {
             // Styles for the Tabs container
             ".css-5i28le-MuiTabs-root": {
               minHeight: 0, // Remove extra height from tabs container
-            },
-            // Styles for the Tabs container
-            ".MuiBox-root": {
-              padding: 0, // Remove extra height from tabs container
             },
           }}
         >
@@ -97,39 +93,36 @@ const BillingPage: React.FC = () => {
           >
             {/* Individual tabs */}
             <Tab label="Overview" {...aProps(0)} /> {/* Tab 1 */}
-            <Tab label="Tranactions" {...aProps(1)} /> {/* Tab 2 */}
-            <Tab label="Plans" {...aProps(2)} /> {/* Tab 2 */}
-            <Tab label="Setting" {...aProps(3)} /> {/* Tab 3 */}
+            <Tab label="Employers List" {...aProps(1)} /> {/* Tab 2 */}
+            <Tab label="Setting" {...aProps(2)} /> {/* Tab 3 */}
           </Tabs>
         </Box>
         <Button
+          onClick={handleOpenModal}
           className="flex w-full gap-2 rounded-md bg-primary p-2 sm:w-fit"
           size="small"
           variant="contained"
-          onClick={handleOpenModal}
         >
-          <AddCircleOutlineIcon />
-          <span className="text-xs">New Plan</span>
+          <Add />
+          <span className="text-xs">New Employer</span>
         </Button>
-        <AddNewPlan
+
+        <AddNewEmployer
           isModalOpen={isModalOpen}
           handleCloseModal={handleCloseModal}
         />
       </div>
       <CustomTabPanel value={value} index={0}>
-        <OvarviewBilling />
+        <OvarviewPage />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <TranactionsPage />
+        <EmployerList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <SubscriptionPlansPage />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
-        setting
+        Setting
       </CustomTabPanel>
     </div>
   );
 };
 
-export default BillingPage;
+export default EmployersPage;

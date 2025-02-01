@@ -236,7 +236,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
           </Box>
         ) : (
           <Typography
-            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
+            className="mb-0 flex w-full items-center justify-center p-2 font-bold md:w-60"
             variant="h6"
             gutterBottom
           >
@@ -265,7 +265,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Country}
                 onChange={handleChangeCountry}
@@ -315,7 +315,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Country}
                 onChange={handleChangeCountry}
@@ -353,7 +353,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Country}
                 onChange={handleChangeCountry}
@@ -383,7 +383,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Country}
                 onChange={handleChangeCountry}

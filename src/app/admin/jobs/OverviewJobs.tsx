@@ -2,9 +2,9 @@
 import { Typography } from "@mui/material";
 import RoomIcon from "@mui/icons-material/Room";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import icon1 from "@/icons/icon-1.png";
-import icon2 from "@/icons/icon-2.png";
-import icon3 from "@/icons/icon-3.png";
+import icon1 from "@/icons/job-1.png";
+import icon2 from "@/icons/job-2.png";
+import icon3 from "@/icons/job-3.png";
 import Image from "next/image";
 import ChartEmployerReport from "@/components/UI/Charts/ChartEmployerReport";
 import CountiresTable from "@/components/UI/Tables/CountiresTable";
@@ -35,7 +35,7 @@ const OvarviewJobs: React.FC = () => {
                 </span>
               </div>
               <div>
-                <Image src={icon3} alt="" />
+                <Image src={icon1} alt="" />
               </div>
             </div>
             <div className="box-content flex items-center justify-between gap-3">
@@ -65,7 +65,7 @@ const OvarviewJobs: React.FC = () => {
                 </span>
               </div>
               <div>
-                <Image src={icon1} alt="" />
+                <Image src={icon3} alt="" />
               </div>
             </div>
           </div>

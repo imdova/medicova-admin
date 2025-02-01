@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -275,11 +275,19 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
                           disableScrollLock: true,
                         }}
                         renderValue={(selected) => {
-                          return selected || <em>Select Location</em>;
+                          return (
+                            selected || (
+                              <div className="text-sm text-gray-400">
+                                Select Location
+                              </div>
+                            )
+                          );
                         }}
                       >
                         <MenuItem value="" disabled>
-                          <em>Select Location</em>
+                          <div className="text-sm text-gray-400">
+                            Select Location
+                          </div>
                         </MenuItem>
                         <MenuItem value="1">Location 1</MenuItem>
                         <MenuItem value="2">Location 2</MenuItem>
@@ -316,11 +324,19 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
                         disableScrollLock: true,
                       }}
                       renderValue={(selected) => {
-                        return selected || <em>Select Sector</em>;
+                        return (
+                          selected || (
+                            <div className="text-sm text-gray-400">
+                              Select Sector
+                            </div>
+                          )
+                        );
                       }}
                     >
                       <MenuItem value="" disabled>
-                        <em>Select Sector</em>
+                        <div className="text-sm text-gray-400">
+                          Select Sector
+                        </div>
                       </MenuItem>
                       <MenuItem value="1">Sector 1</MenuItem>
                       <MenuItem value="2">Sector 2</MenuItem>
@@ -354,11 +370,19 @@ const AddNewEmployer: React.FC<AddNewEmployerProps> = ({
                           disableScrollLock: true,
                         }}
                         renderValue={(selected) => {
-                          return selected || <em>Select Type</em>;
+                          return (
+                            selected || (
+                              <div className="text-sm text-gray-400">
+                                Select Type
+                              </div>
+                            )
+                          );
                         }}
                       >
                         <MenuItem value="" disabled>
-                          <em>Select Type</em>
+                          <div className="text-sm text-gray-400">
+                            Select Type
+                          </div>
                         </MenuItem>
                         <MenuItem value="1">Type 1</MenuItem>
                         <MenuItem value="2">Type 2</MenuItem>

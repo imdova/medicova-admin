@@ -31,12 +31,8 @@ export const commonLinks: CommonLinks = {
       url: "/blogs",
     },
     {
-      title: "Admin",
-      url: "/admin",
-    },
-    {
-      title: "Admin",
-      url: "/admin",
+      title: "FAQ",
+      url: "/faq",
     },
   ],
 };

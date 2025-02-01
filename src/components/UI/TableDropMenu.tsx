@@ -1,14 +1,15 @@
 import {
+  AttachEmailOutlined,
   DeleteOutlineOutlined,
-  EditNoteOutlined,
+  DriveFileRenameOutlineOutlined,
   MoreVert,
+  SendOutlined,
+  WorkOutline,
 } from "@mui/icons-material";
 import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
-interface MoreVertButtonProps {
-  handleDelete: () => void; // Function type
-}
-const MoreVertButton: React.FC<MoreVertButtonProps> = ({ handleDelete }) => {
+
+const TableDropMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -39,11 +40,29 @@ const MoreVertButton: React.FC<MoreVertButtonProps> = ({ handleDelete }) => {
       >
         <MenuItem className="flex items-center gap-2" onClick={handleClose}>
           <ListItemIcon>
-            <EditNoteOutlined className="text-primary" />
+            <WorkOutline className="text-primary" />
           </ListItemIcon>
-          <ListItemText>Edit</ListItemText>
+          <ListItemText>View Job</ListItemText>
         </MenuItem>
-        <MenuItem className="flex items-center gap-2" onClick={handleDelete}>
+        <MenuItem className="flex items-center gap-2">
+          <ListItemIcon>
+            <DriveFileRenameOutlineOutlined className="text-primary" />
+          </ListItemIcon>
+          <ListItemText> Edit Profile</ListItemText>
+        </MenuItem>
+        <MenuItem className="flex items-center gap-2">
+          <ListItemIcon>
+            <SendOutlined className="text-primary" />
+          </ListItemIcon>
+          <ListItemText>Send Massege</ListItemText>
+        </MenuItem>
+        <MenuItem className="flex items-center gap-2">
+          <ListItemIcon>
+            <AttachEmailOutlined className="text-primary" />
+          </ListItemIcon>
+          <ListItemText>Send Email</ListItemText>
+        </MenuItem>
+        <MenuItem className="flex items-center gap-2">
           <ListItemIcon>
             <DeleteOutlineOutlined className="text-primary" />
           </ListItemIcon>
@@ -53,4 +72,4 @@ const MoreVertButton: React.FC<MoreVertButtonProps> = ({ handleDelete }) => {
     </div>
   );
 };
-export default MoreVertButton;
+export default TableDropMenu;

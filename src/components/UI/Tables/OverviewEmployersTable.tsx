@@ -23,6 +23,7 @@ import { MoreVert, Tune } from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import TableDropMenu from "../TableDropMenu";
 
 interface OverviewEmployersTableProps {
   Filtring?: boolean; // `Filtring` is optional
@@ -135,9 +136,7 @@ const columns: GridColDef[] = [
     renderCell: () => (
       <div className="flex items-center gap-2">
         <Switch />
-        <button>
-          <MoreVert />
-        </button>
+        <TableDropMenu />
       </div>
     ),
   },
@@ -204,17 +203,16 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
 
+  // values of Filters inputs
+  const [Country, setCountry] = useState("");
+  const [Sector, setSector] = useState("");
+  const [Type, setType] = useState("");
+  const [Status, setStatus] = useState("");
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  //   values of Filters inputs
-
-  const [Country, setCountry] = useState("");
-
-  const handleChangeCountry = (event: SelectChangeEvent) => {
-    setCountry(event.target.value as string);
-  };
   return (
     <>
       {/* start content table Employers  */}
@@ -271,16 +269,22 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Country}
-                onChange={handleChangeCountry}
+                onChange={(e) => setCountry(e.target.value)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Country")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Egypt
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Egypt
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Egypt
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -321,16 +325,22 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={Sector}
+                onChange={(e) => setSector(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "Sector")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
+                  Sector
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
+                  Sector
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
+                  Sector
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -359,16 +369,22 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={Type}
+                onChange={(e) => setType(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "Type")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Type"}>
+                  Type
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Type"}>
+                  Type
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Type"}>
+                  Type
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -389,16 +405,22 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={Status}
+                onChange={(e) => setStatus(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "Status")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Status"}>
+                  Status
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Status"}>
+                  Status
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Status"}>
+                  Status
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -440,6 +462,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
                   "& .MuiInputBase-root": {
                     pl: 3,
                     overflow: "hidden",
+                    fontSize: 11,
                   },
                   ".css-10o2lyd-MuiStack-root": {
                     width: "100%",

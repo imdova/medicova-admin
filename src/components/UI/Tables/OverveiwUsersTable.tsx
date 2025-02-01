@@ -6,7 +6,6 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  Switch,
   Tab,
   Tabs,
   Typography,
@@ -23,7 +22,7 @@ import { MoreVert, Tune } from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { idID } from "@mui/material/locale";
+import TableDropMenu from "../TableDropMenu";
 
 // handel function status of Employers
 const handleState = (state: StateType) => {
@@ -135,9 +134,7 @@ const columns: GridColDef[] = [
     flex: 1,
     renderCell: () => (
       <div className="flex items-center gap-2">
-        <button>
-          <MoreVert />
-        </button>
+        <TableDropMenu />
       </div>
     ),
   },

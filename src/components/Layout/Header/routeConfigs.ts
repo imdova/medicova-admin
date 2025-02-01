@@ -15,6 +15,7 @@ export const routeConfigs: RouteConfig[] = [
   { pattern: "/", headerType: "transparent", linksType: "default" },
   { pattern: "/admin/*", headerType: "full", linksType: "userType" },
   { pattern: "/blogs/*", headerType: "transparent", linksType: "default" },
+  { pattern: "/faq/*", headerType: "transparent", linksType: "default" },
 ];
 
 // DynamicHeader.tsx

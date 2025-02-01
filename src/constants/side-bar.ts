@@ -31,7 +31,7 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 18,
       icon: HomeOutlined,
       label: "Dashboard",
-      path: "/admin",
+      path: "/admin/employers",
     },
     {
       id: 19,
@@ -50,7 +50,7 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 21,
       icon: PeopleOutline,
       label: "Medicova Employees",
-      path: "#",
+      path: "/admin/employees",
     },
     {
       id: 22,
@@ -62,7 +62,7 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 23,
       icon: PeopleOutline,
       label: "Employers",
-      path: "#",
+      path: "/admin/employers",
     },
     {
       id: 24,

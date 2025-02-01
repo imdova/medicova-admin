@@ -76,15 +76,15 @@ const BlogPage: React.FC = () => {
             Latest Post
           </h1>
           {/* blog Cards Grid  */}
-          <div className="flex flex-col justify-between gap-5 md:flex-row">
+          <div className="flex flex-col justify-between gap-6 md:flex-row">
             <div>
               <div className="mb-4 grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
+                <CardBlog BlogLink="/blogs/1" />
+                <CardBlog BlogLink="/blogs/1" />
+                <CardBlog BlogLink="/blogs/1" />
+                <CardBlog BlogLink="/blogs/1" />
+                <CardBlog BlogLink="/blogs/1" />
+                <CardBlog BlogLink="/blogs/1" />
               </div>
               <div className="flex w-full justify-center">
                 <Button variant="contained" className="">
@@ -92,7 +92,7 @@ const BlogPage: React.FC = () => {
                 </Button>
               </div>
             </div>
-            <div className="w-full md:w-[700px]">
+            <div className="w-full md:w-[1000px]">
               {/* Search Content  */}
               <div className="mb-4 box-content">
                 <h1 className="text-xl">Search</h1>

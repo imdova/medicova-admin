@@ -5,14 +5,12 @@ import {
   FormControl,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Switch,
   Tab,
   Tabs,
   Typography,
 } from "@mui/material";
 
-import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
 import { useState } from "react";
 import { StateType } from "@/types";
@@ -22,13 +20,13 @@ import { DateField } from "@mui/x-date-pickers/DateField";
 import {
   FormatListBulleted,
   GridViewOutlined,
-  MoreVert,
   Tune,
 } from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import CardEmployees from "../CardEmployees";
+import TableDropMenu from "../TableDropMenu";
 
 // handel function status of Employers
 const handleState = (state: StateType) => {
@@ -135,9 +133,7 @@ const columns: GridColDef[] = [
     renderCell: () => (
       <div className="flex items-center gap-2">
         <Switch />
-        <button>
-          <MoreVert />
-        </button>
+        <TableDropMenu />
       </div>
     ),
   },
@@ -311,16 +307,22 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Role}
                 onChange={(e) => setRole(e.target.value as string)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Role")}
               >
-                <MenuItem value={"Egypt"}>Role</MenuItem>
-                <MenuItem value={"Egypt"}>Role</MenuItem>
-                <MenuItem value={"Egypt"}>Role</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Role
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Role
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Role
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -346,16 +348,22 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Department}
                 onChange={(e) => setDepartment(e.target.value as string)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Department")}
               >
-                <MenuItem value={"Egypt"}>Department</MenuItem>
-                <MenuItem value={"Egypt"}>Department</MenuItem>
-                <MenuItem value={"Egypt"}>Department</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Department
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Department
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Department
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -395,16 +403,22 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Title}
                 onChange={(e) => setTitle(e.target.value as string)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Title")}
               >
-                <MenuItem value={"Egypt"}>Title</MenuItem>
-                <MenuItem value={"Egypt"}>Title</MenuItem>
-                <MenuItem value={"Egypt"}>Title</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Title
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Title
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Title
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -425,16 +439,22 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
                 />
               </svg>
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Status}
                 onChange={(e) => setStatus(e.target.value as string)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Status")}
               >
-                <MenuItem value={"Status"}>Status</MenuItem>
-                <MenuItem value={"Status"}>Status</MenuItem>
-                <MenuItem value={"Status"}>Status</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Status"}>
+                  Status
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Status"}>
+                  Status
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Status"}>
+                  Status
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>

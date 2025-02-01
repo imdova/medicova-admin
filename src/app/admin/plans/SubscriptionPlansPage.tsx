@@ -441,61 +441,6 @@ const SubscriptionPlansPage: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <Typography
-        variant="h4"
-        textAlign="center"
-        color={"#000B33"}
-        sx={{ mb: 2, fontWeight: 700 }}
-      >
-        Try our 100% free Plan
-      </Typography>
-
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: { xs: "column", md: "row" },
-          gap: 2,
-          mt: 2,
-          padding: 2.5,
-          border: "2px solid #4CAF50",
-          width: "60%",
-          margin: "0 auto",
-        }}
-      >
-        {/* Text with green border */}
-        <Typography
-          variant="subtitle1"
-          sx={{
-            padding: "8px 16px",
-            borderRadius: "10px",
-            fontWeight: 500,
-            textAlign: "center",
-            backgroundColor: "#F9FFF9",
-            color: "#000",
-          }}
-        >
-          Get started with our free plan and make 10 lookups per month
-          absolutely free!
-        </Typography>
-
-        {/* Signup for Free button */}
-        <Button
-          sx={{
-            backgroundColor: "#4CAF50",
-            color: "#fff",
-            fontWeight: "bold",
-            px: 3,
-            py: 1,
-            "&:hover": {
-              backgroundColor: "#45A049",
-            },
-          }}
-        >
-          Signup for Free
-        </Button>
-      </Box>
       <PlanSettingTable />
     </Box>
   );
