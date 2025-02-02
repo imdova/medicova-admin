@@ -52,37 +52,59 @@ const UserAlertDrop: React.FC = () => {
             vertical: "top",
             horizontal: "left",
           }}
+          slotProps={{
+            paper: {
+              sx: {
+                width: "350px", // Adjust menu width
+                maxHeight: "400px", // Set max height
+                overflowY: "auto", // Enable scroll if content overflows
+                borderRadius: "8px", // Rounded corners
+                padding: "8px", // Add inner spacing
+                boxShadow: 3, // Add subtle shadow
+              },
+            },
+          }}
         >
-          {notifications.map((alert) => (
-            <MenuItem key={alert.title} onClick={handleCloseAlert}>
-              <Link
-                className="flex items-center gap-2 p-1 hover:bg-hover-link"
-                href="#"
+          {notifications.length > 0 ? (
+            notifications.map((alert) => (
+              <MenuItem
+                key={alert.title}
+                onClick={handleCloseAlert}
+                sx={{ padding: "8px 12px" }}
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary">
-                  {alert.icon &&
-                    React.createElement(alert.icon, {
-                      style: { color: "white", fontSize: "15px" },
-                    })}
-                </div>
+                <Link
+                  href="#"
+                  className="flex w-full items-center gap-3 p-2 hover:bg-hover-link"
+                >
+                  {/* Icon Container */}
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e6f7f2] p-4">
+                    {alert.icon &&
+                      React.createElement(alert.icon, {
+                        style: { color: "#2ba149", fontSize: "15px" },
+                      })}
+                  </div>
 
-                <div className="flex flex-col">
-                  <div className="text-xs">{alert.title}</div>
-                  <div className="text-xs text-secondary">
-                    {alert.description}
+                  {/* Notification Details */}
+                  <div className="flex-1">
+                    <div className="text-sm font-medium">{alert.title}</div>
+                    <p className="max-w-[250px] truncate text-xs text-secondary">
+                      {alert.description}
+                    </p>
+                    <div className="text-[10px] text-gray-500">
+                      {getFullLastEdit(alert.timeStamp)}
+                    </div>
                   </div>
-                  <div className="text-[10px] text-secondary">
-                    {getFullLastEdit(alert.timeStamp)}
-                  </div>
-                </div>
-              </Link>
+                </Link>
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem
+              disabled
+              sx={{ justifyContent: "center", fontSize: "12px", color: "gray" }}
+            >
+              No new notifications
             </MenuItem>
-          ))}
-          <div className="mt-3 flex w-full justify-center px-2">
-            <Button className="w-full" variant="outlined">
-              Veiw All
-            </Button>
-          </div>
+          )}
         </Menu>
       </div>
     </>

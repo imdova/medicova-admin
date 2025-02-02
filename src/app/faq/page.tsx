@@ -13,6 +13,7 @@ import Landing from "@/assets/images/FAQ.jpg";
 import { Search, ShortcutOutlined } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
+
 const FAQPage: React.FC = () => {
   const [value, setValue] = useState(0);
 
@@ -22,8 +23,8 @@ const FAQPage: React.FC = () => {
 
   return (
     <main className="bg-[#F8FAFC]">
+      {/* Landing Section  */}
       <section className="mb-10">
-        {/* Landing Section  */}
         <div className="relative">
           <Image
             className="z-0 min-h-[300px] bg-primary"
@@ -226,9 +227,12 @@ const FAQPage: React.FC = () => {
                   if you have some additional question, please contact our Help
                   Center
                 </p>
-                <Button variant="contained" className="flex gap-2 rounded-full">
+                <Button
+                  variant="contained"
+                  endIcon={<ShortcutOutlined />}
+                  className="rounded-full"
+                >
                   Email
-                  <ShortcutOutlined />
                 </Button>
               </div>
             </div>

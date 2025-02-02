@@ -1,27 +1,16 @@
-import { StateType } from "@/types";
-import {
-  EmailOutlined,
-  LocalPhoneOutlined,
-  MoreVert,
-} from "@mui/icons-material";
-import {
-  Avatar,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { EmailOutlined, LocalPhoneOutlined } from "@mui/icons-material";
+import { Avatar, Card, CardActionArea, CardContent } from "@mui/material";
+import TableDropMenu from "./TableDropMenu";
+
+// Define the type for Status of Employers
+type StateType = "Active" | "On leave" | "Remote";
 
 // handel function status of Employers
 const handleState = (state: StateType) => {
   const stateStyles: Record<StateType, string> = {
-    Active:
-      "bg-green-50 text-green-700 ring-green-600/20 dark:border-green-500 dark:bg-inputDark dark:text-green-500",
-    Inactive:
-      "bg-red-50 text-red-700 ring-red-600/10 dark:border-red-500 dark:bg-inputDark dark:text-red-500",
-    Processing:
-      "bg-orange-50 text-orange-700 ring-orange-600/10 dark:border-orange-500 dark:bg-inputDark dark:text-orange-500",
+    Active: "bg-green-50 text-green-700 ring-green-600/20",
+    "On leave": "bg-[#EEF4FE] text-[#1F74EC] ring-[#1F74EC]-600/20  ",
+    Remote: "bg-[#F3EEFE] text-[#4E1BD9] ring-[#4E1BD9]-600/20 ",
   };
 
   return (
@@ -52,13 +41,11 @@ const CardEmployees: React.FC = () => {
               </label>
             </div>
             <div className="flex items-center gap-3">
-              <div>{handleState("Active")}</div>
-              <button>
-                <MoreVert />
-              </button>
+              <div>{handleState("Remote")}</div>
+              <TableDropMenu />
             </div>
           </div>
-          <div className="mb-3 flex h-full items-center justify-start gap-2">
+          <div className="mb-5 flex h-full items-center justify-start gap-2">
             <Avatar
               src="https://s3-alpha-sig.figma.com/img/3d5c/b72f/ae1e058c2ed75ab981a9f8bb62e96a13?Expires=1739145600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=a18VE~FGFT~v8D9-O~88JSK~y9SE~MefKeuzvSlS0w4mGSL22pIspT3NCxcrlQRWIA7Jm9l5T06ss0sTIxZvYVNnjXZsXNS6-vJjjzvlei5he8HJx4rRgyI3A7IhiSRow90EBIWTjk-SHnh0pZ2M6UurtH5ydxPtGDJyLGaG8vjZo86gmxyeJoYXYIHXsyn5~ILsGVMSiXohp5M0oSdpiR4TTYuPpycTV-qtUMqaq9bjDVZNHP9hfy5Ekip9IInRsI8MfB5jJJ-GCtMirfH0lO2s8IX9GjvtB1aSEuV7rcdHolzjeWoLX3KQeTFwAbDCkNZ5NWDVsYYEvhw91DyaJw__"
               alt="Ralph Edwards"
@@ -69,19 +56,19 @@ const CardEmployees: React.FC = () => {
               <p className="text-xs leading-none">Project Manager</p>
             </div>
           </div>
-          <div className="mb-4 flex justify-between">
+          <div className="mb-5 flex justify-between">
             <div>
-              <div className="text-sm uppercase text-secondary">Department</div>
+              <div className="text-xs uppercase text-secondary">Department</div>
               <div className="text-xs">Sales & Markiting</div>
             </div>
             <div>
-              <div className="text-sm uppercase text-secondary">
+              <div className="text-xs uppercase text-secondary">
                 Date of joining
               </div>
               <div className="text-xs">Aug10, 2022</div>
             </div>
           </div>
-          <div className="mb-4 rounded-lg bg-gray-100">
+          <div className="mb-5 rounded-lg bg-gray-100">
             <div className="flex items-center gap-2 border-b p-3 text-xs">
               <span>
                 <EmailOutlined />
@@ -100,7 +87,7 @@ const CardEmployees: React.FC = () => {
               Edit
             </button>
             <button className="w-full rounded-md bg-primary px-5 py-1 text-white">
-              Edit
+              View
             </button>
           </div>
         </CardContent>

@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   FormControl,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -132,12 +133,12 @@ const columns: GridColDef[] = [
     renderCell: () => (
       <div className="flex h-full items-center gap-2">
         <Switch />
-        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-[#0061C9] text-white hover:bg-black">
+        <IconButton className="rounded-md bg-[#0061C9] text-white hover:bg-black">
           <VisibilityOutlined />
-        </button>
-        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-primary text-white hover:bg-black">
+        </IconButton>
+        <IconButton className="rounded-md bg-primary text-white hover:bg-black">
           <VerticalAlignBottomOutlined />
-        </button>
+        </IconButton>
       </div>
     ),
   },

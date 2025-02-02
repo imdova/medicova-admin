@@ -34,6 +34,15 @@ export const commonLinks: CommonLinks = {
       title: "FAQ",
       url: "/faq",
     },
+
+    {
+      title: "About Us",
+      url: "/about_us",
+    },
+    {
+      title: "Contact Us",
+      url: "/contact_us",
+    },
   ],
 };
 

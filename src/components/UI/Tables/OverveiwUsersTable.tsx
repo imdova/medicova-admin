@@ -5,7 +5,6 @@ import {
   FormControl,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Tab,
   Tabs,
   Typography,
@@ -14,7 +13,6 @@ import {
 import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
 import { useState } from "react";
-import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateField } from "@mui/x-date-pickers/DateField";
@@ -23,28 +21,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import TableDropMenu from "../TableDropMenu";
-
-// handel function status of Employers
-const handleState = (state: StateType) => {
-  const stateStyles: Record<StateType, string> = {
-    Active:
-      "bg-green-50 text-green-700 ring-green-600/20 dark:border-green-500 dark:bg-inputDark dark:text-green-500",
-    Inactive:
-      "bg-red-50 text-red-700 ring-red-600/10 dark:border-red-500 dark:bg-inputDark dark:text-red-500",
-    Processing:
-      "bg-orange-50 text-orange-700 ring-orange-600/10 dark:border-orange-500 dark:bg-inputDark dark:text-orange-500",
-  };
-
-  return (
-    <span
-      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
-        stateStyles[state]
-      }`}
-    >
-      {state}
-    </span>
-  );
-};
 
 const columns: GridColDef[] = [
   {
@@ -204,15 +180,14 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
 
+  // values of Filters inputs
+  const [location, setLocation] = useState("");
+  const [category, setCategory] = useState("");
+  const [sepecialty, setSepecialty] = useState("");
+  const [education, setEducation] = useState("");
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-  };
-
-  //   values of Filters inputs
-  const [Country, setCountry] = useState("");
-
-  const handleChangeCountry = (event: SelectChangeEvent) => {
-    setCountry(event.target.value as string);
   };
   return (
     <>
@@ -265,22 +240,69 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M12.9995 0C8.03688 0 3.99951 4.12148 3.99951 9.1875C3.99951 10.8091 4.41921 12.4034 5.21318 13.7979C5.39828 14.123 5.60519 14.4398 5.82826 14.7396L12.6085 24H13.3905L20.1708 14.7397C20.3938 14.4398 20.6007 14.1231 20.7858 13.7979C21.5798 12.4034 21.9995 10.8091 21.9995 9.1875C21.9995 4.12148 17.9621 0 12.9995 0ZM12.9995 12.2344C11.3538 12.2344 10.0148 10.8675 10.0148 9.1875C10.0148 7.50745 11.3538 6.14062 12.9995 6.14062C14.6453 6.14062 15.9842 7.50745 15.9842 9.1875C15.9842 10.8675 14.6453 12.2344 12.9995 12.2344Z"
+                  d="M12.8457 0C7.88308 0 3.8457 4.12148 3.8457 9.1875C3.8457 10.8091 4.2654 12.4034 5.05937 13.7979C5.24447 14.123 5.45138 14.4398 5.67445 14.7396L12.4547 24H13.2367L20.017 14.7397C20.24 14.4398 20.4469 14.1231 20.632 13.7979C21.426 12.4034 21.8457 10.8091 21.8457 9.1875C21.8457 4.12148 17.8083 0 12.8457 0ZM12.8457 12.2344C11.1999 12.2344 9.86101 10.8675 9.86101 9.1875C9.86101 7.50745 11.1999 6.14062 12.8457 6.14062C14.4915 6.14062 15.8304 7.50745 15.8304 9.1875C15.8304 10.8675 14.4915 12.2344 12.8457 12.2344Z"
                   fill="#2BA149"
                 />
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Country")}
+                renderValue={(value) => (value ? value : "location")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Egypt
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Egypt
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Egypt
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Box sx={{ width: "100%" }}>
+            <FormControl className="relative" fullWidth>
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary"
+                width="17"
+                height="17"
+                viewBox="0 0 22 22"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M15.0755 1H18.3421C19.6937 1 20.79 2.1059 20.79 3.47018V6.7641C20.79 8.12735 19.6937 9.23429 18.3421 9.23429H15.0755C13.723 9.23429 12.6266 8.12735 12.6266 6.7641V3.47018C12.6266 2.1059 13.723 1 15.0755 1ZM3.23896 1H6.50453C7.85707 1 8.95345 2.1059 8.95345 3.47018V6.7641C8.95345 8.12735 7.85707 9.23429 6.50453 9.23429H3.23896C1.88642 9.23429 0.790039 8.12735 0.790039 6.7641V3.47018C0.790039 2.1059 1.88642 1 3.23896 1ZM3.23896 12.7657H6.50453C7.85707 12.7657 8.95345 13.8716 8.95345 15.2369V18.5298C8.95345 19.8941 7.85707 21 6.50453 21H3.23896C1.88642 21 0.790039 19.8941 0.790039 18.5298V15.2369C0.790039 13.8716 1.88642 12.7657 3.23896 12.7657ZM15.0755 12.7657H18.3421C19.6937 12.7657 20.79 13.8716 20.79 15.2369V18.5298C20.79 19.8941 19.6937 21 18.3421 21H15.0755C13.723 21 12.6266 19.8941 12.6266 18.5298V15.2369C12.6266 13.8716 13.723 12.7657 15.0755 12.7657Z"
+                  stroke="#2BA149"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <Select
+                className="pl-6 text-xs md:text-sm"
+                id="demo-simple-select"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                displayEmpty
+                renderValue={(value) => (value ? value : "category")}
+              >
+                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
+                  Sector
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
+                  Sector
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
+                  Sector
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -290,85 +312,34 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
                 className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary"
                 width="18"
                 height="18"
-                viewBox="0 0 27 27"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clip-path="url(#clip0_30_6145)">
-                  <path
-                    d="M11.3911 2.74219C11.3881 2.88392 11.3852 3.02565 11.3821 3.17167C11.3532 4.66756 11.3427 6.16284 11.3422 7.659C11.3411 8.21526 11.3327 8.77002 11.321 9.32631C11.2475 12.9735 11.5161 15.4634 13.8143 18.3613C14.2804 18.9636 14.6637 19.5983 15.0578 20.25C15.2568 20.569 15.2568 20.569 15.4599 20.8944C15.5877 21.0994 15.7155 21.3044 15.8472 21.5156C16.1157 21.9463 16.3843 22.377 16.653 22.8076C16.7672 22.9909 16.8815 23.1742 16.9992 23.363C17.2338 23.7351 17.4753 24.1028 17.7192 24.4688C17.7324 24.8906 17.7324 24.8906 17.5083 25.3125C15.0664 26.5804 11.6306 26.568 9.01806 25.8003C8.60946 25.6488 8.20442 25.4871 7.80517 25.3125C7.63577 25.2385 7.46637 25.1646 7.29184 25.0884C4.69198 23.7907 2.37547 21.2751 1.26034 18.5988C0.252241 15.3113 0.50702 11.9162 2.10986 8.85938C3.87843 5.86471 6.24093 3.97311 9.52234 2.88226C10.1652 2.73297 10.7335 2.73251 11.3911 2.74219ZM4.85369 6.91892C2.69577 9.15837 1.81071 12.1099 1.82178 15.1437C1.86946 17.4083 2.64377 19.0974 4.0083 20.8828C4.11896 21.0283 4.22963 21.1738 4.34365 21.3236C5.95421 23.298 8.21459 24.728 10.7583 25.1016C11.4177 25.1362 12.0756 25.1406 12.7358 25.1411C12.9969 25.145 12.9969 25.145 13.2632 25.1489C14.3397 25.1515 15.2229 25.0274 16.2427 24.6797C15.9428 23.8628 15.5594 23.1573 15.1006 22.4187C14.9573 22.187 14.814 21.9554 14.6664 21.7167C14.5151 21.4739 14.3638 21.2311 14.2124 20.9883C13.334 19.571 13.334 19.571 13.1145 19.2054C12.7618 18.6225 12.4012 18.0867 11.9665 17.5612C10.1343 15.1942 10.5245 12.2796 10.5474 9.42627C10.5457 8.87983 10.5432 8.3334 10.5399 7.78697C10.5337 6.45684 10.5368 5.12698 10.5474 3.79688C8.48694 3.79688 6.29185 5.61894 4.85369 6.91892Z"
-                    fill="#2BA149"
-                  />
-                  <path
-                    d="M25.946 11.1797C26.952 13.9125 26.2328 17.6629 25.1023 20.25C24.0491 22.469 22.1136 24.9611 19.842 26.0244C19.6267 26.0897 19.6267 26.0897 19.407 26.1562C18.8699 25.6625 18.5061 25.1374 18.124 24.5174C17.9983 24.3146 17.8725 24.1118 17.743 23.9029C17.6091 23.685 17.4751 23.4672 17.3371 23.2427C16.4856 21.8636 15.6324 20.4873 14.7449 19.131C14.5409 18.8177 14.5409 18.8177 14.3328 18.4981C14.0726 18.0996 13.8106 17.7024 13.5466 17.3065C13.3709 17.0362 13.3709 17.0362 13.1917 16.7605C13.0363 16.5255 13.0363 16.5255 12.8778 16.2857C12.6205 15.7435 12.6147 15.3587 12.657 14.7656C15.7882 13.7001 18.925 12.6497 22.0868 11.6779C22.3653 11.592 22.6436 11.505 22.9216 11.4171C23.3101 11.2946 23.6998 11.176 24.0896 11.0577C24.3111 10.9894 24.5327 10.9211 24.7609 10.8507C25.3132 10.7578 25.3132 10.7578 25.946 11.1797ZM23.645 12.3093C23.4296 12.3769 23.2143 12.4445 22.9924 12.5141C22.7593 12.589 22.5261 12.6639 22.2859 12.7411C22.0477 12.8163 21.8096 12.8915 21.5642 12.969C20.8007 13.2105 20.0379 13.4541 19.2751 13.6977C18.7588 13.8614 18.2425 14.025 17.726 14.1884C16.4577 14.5901 15.1899 14.9936 13.9226 15.3984C14.1205 15.7645 14.3188 16.1304 14.5172 16.4961C14.6276 16.6999 14.738 16.9036 14.8517 17.1136C15.3399 17.9915 15.8722 18.8377 16.4143 19.6831C16.5226 19.8533 16.6309 20.0234 16.7424 20.1988C17.0672 20.7086 17.3931 21.2177 17.7195 21.7266C17.8187 21.8815 17.9179 22.0364 18.0201 22.196C18.5512 23.0249 19.0837 23.8528 19.6179 24.6797C22.0819 23.5266 23.6552 21.022 24.5749 18.5361C24.6868 18.1954 24.7931 17.8527 24.8913 17.5078C24.9472 17.3165 24.9472 17.3165 25.0042 17.1213C25.1148 16.6057 25.1261 16.1398 25.1229 15.6127C25.1222 15.4155 25.1215 15.2184 25.1208 15.0153C25.119 14.8111 25.1173 14.6069 25.1155 14.3965C25.1145 14.189 25.1136 13.9815 25.1126 13.7678C25.1101 13.2566 25.1066 12.7455 25.1023 12.2344C24.5144 11.9404 24.2658 12.112 23.645 12.3093Z"
-                    fill="#2BA149"
-                  />
-                  <path
-                    d="M12.2349 0.84375C16.3703 0.84375 19.2791 1.73801 22.2931 4.56812C23.6992 5.99077 24.8214 7.60563 25.5239 9.49219C25.4543 9.70102 25.3847 9.90984 25.313 10.125C24.9121 10.3183 24.9121 10.3183 24.3761 10.4818C24.1734 10.5451 23.9706 10.6085 23.7617 10.6738C23.4267 10.7741 23.4267 10.7741 23.085 10.8765C22.6068 11.0239 22.1286 11.1714 21.6504 11.3189C21.3925 11.3976 21.1345 11.4762 20.8688 11.5572C19.9849 11.8278 19.1046 12.1096 18.2243 12.3918C17.7668 12.5376 17.3093 12.6833 16.8517 12.8289C16.5522 12.9244 16.2528 13.0203 15.9536 13.1167C15.5307 13.2525 15.1073 13.3864 14.6837 13.5198C14.44 13.5974 14.1963 13.675 13.9452 13.755C13.2896 13.9219 13.2896 13.9219 12.2349 13.9219C12.2349 9.60609 12.2349 5.29031 12.2349 0.84375ZM13.0786 1.89844C13.0786 5.44852 13.0786 8.99859 13.0786 12.6562C14.5221 12.3675 15.8833 12.054 17.2784 11.6156C17.4669 11.5568 17.6554 11.498 17.8496 11.4375C18.2434 11.3142 18.6371 11.1902 19.0305 11.0657C19.6351 10.8751 20.2408 10.6885 20.8466 10.502C21.2305 10.3812 21.6144 10.2602 21.9981 10.139C22.1796 10.0836 22.3611 10.0282 22.548 9.97115C22.7975 9.89091 22.7975 9.89091 23.0521 9.80906C23.2723 9.74 23.2723 9.74 23.4969 9.66955C23.9148 9.50127 23.9148 9.50127 24.0474 8.85938C22.7154 5.8357 20.095 3.71071 17.0732 2.53125C15.6379 2.02027 14.6696 1.89844 13.0786 1.89844Z"
-                    fill="#2BA149"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_30_6145">
-                    <rect
-                      width="27"
-                      height="27"
-                      fill="white"
-                      transform="translate(0.000488281)"
-                    />
-                  </clipPath>
-                </defs>
-              </svg>
-
-              <Select
-                className="pl-6"
-                id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
-                displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
-              >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box sx={{ width: "100%" }}>
-            <FormControl className="relative" fullWidth>
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary"
-                width="20"
-                height="20"
-                viewBox="0 0 32 32"
+                viewBox="0 0 23 20"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M8 5C7.73478 5 7.48043 5.10536 7.29289 5.29289C7.10536 5.48043 7 5.73478 7 6V26C7 26.2652 7.10536 26.5196 7.29289 26.7071C7.48043 26.8946 7.73478 27 8 27C8.26522 27 8.51957 26.8946 8.70711 26.7071C8.89464 26.5196 9 26.2652 9 26V6C9 5.73478 8.89464 5.48043 8.70711 5.29289C8.51957 5.10536 8.26522 5 8 5Z"
-                  fill="#2BA149"
-                />
-                <path
-                  d="M22 17H14C12.3431 17 11 18.3431 11 20V22C11 23.6569 12.3431 25 14 25H22C23.6569 25 25 23.6569 25 22V20C25 18.3431 23.6569 17 22 17Z"
-                  fill="#2BA149"
-                />
-                <path
-                  d="M18 7H14C12.3431 7 11 8.34315 11 10V12C11 13.6569 12.3431 15 14 15H18C19.6569 15 21 13.6569 21 12V10C21 8.34315 19.6569 7 18 7Z"
-                  fill="#2BA149"
+                  d="M19.2598 7.3V17.2C19.2598 17.2 14.3831 19 11.7598 19C9.13643 19 4.25977 17.2 4.25977 17.2V7.3M21.7598 5.5L11.7598 1L1.75977 5.5L11.7598 10.9L21.7598 5.5ZM21.7598 5.5V13.6"
+                  stroke="#2BA149"
+                  stroke-width="1.5"
                 />
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={sepecialty}
+                onChange={(e) => setSepecialty(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "sepecialty")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Type"}>
+                  Type
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Type"}>
+                  Type
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Type"}>
+                  Type
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -389,16 +360,22 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={education}
+                onChange={(e) => setEducation(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "education")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"education"}>
+                  education
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"education"}>
+                  education
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"education"}>
+                  education
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -440,6 +417,7 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
                   "& .MuiInputBase-root": {
                     pl: 3,
                     overflow: "hidden",
+                    fontSize: 11,
                   },
                   ".css-10o2lyd-MuiStack-root": {
                     width: "100%",

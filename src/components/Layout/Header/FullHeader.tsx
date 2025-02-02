@@ -3,7 +3,6 @@ import { BaseHeaderProps } from "@/types";
 import Link from "next/link";
 import { getNavLinks } from "./routeConfigs";
 import HeaderAction from "./HeaderAction";
-import LanguageIcon from "@mui/icons-material/Language";
 
 import {
   Select,
@@ -18,6 +17,7 @@ import Usercontent from "@/components/UI/userContent";
 import Image from "next/image";
 import { commonLangouge } from "@/constants/header";
 import SearchInput from "@/components/UI/SearchInput";
+import { PublicOutlined } from "@mui/icons-material";
 
 const FullHeader: React.FC<BaseHeaderProps> = ({ user, pathname }) => {
   const links = getNavLinks(user?.type, pathname);
@@ -42,7 +42,7 @@ const FullHeader: React.FC<BaseHeaderProps> = ({ user, pathname }) => {
                   className="hidden flex-row items-center lg:flex"
                   sx={{ minWidth: 120 }}
                 >
-                  <LanguageIcon className="text-lg text-secondary" />
+                  <PublicOutlined className="text-lg text-secondary" />
                   <Select
                     className="text-xs"
                     displayEmpty

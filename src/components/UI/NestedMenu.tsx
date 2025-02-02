@@ -139,12 +139,24 @@ const NestedMenu: React.FC = () => {
                     displayStaticWrapperAs="desktop"
                     orientation="portrait"
                     value={tempStartDate}
+                    sx={{
+                      ".css-xi742h-MuiButtonBase-root-MuiPickersDay-root.Mui-selected":
+                        {
+                          color: "white",
+                        },
+                    }}
                     onChange={(newValue) => setTempStartDate(newValue)}
                   />
 
                   <Typography variant="h6">Select End Date</Typography>
                   <StaticDatePicker
                     displayStaticWrapperAs="desktop"
+                    sx={{
+                      ".css-xi742h-MuiButtonBase-root-MuiPickersDay-root.Mui-selected":
+                        {
+                          color: "white",
+                        },
+                    }}
                     orientation="portrait"
                     value={tempEndDate}
                     onChange={(newValue) => setTempEndDate(newValue)}

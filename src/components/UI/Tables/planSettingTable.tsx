@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   FormControl,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -88,12 +89,12 @@ const columns: GridColDef[] = [
     flex: 1,
     renderCell: () => (
       <div className="flex h-full items-center gap-2">
-        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-primary text-white hover:bg-black">
+        <IconButton className="rounded-md bg-primary text-white hover:bg-black">
           <CreateOutlined />
-        </button>
-        <button className="flex h-10 w-16 items-center justify-center rounded-md bg-[#FBC1BC] text-[#FF0000]">
+        </IconButton>
+        <IconButton className="rounded-md bg-[#FBC1BC] text-[#FF0000]">
           <DeleteOutline />
-        </button>
+        </IconButton>
       </div>
     ),
   },

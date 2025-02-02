@@ -17,6 +17,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 type SingleBlogProps = {
   params: { blogID: string };
@@ -27,6 +28,7 @@ type BlogPost = {
 };
 
 export default function BlogPage({ params }: SingleBlogProps) {
+  const { handleSubmit } = useForm();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
@@ -48,12 +50,8 @@ export default function BlogPage({ params }: SingleBlogProps) {
 
   if (!post) return NotFoundPage(); // 404 page if post is not found
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!comment.trim()) return; // Prevent empty submissions
-
-    console.log("Comment submitted:", comment, name, email);
-    // Clear input after submission
+  const onSubmit = (data: any) => {
+    console.log("Form Data Submitted:", data);
     setName("");
     setEmail("");
     setComment("");
@@ -552,7 +550,7 @@ export default function BlogPage({ params }: SingleBlogProps) {
                 Leave a Comment
               </h1>
             </div>
-            <form onSubmit={handleSubmit} className="flex-1">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex-1">
               <div>
                 <p className="mb-5 w-full text-xs text-white md:w-1/2">
                   Have a project in mind that you think we’d be a great fit for
@@ -565,6 +563,12 @@ export default function BlogPage({ params }: SingleBlogProps) {
                     </InputLabel>
                     <TextField
                       placeholder="input your name here"
+                      sx={{
+                        ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
+                          display: "none",
+                        },
+                        border: "1px solid #eee",
+                      }}
                       fullWidth
                       rows={3}
                       value={name}
@@ -578,6 +582,12 @@ export default function BlogPage({ params }: SingleBlogProps) {
                     </InputLabel>
                     <TextField
                       placeholder="input your email here"
+                      sx={{
+                        ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
+                          display: "none",
+                        },
+                        border: "1px solid #eee",
+                      }}
                       fullWidth
                       rows={3}
                       type="email"
@@ -598,7 +608,7 @@ export default function BlogPage({ params }: SingleBlogProps) {
                   rows={4}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  className="w-full resize-none rounded-lg border border-gray-300 p-3 outline-none focus:border-light-primary focus:ring-1 focus:ring-light-primary"
+                  className="w-full resize-none rounded-lg border border-[#eee] p-3 outline-none"
                   placeholder="Type your comment here..."
                 />
               </div>
@@ -606,7 +616,7 @@ export default function BlogPage({ params }: SingleBlogProps) {
                 <FormControlLabel
                   sx={{
                     ".MuiFormControlLabel-label": {
-                      color: "white",
+                      color: "#",
                       fontSize: "12px",
                     },
                   }}
