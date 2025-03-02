@@ -21,7 +21,7 @@ export default function DynamicSideBar({
   status,
   pathname,
 }: SideBarProps) {
-  const userType = user?.type || "admin";
+  const userType = user?.type || "admin courses";
   const initialLinks = getSideBarLinks(userType, pathname);
   const [links, setLinks] = useState<NavItem[]>(initialLinks);
 

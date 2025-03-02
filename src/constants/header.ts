@@ -18,6 +18,8 @@ export const roleBasedLinks: RoleBasedLinks = {
       url: "/admin/settings",
     },
   ],
+  "admin jobs": [],
+  "admin courses": [],
 };
 
 export const commonLinks: CommonLinks = {

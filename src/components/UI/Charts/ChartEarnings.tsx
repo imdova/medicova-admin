@@ -1,20 +1,12 @@
 import { AxisConfig, BarChart, ChartsXAxisProps } from "@mui/x-charts";
-import NestedMenu from "../NestedMenu";
 
-type ChartUserProps = {
+type ChartEarningsProps = {
   labelX: string;
 };
 
-const ChartUserReport: React.FC<ChartUserProps> = ({ labelX }) => {
+const ChartEarnings: React.FC<ChartEarningsProps> = ({ labelX }) => {
   return (
     <>
-      <div className="flex w-full items-center justify-between p-4">
-        <div>
-          <span className="mb-2 text-secondary">Statistics</span>
-          <h2>Employer Report</h2>
-        </div>
-        <NestedMenu />
-      </div>
       <BarChart
         sx={{
           ".MuiChartsAxis-line": {
@@ -42,28 +34,37 @@ const ChartUserReport: React.FC<ChartUserProps> = ({ labelX }) => {
           {
             scaleType: "band",
             data: [
-              "Doctors",
-              "Dentists",
-              "Pharmacists",
-              "Physiot...",
-              "Nurses",
-              "Technicians",
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
             ],
             barGapRatio: 0.8,
-            categoryGapRatio: 0.8,
+            categoryGapRatio: 0.5,
           } as AxisConfig<"band", unknown, ChartsXAxisProps>,
         ]}
         series={[
           {
             label: labelX,
-            data: [2423, 2200, 2100, 2500, 1900, 2300], // Data matches each x-axis category
+            data: [
+              2423, 2200, 2100, 2500, 1900, 2300, 2500, 1200, 800, 500, 1800,
+              650,
+            ],
             color: "#2ba149e5",
           },
         ]}
-        height={400}
+        height={350}
       />
     </>
   );
 };
 
-export default ChartUserReport;
+export default ChartEarnings;
