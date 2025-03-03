@@ -12,6 +12,7 @@ import {
   SmsOutlined,
   VideocamOutlined,
 } from "@mui/icons-material";
+import { Button } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -66,8 +67,8 @@ export default function Dashboard() {
       </div>
       <div className="mb-4 flex flex-col gap-4 2xl:flex-row">
         <div className="w-full">
-          <div className="mb-4 box-content flex flex-col gap-3 sm:flex-row">
-            <div className="w-[140px]">
+          <div className="mb-4 box-content flex flex-col gap-3 !p-0 sm:flex-row">
+            <div className="w-[140px] p-4">
               <h2 className="mb-3 text-xl font-bold">Earnings</h2>
               <span className="mb-6 block text-sm text-secondary">
                 Dec 1 - Dec 31,2021
@@ -81,12 +82,24 @@ export default function Dashboard() {
             </div>
             <ChartEarnings labelX={"Earn"} />
           </div>
-          <div className="flex flex-col gap-3 md:flex-row">
-            <div className="box-content flex w-full items-center justify-center">
-              <CircularProgress />
+          <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-3 flex items-center md:col-span-1">
+              <div className="flex h-full w-full flex-col justify-between">
+                <h2 className="mb-2 p-3 text-xl font-bold">Courses Stats</h2>
+                <div className="box-content h-full w-full !p-0">
+                  <CircularProgress />
+                </div>
+              </div>
             </div>
-            <div className="box-content w-full">
-              <WeeklySalesTable />
+            <div className="col-span-3 md:col-span-2">
+              <div className="flex h-full w-full flex-col justify-between">
+                <h2 className="mb-2 p-3 text-xl font-bold">
+                  Weekly Sales Stats State
+                </h2>
+                <div className="box-content h-full !p-0">
+                  <WeeklySalesTable />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -123,6 +136,15 @@ export default function Dashboard() {
               );
             })}
           </ul>
+          <div className="flex justify-center">
+            <Button
+              className="w-[200px] rounded-md bg-primary text-white"
+              variant="contained"
+              size="large"
+            >
+              Veiw All
+            </Button>
+          </div>
         </div>
       </div>
       <div className="box-content">

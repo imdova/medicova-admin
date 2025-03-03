@@ -71,13 +71,13 @@ const columns: GridColDef[] = [
     flex: 1,
     renderCell: () => (
       <div className="flex items-center gap-2">
-        <TableDropMenu />
         <button className="hover:text-primary">
           <VideocamOutlined className="text-xl" />
         </button>
         <button className="hover:text-primary">
           <SmsOutlined className="text-lg" />
         </button>
+        <TableDropMenu />
       </div>
     ),
   },
@@ -181,8 +181,10 @@ const CurrentStudentTable: React.FC = () => {
     <>
       {/* start content table Employers  */}
       <div className="flex flex-col items-center justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
-        <h1 className="w-full text-lg font-bold">Current Students</h1>
-        <SearchInput />
+        <h1 className="text-lg font-bold">Current Students</h1>
+        <div className="w-[500px] max-w-[400px]">
+          <SearchInput />
+        </div>
       </div>
       <Box sx={{ height: 400, overflowX: "auto" }}>
         <DataGrid
@@ -210,7 +212,6 @@ const CurrentStudentTable: React.FC = () => {
             },
           }}
           pageSizeOptions={[5]}
-          checkboxSelection
           disableRowSelectionOnClick
         />
       </Box>

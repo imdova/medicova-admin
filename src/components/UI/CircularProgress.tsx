@@ -24,36 +24,35 @@ const CircularProgress: React.FC = () => {
   const offset = circumference - (progress / 100) * circumference;
 
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <div className="flex w-full items-center justify-between">
+    <div className="flex h-full w-full flex-col items-center justify-between space-y-4 p-3">
+      <div className="flex h-full w-full flex-col items-center justify-between gap-2 xl:flex-row">
         <div className="flex items-center gap-2">
           <span
             style={{ backgroundColor: getColor(progress) }}
             className="h-4 w-4 rounded-md"
           ></span>
-          <span>Point Prograss</span>
+          <span className="text-sm">Point Prograss</span>
         </div>
         {/* Dropdown */}
         <select
-          className="rounded-md border px-4 py-2 focus:outline-none"
+          className="rounded-md border px-4 py-2 text-sm focus:outline-none"
           value={selectedPeriod}
           onChange={(e) =>
             setSelectedPeriod(e.target.value as keyof typeof progressData)
           }
         >
           {Object.keys(progressData).map((period) => (
-            <option key={period} value={period}>
+            <option className="text-sm" key={period} value={period}>
               {period}
             </option>
           ))}
         </select>
       </div>
-
       <div className="relative">
         {/* Circular Progress */}
         <svg
-          width="140"
-          height="140"
+          width="160"
+          height="160"
           viewBox="0 0 120 120"
           className="rotate-[-90deg]"
         >
@@ -87,7 +86,7 @@ const CircularProgress: React.FC = () => {
           {progress}%
         </span>
       </div>
-      <div className="flex w-[300px] items-center justify-between">
+      <div className="flex w-full flex-col items-center justify-between gap-2 xl:flex-row">
         <div className="flex items-center gap-2 text-sm">
           <div
             style={{ backgroundColor: getColor(progress) }}

@@ -61,7 +61,7 @@ const ChartEarnings: React.FC<ChartEarningsProps> = ({ labelX }) => {
             color: "#2ba149e5",
           },
         ]}
-        height={350}
+        height={250}
       />
     </>
   );
