@@ -165,6 +165,7 @@ interface OverviewEmployersTableProps {
 const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
 }) => {
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
 
@@ -181,6 +182,10 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
   const handleChangeCountry = (event: SelectChangeEvent) => {
     setCountry(event.target.value as string);
   };
+  // Filter data based on selection
+  const filteredData = rows.filter((row) =>
+    row.JobTitle.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
   return (
     <>
       {/* start content table Employers  */}
@@ -216,7 +221,7 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
           </Box>
         )}
 
-        <SearchInput />
+        <SearchInput SetSearchQuery={setSearchQuery} />
         <ExportButton data="Name,Age\nJohn,30\nJane,25" />
       </div>
       {Filtring ? (
@@ -444,7 +449,7 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
               textAlign: "center",
             },
           }}
-          rows={rows}
+          rows={filteredData}
           columns={columns}
           initialState={{
             pagination: {

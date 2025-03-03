@@ -195,6 +195,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
   MainTabs = false,
 }) => {
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
 
@@ -209,6 +210,10 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
   const handleChangeCountry = (event: SelectChangeEvent) => {
     setCountry(event.target.value as string);
   };
+  // Filter data based on selection
+  const filteredData = rows.filter((row) =>
+    row.Name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
   return (
     <>
       {/* start content table Employers  */}
@@ -243,7 +248,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
             Tranactions
           </Typography>
         )}
-        <SearchInput />
+        <SearchInput SetSearchQuery={setSearchQuery} />
         <ExportButton data="Name,Age\nJohn,30\nJane,25" />
       </div>
       {Filtring ? (
@@ -474,7 +479,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
               fontSize: "12px", // Row font size
             },
           }}
-          rows={rows}
+          rows={filteredData}
           columns={columns}
           initialState={{
             pagination: {

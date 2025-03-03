@@ -25,7 +25,9 @@ const DynamicLayout = ({ children }: { children: React.ReactNode }) => {
                 />
               </div>
             </aside>
-            <main className="w-full px-0 md:px-6 lg:w-4/5">{children}</main>
+            <main className="w-full px-0 md:px-6 lg:w-4/5 lg:max-w-[1440px]">
+              {children}
+            </main>
           </div>
         );
       case "minimal":

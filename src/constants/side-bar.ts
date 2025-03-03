@@ -153,13 +153,13 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 22,
       icon: PeopleOutline,
       label: "Students",
-      path: "#",
+      path: "/courses/admin/students",
     },
     {
       id: 23,
       icon: PeopleOutline,
       label: "Instructors",
-      path: "#",
+      path: "/courses/admin/instructors",
     },
     {
       id: 24,

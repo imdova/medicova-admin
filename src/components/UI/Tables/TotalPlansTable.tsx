@@ -187,6 +187,7 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
   MainTabs = false,
 }) => {
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
 
@@ -195,12 +196,15 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
   };
 
   //   values of Filters inputs
-
   const [Country, setCountry] = useState("");
 
   const handleChangeCountry = (event: SelectChangeEvent) => {
     setCountry(event.target.value as string);
   };
+  // Filter data based on selection
+  const filteredData = rows.filter((row) =>
+    row.Name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
   return (
     <>
       {/* start content table Employers  */}
@@ -235,7 +239,7 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
             Total Plans: 4
           </Typography>
         )}
-        <SearchInput />
+        <SearchInput SetSearchQuery={setSearchQuery} />
         <ExportButton data="Name,Age\nJohn,30\nJane,25" />
       </div>
       {Filtring ? (
@@ -388,7 +392,6 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
               </Select>
             </FormControl>
           </Box>
-
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer
               components={["DateField"]}
@@ -419,7 +422,6 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
                   stroke-linejoin="round"
                 />
               </svg>
-
               <DateField
                 className="w-full"
                 sx={{
@@ -469,7 +471,7 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
               columnSpacing: 2, // Add spacing between column headers
             },
           }}
-          rows={rows}
+          rows={filteredData}
           columns={columns}
           initialState={{
             pagination: {

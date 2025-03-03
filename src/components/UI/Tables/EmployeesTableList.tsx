@@ -401,7 +401,6 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
                   </clipPath>
                 </defs>
               </svg>
-
               <Select
                 className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"

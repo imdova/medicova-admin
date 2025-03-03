@@ -2,7 +2,6 @@ import LogoIcon from "@/components/icons/logo";
 import { BaseHeaderProps } from "@/types";
 import Link from "next/link";
 import { getNavLinks } from "./routeConfigs";
-import HeaderAction from "./HeaderAction";
 
 import {
   Select,
@@ -10,10 +9,8 @@ import {
   FormControl,
   SelectChangeEvent,
 } from "@mui/material";
-import { isCurrentPage } from "@/util";
 import { useState } from "react";
 import Usercontent from "@/components/UI/userContent";
-
 import Image from "next/image";
 import { commonLangouge } from "@/constants/header";
 import SearchInput from "@/components/UI/SearchInput";
@@ -22,6 +19,7 @@ import { PublicOutlined } from "@mui/icons-material";
 const FullHeader: React.FC<BaseHeaderProps> = ({ user, pathname }) => {
   const links = getNavLinks(user?.type, pathname);
   const [langSelectedValue, setLangSelectedValue] = useState("Eng (US)");
+  const [searchQuery, setSearchQuery] = useState("");
   // Correctly type the event parameter as SelectChangeEvent
   const handleChange = (event: SelectChangeEvent<string>) => {
     setLangSelectedValue(event.target.value); // Now the target value is typed as string
@@ -37,7 +35,7 @@ const FullHeader: React.FC<BaseHeaderProps> = ({ user, pathname }) => {
                 <LogoIcon className="h-[30px] w-auto text-primary md:h-[40px]" />
               </Link>
               <div className="flex items-center gap-5">
-                <SearchInput />
+                <SearchInput SetSearchQuery={setSearchQuery} />
                 <FormControl
                   className="hidden flex-row items-center lg:flex"
                   sx={{ minWidth: 120 }}

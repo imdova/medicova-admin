@@ -25,7 +25,7 @@ const CircularProgress: React.FC = () => {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-between space-y-4 p-3">
-      <div className="flex h-full w-full flex-col items-center justify-between gap-2 xl:flex-row">
+      <div className="flex w-full flex-col items-center justify-between gap-2 xl:flex-row">
         <div className="flex items-center gap-2">
           <span
             style={{ backgroundColor: getColor(progress) }}

@@ -200,6 +200,7 @@ const rows = [
 const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
 }) => {
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
 
@@ -212,7 +213,10 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
+  // Filter data based on selection
+  const filteredData = rows.filter((row) =>
+    row.Name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
   return (
     <>
       {/* start content table Employers  */}
@@ -247,7 +251,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
             </Tabs>
           </Box>
         )}
-        <SearchInput />
+        <SearchInput SetSearchQuery={setSearchQuery} />
         <ExportButton data="Name,Age\nJohn,30\nJane,25" />
       </div>
       {Filtring ? (
@@ -504,7 +508,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               textAlign: "center",
             },
           }}
-          rows={rows}
+          rows={filteredData}
           columns={columns}
           initialState={{
             pagination: {

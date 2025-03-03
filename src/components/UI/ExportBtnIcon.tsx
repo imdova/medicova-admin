@@ -9,11 +9,10 @@ import {
   RadioGroup,
 } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 interface ExportOptions {
   data: string; // The content to export (e.g., CSV or JSON content).
 }
-const ExportButton = ({ data }: ExportOptions) => {
+const ExportBtnIcon = ({ data }: ExportOptions) => {
   const handleExport = () => {
     const blob = new Blob([data], { type: selectedValue });
     const url = window.URL.createObjectURL(blob);
@@ -37,19 +36,14 @@ const ExportButton = ({ data }: ExportOptions) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedValue(event.target.value);
   };
-  console.log(selectedValue);
   return (
     <>
-      <Button
-        variant="outlined"
-        color="primary"
-        startIcon={<FileDownloadIcon className="text-xs" />}
-        endIcon={<ExpandMoreIcon />}
+      <button
         onClick={handleClickButton}
-        className="h-10 w-full text-[10px] md:w-44"
+        className="flex h-12 w-12 items-center justify-center rounded-md bg-primary text-white hover:bg-primary-900"
       >
-        Export
-      </Button>
+        <FileDownloadIcon className="text-xl" />
+      </button>
       <Menu
         id="demo-positioned-menu"
         aria-labelledby="demo-positioned-button"
@@ -113,4 +107,4 @@ const ExportButton = ({ data }: ExportOptions) => {
   );
 };
 
-export default ExportButton;
+export default ExportBtnIcon;

@@ -263,7 +263,6 @@ const PlanSettingTable: React.FC<PlanSettingTable> = ({
                   </clipPath>
                 </defs>
               </svg>
-
               <Select
                 className="pl-6"
                 id="demo-simple-select"

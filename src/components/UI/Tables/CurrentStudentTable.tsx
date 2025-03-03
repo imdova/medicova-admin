@@ -83,7 +83,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+const instructors = [
   {
     id: 1,
     Name: "Said Ahmed",
@@ -177,13 +177,18 @@ const rows = [
 ];
 
 const CurrentStudentTable: React.FC = () => {
+  const [searchQuery, setSearchQuery] = React.useState("");
+  // Filter data based on selection
+  const filteredData = instructors.filter((instructor) =>
+    instructor.Name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
   return (
     <>
       {/* start content table Employers  */}
       <div className="flex flex-col items-center justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
         <h1 className="text-lg font-bold">Current Students</h1>
         <div className="w-[500px] max-w-[400px]">
-          <SearchInput />
+          <SearchInput SetSearchQuery={setSearchQuery} />
         </div>
       </div>
       <Box sx={{ height: 400, overflowX: "auto" }}>
@@ -202,7 +207,7 @@ const CurrentStudentTable: React.FC = () => {
               textAlign: "center",
             },
           }}
-          rows={rows}
+          rows={filteredData}
           columns={columns}
           initialState={{
             pagination: {

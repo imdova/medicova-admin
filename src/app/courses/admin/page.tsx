@@ -19,7 +19,7 @@ import Link from "next/link";
 export default function Dashboard() {
   return (
     <div>
-      <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
         <div className="box-content flex flex-col items-center gap-4">
           <h2 className="text-lg font-bold">Total Students</h2>
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#2EAE7D]">
@@ -65,7 +65,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="mb-4 flex flex-col gap-4 2xl:flex-row">
+      <div className="mb-4 flex flex-col gap-4 lg:flex-row">
         <div className="w-full">
           <div className="mb-4 box-content flex flex-col gap-3 !p-0 sm:flex-row">
             <div className="w-[140px] p-4">
@@ -83,7 +83,7 @@ export default function Dashboard() {
             <ChartEarnings labelX={"Earn"} />
           </div>
           <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-3 flex items-center md:col-span-1">
+            <div className="col-span-3 flex items-center sm:col-span-1 lg:col-span-3 xl:col-span-1">
               <div className="flex h-full w-full flex-col justify-between">
                 <h2 className="mb-2 p-3 text-xl font-bold">Courses Stats</h2>
                 <div className="box-content h-full w-full !p-0">
@@ -91,7 +91,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="col-span-3 md:col-span-2">
+            <div className="col-span-3 sm:col-span-2 lg:col-span-3 xl:col-span-2">
               <div className="flex h-full w-full flex-col justify-between">
                 <h2 className="mb-2 p-3 text-xl font-bold">
                   Weekly Sales Stats State
@@ -103,7 +103,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="box-content 2xl:w-[500px]">
+        <div className="box-content lg:w-[450px]">
           <h2 className="mb-6 text-xl font-bold">Instracturs List</h2>
           <ul className="mt-3">
             {Instructors.map((instructor) => {
