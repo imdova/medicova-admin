@@ -30,11 +30,11 @@ export const commonLinks: CommonLinks = {
     },
     {
       title: "Job Admin",
-      url: "jobs/admin",
+      url: "/jobs/admin",
     },
     {
       title: "Courses Admin",
-      url: "courses/admin",
+      url: "/courses/admin",
     },
     {
       title: "Blogs",
