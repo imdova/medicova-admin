@@ -9,7 +9,7 @@ interface FormData {
   phoneNumber: string;
   location?: string;
   joinDate?: string;
-  type?: string;
+  roll?: string;
   courses?: string;
   assignTo?: string;
 }
@@ -27,8 +27,8 @@ export default function InstructorForm() {
 
   return (
     <div className="w-full">
-      <h2 className="mb-4 text-2xl font-semibold">New Instructor</h2>
-      <div className="box-content w-full">
+      <h2 className="mb-4 py-4 text-2xl font-semibold">New Staff</h2>
+      <div className="box-content">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="grid grid-cols-1 gap-4 md:grid-cols-2"
@@ -105,13 +105,13 @@ export default function InstructorForm() {
           </div>
           <div>
             <label className="mb-2 block text-xs font-medium text-secondary">
-              Type
+              Roll
             </label>
             <select
-              {...register("type")}
-              className="w-full rounded border p-3 text-xs text-secondary outline-none"
+              {...register("roll")}
+              className="w-full rounded border p-3 text-secondary outline-none"
             >
-              <option value="">Select Type</option>
+              <option value="">Select Roll</option>
               <option value="Full-time">Full-time</option>
               <option value="Part-time">Part-time</option>
             </select>

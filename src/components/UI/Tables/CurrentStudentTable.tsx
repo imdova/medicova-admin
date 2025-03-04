@@ -12,7 +12,7 @@ const columns: GridColDef[] = [
     field: "Name",
     headerName: "Name",
     width: 160,
-    editable: false,
+
     sortable: true,
     renderCell: (params) => (
       <div className="flex h-full items-center gap-2">
@@ -34,14 +34,12 @@ const columns: GridColDef[] = [
     headerName: "Student ID",
     sortable: true,
     flex: 1,
-    editable: true,
   },
   {
     field: "PricePerLesson",
     headerName: "Price Per Lesson",
     sortable: true,
     flex: 1,
-    editable: true,
   },
   {
     field: "JoinDate",
@@ -194,7 +192,6 @@ const CurrentStudentTable: React.FC = () => {
       <Box sx={{ height: 400, overflowX: "auto" }}>
         <DataGrid
           sx={{
-            minWidth: "600px",
             border: "1px solid rgba(0, 0, 0, 0.12)",
             "& .MuiDataGrid-container--top [role=row]": {
               background: "", // Custom header background color

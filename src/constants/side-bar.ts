@@ -13,6 +13,7 @@ import {
   CompareArrows,
   MailOutline,
   LiveTv,
+  Category,
 } from "@mui/icons-material";
 
 export type CommonLinksType = "home";
@@ -141,7 +142,7 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 19,
       icon: MenuBook,
       label: "Courses",
-      path: "#",
+      path: "/courses/admin/courses",
     },
     {
       id: 21,
@@ -163,21 +164,33 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
     },
     {
       id: 24,
-      icon: CompareArrows,
-      label: "Transaction",
-      path: "#",
+      icon: PeopleOutline,
+      label: "Staff",
+      path: "/courses/admin/staff",
     },
     {
       id: 25,
+      icon: CompareArrows,
+      label: "Transaction",
+      path: "/courses/admin/transactions",
+    },
+    {
+      id: 26,
       icon: LiveTv,
       label: "Live Class",
       path: "#",
     },
     {
-      id: 25,
+      id: 27,
       icon: MailOutline,
       label: "Messages",
       path: "#",
+    },
+    {
+      id: 27,
+      icon: Category,
+      label: "Categories",
+      path: "/courses/admin/courses-category",
     },
     {
       id: 31,

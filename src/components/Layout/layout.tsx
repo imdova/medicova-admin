@@ -10,16 +10,17 @@ const DynamicLayout = ({ children }: { children: React.ReactNode }) => {
   const user = session?.user as UserState;
 
   const pathname = usePathname() || "/";
-  const sideBarType = matchRoute(pathname)?.sideBarType || "";
+  const route = matchRoute(pathname);
+  const { sideBarType, userRole } = route || {};
   const getLayout = () => {
     switch (sideBarType) {
       case "full":
         return (
-          <div className="flex w-full flex-row p-4">
+          <div className="container mx-auto my-4 flex min-h-[calc(100vh-150px)] w-full flex-row p-2 md:my-8">
             <aside className="mx-2 hidden w-1/5 max-w-[250px] rounded-base border border-gray-100 bg-white py-4 shadow-xl lg:block">
               <div className="sticky top-[85px]">
                 <DynamicSideBar
-                  user={user}
+                  user={userRole ? { ...user, type: userRole } : undefined}
                   status={status}
                   pathname={pathname}
                 />
