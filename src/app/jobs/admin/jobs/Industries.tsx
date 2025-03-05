@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import { Container, Grid } from "@mui/material";
 import IndustriesSidebar from "./IndustriesSidebar";
 import CategoryManagement from "./CategoryManagement";
 
