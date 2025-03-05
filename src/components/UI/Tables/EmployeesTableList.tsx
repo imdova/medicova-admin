@@ -217,10 +217,11 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
   return (
     <>
       {/* start content table Employers  */}
-      <div className="flex justify-center">
+      <div className="flex justify-start">
         <Box
           sx={{
             bgcolor: "background.paper",
+            width: "100%",
           }}
         >
           <Tabs
@@ -238,7 +239,6 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
           </Tabs>
         </Box>
       </div>
-
       <div className="flex flex-col items-center justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
         {Filtring ? (
           <Typography

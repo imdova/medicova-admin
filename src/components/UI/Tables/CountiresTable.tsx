@@ -16,7 +16,7 @@ const CountiresTable: React.FC = () => {
       id: 1,
       country: "egypt",
       avatar_country:
-        "https://s3-alpha-sig.figma.com/img/7287/73b3/199c69ec2b1d8ca4cbf271947f8b9dd7?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=L7FvQT5wpJ--YXluadYKCltTwTJjyp37uPuMab5DVsee7krzvCqSOzxaTn3QNAYgZAmxdVEC5Zikif1Ci4hCRO6qahfL~HpUFbMNn6I5GKJJ7QJl60GQ0BGAXWl7GnhpZBMW8I98QCaXVSTzx~YRCtoQjOXjX4copUN1j1iiYIm0UKpJs~5JoZ1weFQwUEkwdF~L6mFzzFVL2SgiCZqaBELtg2DcuLc8jFjGAhF5cJhR~Zl3lA9JwBCWpEgkDIJeVhcWu0ppLxuJLvn5TGEjAgZ8MdRPVnz52RIrbpaNuCyAqtAl4QZFgfWYarUSmhX6yuJPHfCFWQrM-xujElTIgQ__",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Egypt.svg/255px-Flag_of_Egypt.svg.png",
       job: 12,
       Employers_jobs: 22,
       revenue: "60k",
@@ -25,7 +25,7 @@ const CountiresTable: React.FC = () => {
       id: 2,
       country: "egypt",
       avatar_country:
-        "https://s3-alpha-sig.figma.com/img/7287/73b3/199c69ec2b1d8ca4cbf271947f8b9dd7?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=L7FvQT5wpJ--YXluadYKCltTwTJjyp37uPuMab5DVsee7krzvCqSOzxaTn3QNAYgZAmxdVEC5Zikif1Ci4hCRO6qahfL~HpUFbMNn6I5GKJJ7QJl60GQ0BGAXWl7GnhpZBMW8I98QCaXVSTzx~YRCtoQjOXjX4copUN1j1iiYIm0UKpJs~5JoZ1weFQwUEkwdF~L6mFzzFVL2SgiCZqaBELtg2DcuLc8jFjGAhF5cJhR~Zl3lA9JwBCWpEgkDIJeVhcWu0ppLxuJLvn5TGEjAgZ8MdRPVnz52RIrbpaNuCyAqtAl4QZFgfWYarUSmhX6yuJPHfCFWQrM-xujElTIgQ__",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Egypt.svg/255px-Flag_of_Egypt.svg.png",
       job: 12,
       Employers_jobs: 22,
       revenue: "60k",
@@ -34,7 +34,7 @@ const CountiresTable: React.FC = () => {
       id: 3,
       country: "egypt",
       avatar_country:
-        "https://s3-alpha-sig.figma.com/img/7287/73b3/199c69ec2b1d8ca4cbf271947f8b9dd7?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=L7FvQT5wpJ--YXluadYKCltTwTJjyp37uPuMab5DVsee7krzvCqSOzxaTn3QNAYgZAmxdVEC5Zikif1Ci4hCRO6qahfL~HpUFbMNn6I5GKJJ7QJl60GQ0BGAXWl7GnhpZBMW8I98QCaXVSTzx~YRCtoQjOXjX4copUN1j1iiYIm0UKpJs~5JoZ1weFQwUEkwdF~L6mFzzFVL2SgiCZqaBELtg2DcuLc8jFjGAhF5cJhR~Zl3lA9JwBCWpEgkDIJeVhcWu0ppLxuJLvn5TGEjAgZ8MdRPVnz52RIrbpaNuCyAqtAl4QZFgfWYarUSmhX6yuJPHfCFWQrM-xujElTIgQ__",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Egypt.svg/255px-Flag_of_Egypt.svg.png",
       job: 12,
       Employers_jobs: 22,
       revenue: "60k",
@@ -43,7 +43,7 @@ const CountiresTable: React.FC = () => {
       id: 4,
       country: "egypt",
       avatar_country:
-        "https://s3-alpha-sig.figma.com/img/7287/73b3/199c69ec2b1d8ca4cbf271947f8b9dd7?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=L7FvQT5wpJ--YXluadYKCltTwTJjyp37uPuMab5DVsee7krzvCqSOzxaTn3QNAYgZAmxdVEC5Zikif1Ci4hCRO6qahfL~HpUFbMNn6I5GKJJ7QJl60GQ0BGAXWl7GnhpZBMW8I98QCaXVSTzx~YRCtoQjOXjX4copUN1j1iiYIm0UKpJs~5JoZ1weFQwUEkwdF~L6mFzzFVL2SgiCZqaBELtg2DcuLc8jFjGAhF5cJhR~Zl3lA9JwBCWpEgkDIJeVhcWu0ppLxuJLvn5TGEjAgZ8MdRPVnz52RIrbpaNuCyAqtAl4QZFgfWYarUSmhX6yuJPHfCFWQrM-xujElTIgQ__",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Egypt.svg/255px-Flag_of_Egypt.svg.png",
       job: 12,
       Employers_jobs: 22,
       revenue: "60k",

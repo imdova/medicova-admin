@@ -90,7 +90,6 @@ const SubscriptionPlansPage: React.FC = () => {
       <div className="mb-6">
         <TotalPlansTable />
       </div>
-
       {/* Heading */}
       <Typography
         variant="h4"

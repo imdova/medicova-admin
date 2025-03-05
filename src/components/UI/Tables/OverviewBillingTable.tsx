@@ -241,7 +241,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
           </Box>
         ) : (
           <Typography
-            className="mb-0 flex w-full items-center justify-center p-2 font-bold md:w-60"
+            className="mb-0 flex w-full items-center p-2 font-bold md:w-60"
             variant="h6"
             gutterBottom
           >

@@ -33,7 +33,7 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 18,
       icon: HomeOutlined,
       label: "Dashboard",
-      path: "/jobs/admin/employers",
+      path: "/jobs/admin",
     },
     {
       id: 19,
@@ -64,7 +64,7 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 23,
       icon: PeopleOutline,
       label: "Employers",
-      path: "/jobs/admin/employers",
+      path: "/jobs/admin",
     },
     {
       id: 24,

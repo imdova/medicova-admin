@@ -28,7 +28,7 @@ export default function InstructorForm() {
   return (
     <div className="w-full">
       <h2 className="mb-4 text-2xl font-semibold">New Instructor</h2>
-      <div className="box-content w-full">
+      <div className="box-content">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="grid grid-cols-1 gap-4 md:grid-cols-2"
@@ -109,7 +109,7 @@ export default function InstructorForm() {
             </label>
             <select
               {...register("type")}
-              className="w-full rounded border p-3 text-xs text-secondary outline-none"
+              className="w-full rounded border p-3 text-secondary outline-none"
             >
               <option value="">Select Type</option>
               <option value="Full-time">Full-time</option>

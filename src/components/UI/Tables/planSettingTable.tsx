@@ -92,7 +92,7 @@ const columns: GridColDef[] = [
         <IconButton className="rounded-md bg-primary text-white hover:bg-black">
           <CreateOutlined />
         </IconButton>
-        <IconButton className="rounded-md bg-[#FBC1BC] text-[#FF0000]">
+        <IconButton className="rounded-md bg-[#fad2cf] text-[rgb(231,85,85)] hover:bg-[#f7c3c0]">
           <DeleteOutline />
         </IconButton>
       </div>
@@ -188,7 +188,7 @@ const PlanSettingTable: React.FC<PlanSettingTable> = ({
           </Box>
         ) : (
           <Typography
-            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
+            className="mb-0 flex w-60 items-center p-2 font-bold"
             variant="h6"
             gutterBottom
           >

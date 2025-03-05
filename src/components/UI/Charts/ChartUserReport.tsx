@@ -50,7 +50,7 @@ const ChartUserReport: React.FC<ChartUserProps> = ({ labelX }) => {
               "Technicians",
             ],
             barGapRatio: 0.8,
-            categoryGapRatio: 0.8,
+            categoryGapRatio: 0.6,
           } as AxisConfig<"band", unknown, ChartsXAxisProps>,
         ]}
         series={[

@@ -219,7 +219,7 @@ const StudentsTable: React.FC = () => {
   return (
     <>
       {/* start content table Employers  */}
-      <div className="flex flex-col items-center justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
+      <div className="flex flex-col items-end justify-between gap-4 overflow-hidden px-1 py-3 md:flex-row">
         <div className="w-[500px] max-w-[400px]">
           <SearchInput SetSearchQuery={setSearchQuery} />
         </div>
@@ -261,7 +261,7 @@ const StudentsTable: React.FC = () => {
       <Box sx={{ height: 400, overflowX: "auto" }}>
         <DataGrid
           sx={{
-            minWidth: "600px",
+            minWidth: "800px",
             border: "1px solid rgba(0, 0, 0, 0.12)",
             "& .MuiDataGrid-container--top [role=row]": {
               background: "", // Custom header background color

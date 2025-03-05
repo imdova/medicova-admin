@@ -232,7 +232,7 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
           </Box>
         ) : (
           <Typography
-            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
+            className="mb-0 flex w-60 items-center p-2 font-bold"
             variant="h6"
             gutterBottom
           >
