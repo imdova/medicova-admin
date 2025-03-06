@@ -12,6 +12,12 @@ import {
 } from "@mui/icons-material";
 import GeneralPanel from "@/app/courses/admin/add-course/panels/GeneralPanel";
 import { useState } from "react";
+import OfflineCoursesPanel from "@/app/courses/admin/add-course/panels/OfflineCoursesPanel";
+import PricingPanel from "@/app/courses/admin/add-course/panels/PricingPanel";
+import ExtraInformationPanel from "@/app/courses/admin/add-course/panels/ExtraInformationPanel";
+import AssessmentPanel from "@/app/courses/admin/add-course/panels/AssessmentPanel";
+import DownloadablePanel from "@/app/courses/admin/add-course/panels/DownloadablePanel";
+import AuthorPanel from "@/app/courses/admin/add-course/panels/AuthorPanel";
 
 type Tab = {
   label: string;
@@ -38,7 +44,7 @@ const tabs = [
         <span className="text-sm">Offline courses</span>
       </div>
     ),
-    content: "",
+    content: <OfflineCoursesPanel />,
   },
   {
     label: (
@@ -47,7 +53,7 @@ const tabs = [
         <span className="text-sm">Pricing</span>
       </div>
     ),
-    content: "",
+    content: <PricingPanel />,
   },
   {
     label: (
@@ -56,7 +62,7 @@ const tabs = [
         <span className="text-sm">Extra Information</span>
       </div>
     ),
-    content: "",
+    content: <ExtraInformationPanel />,
   },
   {
     label: (
@@ -65,7 +71,7 @@ const tabs = [
         <span className="text-sm">Assessment</span>
       </div>
     ),
-    content: "",
+    content: <AssessmentPanel />,
   },
   {
     label: (
@@ -74,7 +80,7 @@ const tabs = [
         <span className="text-sm">Author</span>
       </div>
     ),
-    content: "",
+    content: <AuthorPanel />,
   },
   {
     label: (
@@ -83,7 +89,7 @@ const tabs = [
         <span className="text-sm">Downloadable</span>
       </div>
     ),
-    content: "",
+    content: <DownloadablePanel />,
   },
 ];
 
@@ -109,7 +115,9 @@ const Tabs: React.FC = () => {
       </div>
 
       {/* Tab Content */}
-      <div>{tabs[activeTab].content}</div>
+      <div className="w-full rounded-md border p-4">
+        {tabs[activeTab].content}
+      </div>
     </div>
   );
 };

@@ -141,9 +141,11 @@ export default function AddCoursePage() {
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Add a New Course</h1>
-      <p className="text-gray-500">Lets check your update today</p>
+    <div>
+      <div className="mb-4">
+        <h1 className="mb-1 text-2xl font-bold">Add a New Course</h1>
+        <p className="text-sm text-gray-500">Lets check your update today</p>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mt-6 grid grid-cols-3 gap-4">
           <div className="col-span-3 flex flex-col gap-4 lg:col-span-2">
@@ -277,11 +279,19 @@ export default function AddCoursePage() {
               <FormGroup>
                 <FormControlLabel
                   control={<Checkbox defaultChecked />}
-                  label="Allow Comments"
+                  label={
+                    <span className="text-xs text-secondary">
+                      Allow Comments
+                    </span>
+                  }
                 />
                 <FormControlLabel
                   control={<Checkbox />}
-                  label="Allow trackbacks and pingbacks"
+                  label={
+                    <span className="text-xs text-secondary">
+                      Allow trackbacks and pingbacks
+                    </span>
+                  }
                 />
               </FormGroup>
             </Card>
@@ -350,13 +360,8 @@ export default function AddCoursePage() {
 
             {/* Course Tags */}
             <Card className="p-4">
-              <h2 className="font-semibold">Course Tags</h2>
-              <TextField
-                fullWidth
-                label="Add Tag"
-                {...register("newTag")}
-                className="mt-2"
-              />
+              <h2 className="mb-2 font-semibold">Course Tags</h2>
+              <TextField fullWidth {...register("newTag")} className="mt-2" />
               <Button
                 onClick={() =>
                   setValue("tags", [...watch("tags"), watch("newTag")])
@@ -374,40 +379,46 @@ export default function AddCoursePage() {
             </Card>
             {/* LightSpeed Options */}
             <Card className="p-4">
-              <h2 className="font-semibold">LightSpeed Options</h2>
-              <Controller
-                name="disableCache"
-                control={control}
-                render={({ field }) => (
-                  <Switch
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  />
-                )}
-              />{" "}
-              Disable Cache
-              <Controller
-                name="disableLazyLoad"
-                control={control}
-                render={({ field }) => (
-                  <Switch
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  />
-                )}
-              />{" "}
-              Disable LazyLoad
-              <Controller
-                name="disableWi"
-                control={control}
-                render={({ field }) => (
-                  <Switch
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  />
-                )}
-              />{" "}
-              Disable Wi
+              <h2 className="mb-4 font-semibold">LightSpeed Options</h2>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-secondary">Disable Cache</span>
+                <Controller
+                  name="disableCache"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  )}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-secondary">Disable LazyLoad</span>
+                <Controller
+                  name="disableLazyLoad"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  )}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-secondary">Disable Wi</span>
+                <Controller
+                  name="disableWi"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  )}
+                />
+              </div>
             </Card>
             {/* Featured Image */}
             <Card className="p-4">

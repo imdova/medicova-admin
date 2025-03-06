@@ -8,11 +8,16 @@ import {
   Radio,
   RadioGroup,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 interface FormData {
   durationWeeks: number;
-  blockContent: boolean;
+  blockOnCompletion: boolean;
+  blockOnExpire: boolean;
   allowRepurchase: boolean;
   repurchaseAction: string;
   difficultyLevel: string;
@@ -21,12 +26,15 @@ interface FormData {
   retackeCourse: number;
   finishButton: boolean;
   featuredlist: boolean;
+  featuredReview: string;
+  extrnalLink: string;
 }
 
 export default function GeneralPanel() {
   const [formData, setFormData] = useState<FormData>({
     durationWeeks: 10,
-    blockContent: false,
+    blockOnCompletion: false,
+    blockOnExpire: false,
     allowRepurchase: false,
     repurchaseAction: "read",
     difficultyLevel: "All Levels",
@@ -35,6 +43,8 @@ export default function GeneralPanel() {
     retackeCourse: 10,
     finishButton: false,
     featuredlist: false,
+    featuredReview: "",
+    extrnalLink: "",
   });
 
   const handleChange = (field: keyof FormData, value: any) => {
@@ -51,9 +61,8 @@ export default function GeneralPanel() {
   return (
     <div>
       <div className="mb-4">
-        <Typography className="mb-4 font-bold">Duration</Typography>
+        <Typography className="mb-2 font-bold">Duration</Typography>
         <TextField
-          label="Duration (Weeks)"
           type="number"
           value={formData.durationWeeks}
           onChange={(e) =>
@@ -70,23 +79,32 @@ export default function GeneralPanel() {
         <FormControlLabel
           control={
             <Checkbox
-              checked={formData.blockContent}
-              onChange={(e) => handleChange("blockContent", e.target.checked)}
+              checked={formData.blockOnExpire}
+              onChange={(e) => handleChange("blockOnExpire", e.target.checked)}
             />
           }
-          label="When the duration expires, the course is blocked."
+          label={
+            <span className="text-sm">
+              When the duration expires, the course is blocked.
+            </span>
+          }
         />
         <FormControlLabel
           control={
             <Checkbox
-              checked={formData.blockContent}
-              onChange={(e) => handleChange("blockContent", e.target.checked)}
+              checked={formData.blockOnCompletion}
+              onChange={(e) =>
+                handleChange("blockOnCompletion", e.target.checked)
+              }
             />
           }
-          label="Block the course after the student finished this course."
+          label={
+            <span className="text-sm">
+              Block the course after the student finishes this course.
+            </span>
+          }
         />
       </div>
-
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Allow Repurchase</Typography>
         <FormControlLabel
@@ -98,7 +116,12 @@ export default function GeneralPanel() {
               }
             />
           }
-          label="Allow users to repurchase this course after a fee has been paid or blocked (not applicable to free courses or Critical Order manual)."
+          label={
+            <span className="text-sm">
+              Allow users to repurchase this course after a fee has been paid or
+              blocked (not applicable to free courses or Critical Order manual).
+            </span>
+          }
         />
       </div>
 
@@ -112,59 +135,57 @@ export default function GeneralPanel() {
             value="read"
             control={<Radio />}
             className="text-sm"
-            label="Read course progress: The course progress and results of students will be removed."
+            label={
+              <span className="text-sm">
+                Read course progress: The course progress and results of
+                students will be removed.
+              </span>
+            }
           />
           <FormControlLabel
             value="write"
             control={<Radio />}
-            label="Write course progress: The course progress and results of students will return."
+            label={
+              <span className="text-sm">
+                Write course progress: The course progress and results of
+                students will return.
+              </span>
+            }
           />
           <FormControlLabel
             value="open-policy"
             control={<Radio />}
-            label="Open-policy for students to see the number of free course progress in all cases with the confirm people."
+            label={
+              <span className="text-sm">
+                Open-policy for students to see the number of free course
+                progress in all cases with the confirm people.
+              </span>
+            }
           />
         </RadioGroup>
       </div>
-
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Level</Typography>
-        <RadioGroup
-          value={formData.difficultyLevel}
-          onChange={(e) => handleChange("difficultyLevel", e.target.value)}
-        >
-          <FormControlLabel
-            value="All Levels"
-            control={<Radio />}
-            label="All Levels"
-          />
-          <FormControlLabel
-            value="Beginner"
-            control={<Radio />}
-            label="Beginner"
-          />
-          <FormControlLabel
-            value="Intermediate"
-            control={<Radio />}
-            label="Intermediate"
-          />
-          <FormControlLabel
-            value="Advanced"
-            control={<Radio />}
-            label="Advanced"
-          />
-        </RadioGroup>
+        <FormControl fullWidth size="small">
+          <Select
+            value={formData.difficultyLevel}
+            onChange={(e) => handleChange("difficultyLevel", e.target.value)}
+          >
+            <MenuItem value="All Levels">All Levels</MenuItem>
+            <MenuItem value="Beginner">Beginner</MenuItem>
+            <MenuItem value="Intermediate">Intermediate</MenuItem>
+            <MenuItem value="Advanced">Advanced</MenuItem>
+          </Select>
+        </FormControl>
         <span className="mt-1 block text-xs text-secondary">
           Choose a difficulty level.
         </span>
       </div>
-
       <div className="mb-4">
         <Typography className="mb-2 font-bold">
           Role Students Enrolled
         </Typography>
         <TextField
-          label="Role Students Enrolled"
           type="number"
           value={formData.roleStudentsEnrolled}
           onChange={(e) =>
@@ -179,7 +200,6 @@ export default function GeneralPanel() {
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Max Student</Typography>
         <TextField
-          label="Max Student"
           type="number"
           value={formData.maxStudent}
           onChange={(e) =>
@@ -196,7 +216,6 @@ export default function GeneralPanel() {
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Re-take Course</Typography>
         <TextField
-          label="Re-take Course"
           type="number"
           value={formData.retackeCourse}
           onChange={(e) =>
@@ -218,10 +237,14 @@ export default function GeneralPanel() {
               onChange={(e) => handleChange("finishButton", e.target.checked)}
             />
           }
-          label="Allow showing the finish button when the student has completed all items but has not passed the course assessment yet."
+          label={
+            <span className="text-sm">
+              Allow showing the finish button when the student has completed all
+              items but has not passed the course assessment yet.e.
+            </span>
+          }
         />
       </div>
-
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Featured list</Typography>
         <FormControlLabel
@@ -231,11 +254,40 @@ export default function GeneralPanel() {
               onChange={(e) => handleChange("featuredlist", e.target.checked)}
             />
           }
-          label="Add the course to the Featured List."
+          label={
+            <span className="text-sm">
+              Add the course to the Featured List.
+            </span>
+          }
         />
       </div>
+      <div className="mb-4">
+        <Typography className="mb-2 font-bold">Featured Review</Typography>
+        <TextField
+          type="text"
+          value={formData.featuredReview}
+          onChange={(e) => handleChange("featuredReview", e.target.value)}
+          fullWidth
+        />
+        <span className="mt-1 block text-xs text-secondary">
+          A good review to promote the course.
+        </span>
+      </div>
+      <div className="mb-4">
+        <Typography className="mb-2 font-bold">Extrnal Link</Typography>
+        <TextField
+          type="text"
+          value={formData.extrnalLink}
+          onChange={(e) => handleChange("extrnalLink", e.target.value)}
+          fullWidth
+        />
+        <span className="mt-1 block text-xs text-secondary">
+          Normally used for offline classes. Ex: link to a contact page. Format:
+          https://google.com
+        </span>
+      </div>
       <Button onClick={onSubmit} variant="contained" color="primary">
-        Submit
+        Save
       </Button>
     </div>
   );

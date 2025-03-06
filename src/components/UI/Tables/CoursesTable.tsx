@@ -3,9 +3,10 @@ import SearchInput from "@/components/UI/SearchInput";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import TableDropMenu from "../TableDropMenu";
-import { Tune } from "@mui/icons-material";
+import { Add, Tune } from "@mui/icons-material";
 
 import ExportBtnIcon from "../ExportBtnIcon";
+import Link from "next/link";
 
 const columns: GridColDef[] = [
   {
@@ -298,6 +299,13 @@ const CoursesTable: React.FC = () => {
               </MenuItem>
             ))}
           </Menu>
+          <Link
+            className="flex h-12 items-center gap-2 rounded-md bg-primary px-2 text-sm text-white hover:bg-primary-900"
+            href={"/courses/admin/add-course"}
+          >
+            <Add />
+            Add Course
+          </Link>
         </div>
       </div>
       <Box sx={{ height: 400, overflowX: "auto" }}>
