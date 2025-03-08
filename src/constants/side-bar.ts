@@ -14,6 +14,7 @@ import {
   MailOutline,
   LiveTv,
   Category,
+  PersonOutlined,
 } from "@mui/icons-material";
 
 export type CommonLinksType = "home";
@@ -191,6 +192,18 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       icon: Category,
       label: "Categories",
       path: "/courses/admin/courses-category",
+    },
+    {
+      id: 28,
+      icon: PersonOutlined,
+      label: "Student Profile",
+      path: "/courses/admin/student-profile",
+    },
+    {
+      id: 29,
+      icon: PersonOutlined,
+      label: "Instractor Profile",
+      path: "/courses/admin/instractor-profile",
     },
     {
       id: 31,
