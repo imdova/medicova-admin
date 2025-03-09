@@ -22,7 +22,7 @@ export default function MedicalCard({
 }: MedicalCardProps) {
   return (
     <Link href={"#"} className="box-content overflow-hidden rounded-xl !p-2">
-      <div className="relative h-44 w-full">
+      <div className="relative h-40 w-full">
         <Image
           src={imageUrl}
           alt={title}

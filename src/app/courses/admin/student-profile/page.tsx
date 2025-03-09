@@ -6,9 +6,30 @@ import NotficationContent from "@/components/UI/NotficationContent";
 import ProgressAvatar from "@/components/UI/ProgressAvatar";
 import MentorInstructorTable from "@/components/UI/Tables/MentorInstructorTable";
 import { dummyData, dummyNotifications } from "@/constants/profile.data";
-import { NotificationsNoneOutlined } from "@mui/icons-material";
+import {
+  NavigateBefore,
+  NavigateNext,
+  NotificationsNoneOutlined,
+} from "@mui/icons-material";
+import { useState } from "react";
 
 export default function StudentProfile() {
+  const [current, setCurrent] = useState(0);
+
+  const visibleCards = 4;
+
+  const nextSlide = () => {
+    setCurrent((prev) => (prev + 1) % (dummyData.length - (visibleCards - 1)));
+  };
+
+  const prevSlide = () => {
+    setCurrent(
+      (prev) =>
+        (prev - 1 + (dummyData.length - (visibleCards - 1))) %
+        (dummyData.length - (visibleCards - 1)),
+    );
+  };
+
   return (
     <div className="p-4">
       <h2 className="mb-6 text-2xl font-bold">Student Profile</h2>
@@ -37,12 +58,39 @@ export default function StudentProfile() {
             ))}
           </div>
           {/* Continue Watching */}
-          <div>
-            <h2 className="my-6 text-lg font-semibold">Continue Watching</h2>
-            <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-              {dummyData.map((course, index) => (
-                <MedicalCard key={index} {...course} />
-              ))}
+          <div className="relative mb-4 w-full overflow-hidden rounded-2xl p-4">
+            <div className="mt-6 flex flex-col items-center justify-end md:flex-row md:items-center">
+              {/* Navigation Buttons */}
+              <div className="mb-2 flex justify-end gap-3">
+                <button
+                  onClick={prevSlide}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-primary text-primary transition hover:bg-primary hover:text-white"
+                >
+                  <NavigateBefore className="text-lg" />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-primary text-primary transition hover:bg-primary hover:text-white"
+                >
+                  <NavigateNext className="text-lg" />
+                </button>
+              </div>
+            </div>
+            {/* Slider */}
+            <div className="flex min-h-[300px] w-full items-center justify-center">
+              <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                {dummyData.length > 0 ? (
+                  dummyData
+                    .slice(current, current + visibleCards)
+                    .map((course, index) => (
+                      <MedicalCard key={index} {...course} />
+                    ))
+                ) : (
+                  <p className="col-span-4 text-center text-gray-500">
+                    No projects found.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
