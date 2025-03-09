@@ -1,49 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent, Avatar, Chip } from "@mui/material";
+import { Avatar } from "@mui/material";
+import Link from "next/link";
+import { Notification2 } from "@/types/profile";
 
-interface Notification {
-  id: number;
-  name: string;
-  avatar: string;
-  message: string;
-  date: Date;
-  read: boolean;
+interface NotficationContentProps {
+  notifications: Notification2[];
 }
-
-const dummyNotifications: Notification[] = [
-  {
-    id: 1,
-    name: "Bessie Cooper",
-    avatar: "https://via.placeholder.com/40",
-    message: "Ahmed RAMADANGD didn't update his status for more than 59 days",
-    date: new Date(),
-    read: false,
-  },
-  {
-    id: 2,
-    name: "Marvin McKinney",
-    avatar: "https://via.placeholder.com/40",
-    message: "Ahmed RAMADANGD didn't update his status for more than 59 days",
-    date: new Date(),
-    read: true,
-  },
-  {
-    id: 3,
-    name: "Courtney Henry",
-    avatar: "https://via.placeholder.com/40",
-    message: "Ahmed RAMADANGD didn't update his status for more than 59 days",
-    date: new Date(new Date().setDate(new Date().getDate() - 1)),
-    read: false,
-  },
-  {
-    id: 4,
-    name: "Esther Howard",
-    avatar: "https://via.placeholder.com/40",
-    message: "Ahmed RAMADANGD didn't update his status for more than 59 days",
-    date: new Date(new Date().setDate(new Date().getDate() - 2)),
-    read: true,
-  },
-];
 
 const filters = ["All Notification", "Unread"];
 
@@ -66,26 +28,28 @@ function isYesterday(date: Date): boolean {
   );
 }
 
-export default function NotficationContent() {
+export default function NotficationContent({
+  notifications,
+}: NotficationContentProps) {
   const [filter, setFilter] = useState("All Notification");
 
-  const filteredNotifications = dummyNotifications.filter((notification) => {
+  const filteredNotifications = notifications.filter((notification) => {
     if (filter === "Unread") return !notification.read;
     return true;
   });
 
   return (
-    <div className="h-full max-h-[640px] overflow-y-auto">
-      <h2 className="mb-2 text-xl font-semibold">Notfiication</h2>
+    <div>
+      <h2 className="mb-4 border-b pb-2 text-xl font-semibold">Notfiication</h2>
       <div className="mb-4 flex space-x-2">
         {filters.map((f) => (
-          <Chip
-            key={f}
-            label={f}
-            clickable
-            color={filter === f ? "success" : "default"}
+          <button
             onClick={() => setFilter(f)}
-          />
+            key={f}
+            className={`rounded-full px-4 py-2 text-sm ${filter === f ? "bg-primary text-white" : "bg-[#eee]"}`}
+          >
+            {f}
+          </button>
         ))}
       </div>
       <div>
@@ -93,16 +57,16 @@ export default function NotficationContent() {
         {filteredNotifications
           .filter((n) => isToday(n.date))
           .map((notification) => (
-            <Card key={notification.id} variant="outlined" className="mb-2">
-              <CardContent className="flex items-center space-x-3">
+            <Link href={"#"} key={notification.id} className="relative mb-2">
+              <div className="flex items-center space-x-3 rounded-md p-3 transition hover:bg-[#f3f3f3]">
                 <Avatar src={notification.avatar} alt={notification.name} />
-                <div className="flex-grow">
+                <div className="flex-grow p-2">
                   <p className="text-sm font-medium">{notification.name}</p>
                   <p className="text-xs text-gray-500">
                     {notification.message}
                   </p>
                 </div>
-                <p className="text-xs text-gray-400">
+                <p className="absolute right-1 top-1 text-[8px] text-gray-400">
                   {notification.date.toLocaleTimeString("en-US", {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -114,8 +78,8 @@ export default function NotficationContent() {
                     <div className="h-2 w-2 rounded-full bg-green-500"></div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </Link>
           ))}
         <p className="mb-2 mt-4 text-sm font-semibold text-gray-500">
           YESTERDAY
@@ -123,16 +87,16 @@ export default function NotficationContent() {
         {filteredNotifications
           .filter((n) => isYesterday(n.date))
           .map((notification) => (
-            <Card key={notification.id} variant="outlined" className="mb-2">
-              <CardContent className="flex items-center space-x-3">
+            <Link href={"#"} key={notification.id} className="relative mb-2">
+              <div className="flex items-center space-x-3 rounded-md p-3 transition hover:bg-[#f3f3f3]">
                 <Avatar src={notification.avatar} alt={notification.name} />
-                <div className="flex-grow">
+                <div className="flex-grow p-2">
                   <p className="text-sm font-medium">{notification.name}</p>
                   <p className="text-xs text-gray-500">
                     {notification.message}
                   </p>
                 </div>
-                <p className="text-xs text-gray-400">
+                <p className="absolute right-1 top-1 text-[8px] text-gray-400">
                   {notification.date.toLocaleTimeString("en-US", {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -144,8 +108,8 @@ export default function NotficationContent() {
                     <div className="h-2 w-2 rounded-full bg-green-500"></div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </Link>
           ))}
       </div>
     </div>

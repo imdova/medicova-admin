@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 
 type Section = "requirements" | "targetAudience" | "keyFeatures" | "faqs";
 
@@ -14,27 +14,30 @@ export default function ExtraInformationPanel() {
     faqs: [""],
   });
 
-  const handleAddField = (section: Section) => {
+  const handleAddField = useCallback((section: Section) => {
     setFormData((prev) => ({
       ...prev,
       [section]: [...prev[section], ""],
     }));
-  };
+  }, []);
 
-  const handleRemoveField = (section: Section, index: number) => {
+  const handleRemoveField = useCallback((section: Section, index: number) => {
     setFormData((prev) => ({
       ...prev,
       [section]: prev[section].filter((_, i) => i !== index),
     }));
-  };
+  }, []);
 
-  const handleChange = (section: Section, index: number, value: string) => {
-    setFormData((prev) => {
-      const updatedSection = [...prev[section]];
-      updatedSection[index] = value;
-      return { ...prev, [section]: updatedSection };
-    });
-  };
+  const handleChange = useCallback(
+    (section: Section, index: number, value: string) => {
+      setFormData((prev) => {
+        const updatedSection = [...prev[section]];
+        updatedSection[index] = value;
+        return { ...prev, [section]: updatedSection };
+      });
+    },
+    [],
+  );
 
   const renderSection = (title: string, section: Section) => (
     <div className="mb-6 w-full flex-1">
@@ -52,21 +55,22 @@ export default function ExtraInformationPanel() {
             className="flex-1 border-none bg-transparent outline-none"
             placeholder="Enter text..."
           />
-          <button
-            type="button"
+          <IconButton
             onClick={() => handleRemoveField(section, index)}
+            aria-label="Remove field"
           >
-            <CloseIcon className="text-lg text-secondary transition hover:text-red-500" />
-          </button>
+            <CloseIcon className="text-secondary transition hover:text-red-500" />
+          </IconButton>
         </div>
       ))}
-      <button
-        type="button"
+      <Button
         onClick={() => handleAddField(section)}
-        className="mt-4 flex items-center gap-1 rounded-md border border-primary px-3 py-1 text-sm text-primary transition hover:bg-primary hover:text-white"
+        variant="outlined"
+        color="primary"
+        className="mt-4"
       >
         + Add More
-      </button>
+      </Button>
     </div>
   );
 

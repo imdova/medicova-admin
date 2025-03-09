@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   TextField,
   Button,
-  Checkbox,
   FormControlLabel,
   Typography,
   Radio,
@@ -31,70 +30,62 @@ export default function AssessmentPanel() {
   };
 
   const onSubmit = () => {
-    console.log(formData);
+    console.log("Form Submitted:", formData);
   };
 
   return (
     <div>
+      {/* Evaluation Section */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Evaluation</Typography>
         <RadioGroup
           value={formData.evaluation}
           onChange={(e) => handleChange("evaluation", e.target.value)}
         >
-          <FormControlLabel
-            value="lessons"
-            control={<Radio />}
-            className="text-sm"
-            label={<span className="text-sm">Evaluate via lessons.</span>}
-          />
-          <FormControlLabel
-            value="results"
-            control={<Radio />}
-            label={
-              <span className="text-sm">
-                Evaluate via results of the final quiz
-              </span>
-            }
-          />
-          <FormControlLabel
-            value="quizzes"
-            control={<Radio />}
-            label={<span className="text-sm">Evaluate via passed quizzes</span>}
-          />
-          <FormControlLabel
-            value="questions"
-            control={<Radio />}
-            label={<span className="text-sm">Evaluate via questions</span>}
-          />
-          <FormControlLabel
-            value="mark"
-            control={<Radio />}
-            label={<span className="text-sm">Evaluate via mark</span>}
-          />
+          {[
+            { value: "lessons", label: "Evaluate via lessons." },
+            {
+              value: "results",
+              label: "Evaluate via results of the final quiz",
+            },
+            { value: "quizzes", label: "Evaluate via passed quizzes" },
+            { value: "questions", label: "Evaluate via questions" },
+            { value: "mark", label: "Evaluate via mark" },
+          ].map(({ value, label }) => (
+            <FormControlLabel
+              key={value}
+              value={value}
+              control={<Radio />}
+              label={label}
+            />
+          ))}
         </RadioGroup>
-        <span className="mt-1 block text-xs text-secondary">
+        <Typography variant="body2" color="textSecondary">
           The method of evaluating a students performance in a course.
-        </span>
-        <span className="mt-1 block text-xs text-red-500">
-          Note: changing the evaluation type will affect the assessment results
-          of student learning
-        </span>
+        </Typography>
+        <Typography variant="body2" color="error">
+          Note: Changing the evaluation type will affect the assessment results
+          of student learning.
+        </Typography>
       </div>
+
+      {/* Passing Grade Section */}
       <div className="mb-4">
-        <Typography className="mb-2 font-bold">Passing Grade(%)</Typography>
+        <Typography className="mb-2 font-bold">Passing Grade (%)</Typography>
         <TextField
           type="number"
           value={formData.passingGrade}
           onChange={(e) =>
-            handleChange("passingGrade", parseInt(e.target.value, 10))
+            handleChange("passingGrade", Number(e.target.value) || 0)
           }
           fullWidth
         />
-        <span className="mt-1 block text-xs text-secondary">
+        <Typography variant="body2" color="textSecondary">
           How many students have taken this course?
-        </span>
+        </Typography>
       </div>
+
+      {/* Save Button */}
       <Button onClick={onSubmit} variant="contained" color="primary">
         Save
       </Button>

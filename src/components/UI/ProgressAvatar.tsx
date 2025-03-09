@@ -1,5 +1,6 @@
 "use client";
 
+import { Room } from "@mui/icons-material";
 import Image from "next/image";
 
 interface ProgressAvatarProps {
@@ -55,7 +56,9 @@ const ProgressAvatar: React.FC<ProgressAvatarProps> = ({
       <h2 className="text-lg font-semibold text-gray-800">{name}</h2>
       <p className="text-sm text-gray-500">{email}</p>
       <div className="mt-2 flex items-center text-gray-500">
-        <span className="text-green-500">📍</span>
+        <span className="text-green-500">
+          <Room />
+        </span>
         <span className="ml-1 text-sm">{location}</span>
       </div>
     </div>

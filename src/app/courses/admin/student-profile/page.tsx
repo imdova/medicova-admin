@@ -5,46 +5,8 @@ import MenuCard from "@/components/UI/MenuCard";
 import NotficationContent from "@/components/UI/NotficationContent";
 import ProgressAvatar from "@/components/UI/ProgressAvatar";
 import MentorInstructorTable from "@/components/UI/Tables/MentorInstructorTable";
+import { dummyData, dummyNotifications } from "@/constants/profile.data";
 import { NotificationsNoneOutlined } from "@mui/icons-material";
-
-const dummyData = [
-  {
-    imageUrl:
-      "https://img.freepik.com/free-photo/surprised-pretty-businesswoman-chatting-by-phone-standing-isolated_231208-196.jpg?t=st=1741433009~exp=1741436609~hmac=f7b5b0c72a49b998cbf10430f3ecd3314cddde47a567c4e50d3168eec6d4aa97&w=1380",
-    title: "Medical Terminology Specialization",
-    instructor: "Mohamed Farag",
-    instructorImage:
-      "https://img.freepik.com/free-photo/medium-shot-woman-posing-indoors_23-2149915935.jpg?t=st=1741433123~exp=1741436723~hmac=951a1a4ed8e3f5826c1573d6c046d95faf461ec5d4dbbe4f62bef0aa54c45384&w=740",
-    progress: 70,
-  },
-  {
-    imageUrl:
-      "https://img.freepik.com/free-photo/surprised-pretty-businesswoman-chatting-by-phone-standing-isolated_231208-196.jpg?t=st=1741433009~exp=1741436609~hmac=f7b5b0c72a49b998cbf10430f3ecd3314cddde47a567c4e50d3168eec6d4aa97&w=1380",
-    title: "Anatomy Basics",
-    instructor: "Sarah Johnson",
-    instructorImage:
-      "https://img.freepik.com/free-photo/medium-shot-woman-posing-indoors_23-2149915935.jpg?t=st=1741433123~exp=1741436723~hmac=951a1a4ed8e3f5826c1573d6c046d95faf461ec5d4dbbe4f62bef0aa54c45384&w=740",
-    progress: 50,
-  },
-  {
-    imageUrl:
-      "https://img.freepik.com/free-photo/surprised-pretty-businesswoman-chatting-by-phone-standing-isolated_231208-196.jpg?t=st=1741433009~exp=1741436609~hmac=f7b5b0c72a49b998cbf10430f3ecd3314cddde47a567c4e50d3168eec6d4aa97&w=1380",
-    title: "Pathophysiology Insights",
-    instructor: "James Smith",
-    instructorImage:
-      "https://img.freepik.com/free-photo/medium-shot-woman-posing-indoors_23-2149915935.jpg?t=st=1741433123~exp=1741436723~hmac=951a1a4ed8e3f5826c1573d6c046d95faf461ec5d4dbbe4f62bef0aa54c45384&w=740",
-    progress: 85,
-  },
-  {
-    imageUrl:
-      "https://img.freepik.com/free-photo/surprised-pretty-businesswoman-chatting-by-phone-standing-isolated_231208-196.jpg?t=st=1741433009~exp=1741436609~hmac=f7b5b0c72a49b998cbf10430f3ecd3314cddde47a567c4e50d3168eec6d4aa97&w=1380",
-    title: "Clinical Procedures",
-    instructor: "Emma Brown",
-    instructorImage:
-      "https://img.freepik.com/free-photo/medium-shot-woman-posing-indoors_23-2149915935.jpg?t=st=1741433123~exp=1741436723~hmac=951a1a4ed8e3f5826c1573d6c046d95faf461ec5d4dbbe4f62bef0aa54c45384&w=740",
-    progress: 40,
-  },
-];
 
 export default function StudentProfile() {
   return (
@@ -96,7 +58,7 @@ export default function StudentProfile() {
             />
           </div>
           <div className="box-content">
-            <NotficationContent />
+            <NotficationContent notifications={dummyNotifications} />
           </div>
         </div>
       </div>

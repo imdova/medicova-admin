@@ -5,9 +5,7 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
-  Typography,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
 } from "@mui/material";
@@ -43,9 +41,7 @@ export default function OfflineCoursesPanel() {
   return (
     <div>
       <div className="mb-4">
-        <Typography className="mb-2 font-bold">
-          Enable offline course
-        </Typography>
+        <h1 className="mb-2 font-bold">Enable offline course</h1>
         <FormControlLabel
           control={
             <Checkbox
@@ -65,7 +61,7 @@ export default function OfflineCoursesPanel() {
         />
       </div>
       <div className="mb-4">
-        <Typography className="mb-2 font-bold">Lessons</Typography>
+        <h1 className="mb-2 font-bold">Lessons</h1>
         <TextField
           type="number"
           value={formData.lessons}
@@ -79,7 +75,7 @@ export default function OfflineCoursesPanel() {
         </span>
       </div>
       <div className="mb-4">
-        <Typography className="mb-2 font-bold">Delivery Type</Typography>
+        <h1 className="mb-2 font-bold">Delivery Type</h1>
         <FormControl fullWidth size="small">
           <Select
             value={formData.deliveryType}
@@ -96,7 +92,7 @@ export default function OfflineCoursesPanel() {
         </span>
       </div>
       <div className="mb-4">
-        <Typography className="mb-2 font-bold">Address</Typography>
+        <h1 className="mb-2 font-bold">Address</h1>
         <TextField
           type="text"
           value={formData.address}

@@ -13,6 +13,7 @@ import CurrentStudentTable from "@/components/UI/Tables/CurrentStudentTable";
 import MenuCard from "@/components/UI/MenuCard";
 import NotficationContent from "@/components/UI/NotficationContent";
 import Link from "next/link";
+import { dummyCourses, dummyNotifications } from "@/constants/profile.data";
 
 export default function InstractorProfile() {
   return (
@@ -36,7 +37,7 @@ export default function InstractorProfile() {
               <div className="absolute left-0 top-0 h-full w-full rounded-lg bg-[#2ba148ea]"></div>
               <Link
                 href={"#"}
-                className="absolute right-4 top-4 z-10 rounded-lg bg-white px-3 py-2 text-sm"
+                className="absolute right-4 top-4 z-10 rounded-full bg-white px-3 py-2 text-sm"
               >
                 Edit Profile
               </Link>
@@ -113,18 +114,18 @@ export default function InstractorProfile() {
                 <MenuCard />
               </div>
               <ul className="max-h-[600px] overflow-y-auto md:max-h-[300px]">
-                {[1, 2, 3, 4, 5].map((e, index) => {
+                {dummyCourses.map((course) => {
                   return (
                     <li
-                      className="mb-2 rounded-md bg-[#f5f5f5] py-4 transition hover:bg-green-50"
-                      key={index}
+                      className="mb-2 rounded-md bg-[#f5f5f5] p-2 transition hover:bg-green-50"
+                      key={course.id}
                     >
                       <Link
                         className="flex flex-col items-center gap-3 sm:flex-row"
                         href={"#"}
                       >
                         <Image
-                          src="https://img.freepik.com/free-photo/portrait-woman-holding-clip-board-hands-writing-paper-wearing-glasses-isolated-grey-wall_231208-209.jpg?t=st=1741423896~exp=1741427496~hmac=a56ac8f14382138f6ba57b43a568eee52bd8e5b4c9a5554b6a6b469a049e6c76&w=1380"
+                          src={course.image}
                           height={100}
                           width={100}
                           className="rounded-md"
@@ -132,20 +133,20 @@ export default function InstractorProfile() {
                         />
                         <div>
                           <div className="mb-4 flex flex-col items-center gap-2 sm:flex-row">
-                            <h2>Course Name</h2>
-                            <div className="flex gap-1 rounded-full bg-white p-2">
-                              <LanguageOutlined className="text-sm" />
-                              <span className="text-xs">Online</span>
+                            <h2>{course.name}</h2>
+                            <div className="flex items-center gap-1 rounded-full bg-white px-3 py-2">
+                              <LanguageOutlined className="text-[12px]" />
+                              <span className="text-[10px]">Online</span>
                             </div>
                           </div>
                           <div className="flex gap-2">
                             <span className="flex items-center gap-2 text-sm text-secondary">
                               <CalendarTodayOutlined className="text-sm" />
-                              20/06/2024
+                              {course.date}
                             </span>
                             <span className="flex items-center gap-2 text-sm text-secondary">
                               <SchoolOutlined className="text-sm" />
-                              250 Students
+                              {course.students} Students
                             </span>
                           </div>
                         </div>
@@ -159,7 +160,7 @@ export default function InstractorProfile() {
         </div>
         {/* Notification Section */}
         <div className="box-content lg:w-[400px]">
-          <NotficationContent />
+          <NotficationContent notifications={dummyNotifications} />
         </div>
       </div>
       <div className="box-content">
