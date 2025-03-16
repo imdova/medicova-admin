@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import {
   TextField,
   Button,
@@ -10,28 +9,23 @@ import {
   MenuItem,
 } from "@mui/material";
 
-interface FormData {
-  enableOffline: boolean;
-  deliveryType: string;
-  lessons: number;
-  finishButton: boolean;
-  address: string;
+interface PanelProps {
+  formData: {
+    enableOffline: boolean;
+    deliveryType: string;
+    lessons: number;
+    finishButton: boolean;
+    address: string;
+  };
+  onChange: (field: string, value: any) => void;
 }
 
-export default function OfflineCoursesPanel() {
-  const [formData, setFormData] = useState<FormData>({
-    enableOffline: false,
-    deliveryType: "Private",
-    lessons: 10,
-    finishButton: false,
-    address: "",
-  });
-
-  const handleChange = (field: keyof FormData, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+export default function OfflineCoursesPanel({
+  formData,
+  onChange,
+}: PanelProps) {
+  const handleChange = (field: string, value: any) => {
+    onChange(field, value);
   };
 
   const onSubmit = () => {
@@ -104,9 +98,6 @@ export default function OfflineCoursesPanel() {
           meeting method (e.g., Zoom, Google Meet, etc.).
         </span>
       </div>
-      <Button onClick={onSubmit} variant="contained" color="primary">
-        Save
-      </Button>
     </div>
   );
 }

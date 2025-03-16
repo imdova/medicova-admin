@@ -19,82 +19,137 @@ import AssessmentPanel from "@/app/courses/admin/add-course/panels/AssessmentPan
 import DownloadablePanel from "@/app/courses/admin/add-course/panels/DownloadablePanel";
 import AuthorPanel from "@/app/courses/admin/add-course/panels/AuthorPanel";
 
-type Tab = {
-  label: string;
-  content: React.ReactNode;
-};
+interface TabsProps {
+  formData: any; // Define a proper interface for formData
+  onChange: (field: string, value: any) => void;
+}
 
-type TabsProps = {
-  tabs: Tab[];
-};
-const tabs = [
-  {
-    label: (
-      <div className="flex w-full items-center justify-start gap-3">
-        <SettingsOutlined className="text-xl" />
-        <span className="text-sm">General</span>
-      </div>
-    ),
-    content: <GeneralPanel />,
-  },
-  {
-    label: (
-      <div className="flex w-full items-center justify-start gap-3">
-        <CloudOffOutlined className="text-xl" />
-        <span className="text-sm">Offline courses</span>
-      </div>
-    ),
-    content: <OfflineCoursesPanel />,
-  },
-  {
-    label: (
-      <div className="flex w-full items-center justify-start gap-3">
-        <PaidOutlined className="text-xl" />
-        <span className="text-sm">Pricing</span>
-      </div>
-    ),
-    content: <PricingPanel />,
-  },
-  {
-    label: (
-      <div className="flex w-full items-center justify-start gap-3">
-        <TextSnippetOutlined className="text-xl" />
-        <span className="text-sm">Extra Information</span>
-      </div>
-    ),
-    content: <ExtraInformationPanel />,
-  },
-  {
-    label: (
-      <div className="flex w-full items-center justify-start gap-3">
-        <SupportOutlined className="text-xl" />
-        <span className="text-sm">Assessment</span>
-      </div>
-    ),
-    content: <AssessmentPanel />,
-  },
-  {
-    label: (
-      <div className="flex w-full items-center justify-start gap-3">
-        <PersonOutlineOutlined className="text-xl" />
-        <span className="text-sm">Author</span>
-      </div>
-    ),
-    content: <AuthorPanel />,
-  },
-  {
-    label: (
-      <div className="flex w-full items-center justify-start gap-3">
-        <FileDownloadDoneOutlined className="text-xl" />
-        <span className="text-sm">Downloadable</span>
-      </div>
-    ),
-    content: <DownloadablePanel />,
-  },
-];
-
-const Tabs: React.FC = () => {
+const Tabs: React.FC<TabsProps> = ({ formData, onChange }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const tabs = [
+    {
+      label: (
+        <div className="flex w-full items-center justify-start gap-3">
+          <SettingsOutlined className="text-xl" />
+          <span className="text-sm">General</span>
+        </div>
+      ),
+      content: (
+        <GeneralPanel
+          formData={{
+            durationWeeks: formData.durationWeeks,
+            blockOnCompletion: formData.blockOnCompletion,
+            blockOnExpire: formData.blockOnExpire,
+            allowRepurchase: formData.allowRepurchase,
+            repurchaseAction: formData.repurchaseAction,
+            difficultyLevel: formData.difficultyLevel,
+            roleStudentsEnrolled: formData.roleStudentsEnrolled,
+            maxStudent: formData.maxStudent,
+            retackeCourse: formData.retackeCourse,
+            finishButton: formData.finishButton,
+            featuredlist: formData.featuredlist,
+            featuredReview: formData.featuredReview,
+            extrnalLink: formData.extrnalLink,
+          }}
+          onChange={onChange}
+        />
+      ),
+    },
+    {
+      label: (
+        <div className="flex w-full items-center justify-start gap-3">
+          <CloudOffOutlined className="text-xl" />
+          <span className="text-sm">Offline courses</span>
+        </div>
+      ),
+      content: (
+        <OfflineCoursesPanel
+          formData={{
+            enableOffline: formData.enableOffline,
+            deliveryType: formData.deliveryType,
+            lessons: formData.lessons,
+            finishButton: formData.finishButton,
+            address: formData.address,
+          }}
+          onChange={onChange}
+        />
+      ),
+    },
+    {
+      label: (
+        <div className="flex w-full items-center justify-start gap-3">
+          <PaidOutlined className="text-xl" />
+          <span className="text-sm">Pricing</span>
+        </div>
+      ),
+      content: (
+        <PricingPanel
+          formData={{
+            finishButton: formData.finishButton,
+            enrollmentRequirement: formData.enrollmentRequirement,
+            regularPrice: formData.regularPrice,
+            priceSuffix: formData.priceSuffix,
+          }}
+          onChange={onChange}
+        />
+      ),
+    },
+    {
+      label: (
+        <div className="flex w-full items-center justify-start gap-3">
+          <TextSnippetOutlined className="text-xl" />
+          <span className="text-sm">Extra Information</span>
+        </div>
+      ),
+      content: (
+        <ExtraInformationPanel
+          formData={{
+            requirements: formData.requirements,
+            targetAudience: formData.targetAudience,
+            keyFeatures: formData.keyFeatures,
+            faqs: formData.faqs,
+          }}
+          onChange={onChange}
+        />
+      ),
+    },
+    {
+      label: (
+        <div className="flex w-full items-center justify-start gap-3">
+          <SupportOutlined className="text-xl" />
+          <span className="text-sm">Assessment</span>
+        </div>
+      ),
+      content: (
+        <AssessmentPanel
+          formData={{
+            finishButton: formData.finishButton,
+            evaluation: formData.evaluation,
+            passingGrade: formData.passingGrade,
+          }}
+          onChange={onChange}
+        />
+      ),
+    },
+    {
+      label: (
+        <div className="flex w-full items-center justify-start gap-3">
+          <PersonOutlineOutlined className="text-xl" />
+          <span className="text-sm">Author</span>
+        </div>
+      ),
+      content: <AuthorPanel />,
+    },
+    {
+      label: (
+        <div className="flex w-full items-center justify-start gap-3">
+          <FileDownloadDoneOutlined className="text-xl" />
+          <span className="text-sm">Downloadable</span>
+        </div>
+      ),
+      content: <DownloadablePanel />,
+    },
+  ];
   return (
     <div className="flex w-full flex-col gap-4 lg:flex-row">
       {/* Tab Buttons */}
@@ -102,6 +157,7 @@ const Tabs: React.FC = () => {
         {tabs.map((tab, index) => (
           <button
             key={index}
+            type="button"
             onClick={() => setActiveTab(index)}
             className={`flex h-14 w-full items-center justify-start gap-2 rounded-md p-2 text-center transition-all duration-300 lg:w-[180px] ${
               activeTab === index

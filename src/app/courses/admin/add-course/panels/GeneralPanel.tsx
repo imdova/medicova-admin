@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import {
   TextField,
   Button,
@@ -9,7 +8,6 @@ import {
   RadioGroup,
   Typography,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
 } from "@mui/material";
@@ -30,30 +28,18 @@ interface FormData {
   extrnalLink: string;
 }
 
-export default function GeneralPanel() {
-  const [formData, setFormData] = useState<FormData>({
-    durationWeeks: 10,
-    blockOnCompletion: false,
-    blockOnExpire: false,
-    allowRepurchase: false,
-    repurchaseAction: "read",
-    difficultyLevel: "All Levels",
-    roleStudentsEnrolled: 10,
-    maxStudent: 10,
-    retackeCourse: 10,
-    finishButton: false,
-    featuredlist: false,
-    featuredReview: "",
-    extrnalLink: "",
-  });
+interface GeneralPanelProps {
+  formData: FormData;
+  onChange: (field: keyof FormData, value: any) => void;
+}
 
+export default function GeneralPanel({
+  formData,
+  onChange,
+}: GeneralPanelProps) {
   const handleChange = (field: keyof FormData, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    onChange(field, value);
   };
-
   const onSubmit = () => {
     console.log(formData);
   };
@@ -286,9 +272,6 @@ export default function GeneralPanel() {
           https://google.com
         </span>
       </div>
-      <Button onClick={onSubmit} variant="contained" color="primary">
-        Save
-      </Button>
     </div>
   );
 }

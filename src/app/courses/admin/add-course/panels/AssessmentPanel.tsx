@@ -14,23 +14,17 @@ interface FormData {
   evaluation: string;
   passingGrade: number;
 }
-
-export default function AssessmentPanel() {
-  const [formData, setFormData] = useState<FormData>({
-    finishButton: false,
-    evaluation: "quizzes",
-    passingGrade: 10,
-  });
-
-  const handleChange = (field: keyof FormData, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+interface panelProps {
+  formData: {
+    finishButton: boolean;
+    evaluation: string;
+    passingGrade: number;
   };
-
-  const onSubmit = () => {
-    console.log("Form Submitted:", formData);
+  onChange: (field: string, value: any) => void;
+}
+export default function AssessmentPanel({ formData, onChange }: panelProps) {
+  const handleChange = (field: string, value: any) => {
+    onChange(field, value);
   };
 
   return (
@@ -84,11 +78,6 @@ export default function AssessmentPanel() {
           How many students have taken this course?
         </Typography>
       </div>
-
-      {/* Save Button */}
-      <Button onClick={onSubmit} variant="contained" color="primary">
-        Save
-      </Button>
     </div>
   );
 }

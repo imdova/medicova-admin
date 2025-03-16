@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import {
   TextField,
   Button,
@@ -8,26 +7,19 @@ import {
   Typography,
 } from "@mui/material";
 
-interface FormData {
-  finishButton: boolean;
-  enrollmentRequirement: boolean;
-  regularPrice: string;
-  priceSuffix: string;
+interface panelProps {
+  formData: {
+    finishButton: boolean;
+    enrollmentRequirement: boolean;
+    regularPrice: string;
+    priceSuffix: string;
+  };
+  onChange: (field: string, value: any) => void;
 }
 
-export default function PricingPanel() {
-  const [formData, setFormData] = useState<FormData>({
-    finishButton: false,
-    enrollmentRequirement: false,
-    regularPrice: "",
-    priceSuffix: "",
-  });
-
-  const handleChange = (field: keyof FormData, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+export default function PricingPanel({ formData, onChange }: panelProps) {
+  const handleChange = (field: string, value: any) => {
+    onChange(field, value);
   };
 
   const onSubmit = () => {
@@ -82,9 +74,6 @@ export default function PricingPanel() {
           }
         />
       </div>
-      <Button onClick={onSubmit} variant="contained" color="primary">
-        Save
-      </Button>
     </div>
   );
 }
