@@ -762,7 +762,7 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
 
               {/* Show error message */}
               {errors.parentCategory && (
-                <p className="mt-1 text-sm text-red-500">
+                <p className="mt-1 text-xs text-red-500">
                   {errors.parentCategory.message}
                 </p>
               )}
