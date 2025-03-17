@@ -1,35 +1,39 @@
 "use client";
 import {
   TextField,
-  Button,
   Checkbox,
   FormControlLabel,
   FormControl,
   Select,
   MenuItem,
 } from "@mui/material";
+import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+
+interface FormData {
+  enableOffline: boolean;
+  deliveryType: string;
+  lessons: number;
+  finishButton: boolean;
+  address: string;
+}
 
 interface PanelProps {
-  formData: {
-    enableOffline: boolean;
-    deliveryType: string;
-    lessons: number;
-    finishButton: boolean;
-    address: string;
-  };
-  onChange: (field: string, value: any) => void;
+  formData: FormData;
+  onChange: (field: keyof FormData, value: any) => void;
+  register: UseFormRegister<FormData>;
+  setValue: UseFormSetValue<FormData>;
+  errors: FieldErrors<FormData>;
 }
 
 export default function OfflineCoursesPanel({
   formData,
   onChange,
+  register,
+  setValue,
+  errors,
 }: PanelProps) {
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: keyof FormData, value: any) => {
     onChange(field, value);
-  };
-
-  const onSubmit = () => {
-    console.log(formData);
   };
 
   return (
@@ -39,6 +43,7 @@ export default function OfflineCoursesPanel({
         <FormControlLabel
           control={
             <Checkbox
+              {...register("enableOffline")}
               checked={formData.enableOffline}
               onChange={(e) => handleChange("enableOffline", e.target.checked)}
             />
@@ -47,33 +52,42 @@ export default function OfflineCoursesPanel({
             <span className="text-sm">
               When you enable the offline course feature, the system will
               disable certain online course functions, such as curriculum,
-              finish button, re-take course, block content, repurchase. After
-              checking the checkbox, make sure to click the Update button to
-              apply the changes successfully.
+              finish button, re-take course, block content, repurchase.
             </span>
           }
         />
       </div>
+
       <div className="mb-4">
         <h1 className="mb-2 font-bold">Lessons</h1>
         <TextField
           type="number"
-          value={formData.lessons}
-          onChange={(e) =>
-            handleChange("lessons", parseInt(e.target.value, 10))
-          }
+          {...register("lessons", {
+            required: "Lessons count is required",
+            min: { value: 1, message: "Must have at least 1 lesson" },
+          })}
           fullWidth
+          error={!!errors.lessons}
+          helperText={errors.lessons?.message}
+          onChange={(e) =>
+            setValue("lessons", parseInt(e.target.value, 10) || 1)
+          }
         />
         <span className="mt-1 block text-xs text-secondary">
           Total lessons of the course.
         </span>
       </div>
+
       <div className="mb-4">
         <h1 className="mb-2 font-bold">Delivery Type</h1>
         <FormControl fullWidth size="small">
           <Select
+            {...register("deliveryType", {
+              required: "Delivery type is required",
+            })}
             value={formData.deliveryType}
             onChange={(e) => handleChange("deliveryType", e.target.value)}
+            error={!!errors.deliveryType}
           >
             <MenuItem value="Private">Private</MenuItem>
             <MenuItem value="Beginner">Beginner</MenuItem>
@@ -81,17 +95,29 @@ export default function OfflineCoursesPanel({
             <MenuItem value="Advanced">Advanced</MenuItem>
           </Select>
         </FormControl>
+        {errors.deliveryType && (
+          <p className="text-sm text-red-500">{errors.deliveryType.message}</p>
+        )}
         <span className="mt-1 block text-xs text-secondary">
           How your content is conveyed to students.
         </span>
       </div>
+
       <div className="mb-4">
         <h1 className="mb-2 font-bold">Address</h1>
         <TextField
           type="text"
-          value={formData.address}
-          onChange={(e) => handleChange("address", e.target.value)}
+          {...register("address", {
+            required: "Address is required",
+            minLength: {
+              value: 5,
+              message: "Address must be at least 5 characters",
+            },
+          })}
           fullWidth
+          error={!!errors.address}
+          helperText={errors.address?.message}
+          onChange={(e) => handleChange("address", e.target.value)}
         />
         <span className="mt-1 block text-xs text-secondary">
           You can enter the physical address of your class or specify the

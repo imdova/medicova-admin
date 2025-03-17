@@ -1,29 +1,36 @@
 "use client";
 import {
   TextField,
-  Button,
   Checkbox,
   FormControlLabel,
   Typography,
 } from "@mui/material";
+import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
-interface panelProps {
-  formData: {
-    finishButton: boolean;
-    enrollmentRequirement: boolean;
-    regularPrice: string;
-    priceSuffix: string;
-  };
-  onChange: (field: string, value: any) => void;
+//  Define FormData explicitly
+interface FormData {
+  finishButton: boolean;
+  enrollmentRequirement: boolean;
+  regularPrice: string;
+  priceSuffix: string;
 }
 
-export default function PricingPanel({ formData, onChange }: panelProps) {
-  const handleChange = (field: string, value: any) => {
-    onChange(field, value);
-  };
+interface PanelProps {
+  formData: FormData;
+  onChange: (field: keyof FormData, value: any) => void;
+  register: UseFormRegister<FormData>;
+  setValue: UseFormSetValue<FormData>;
+  errors: FieldErrors<FormData>;
+}
 
-  const onSubmit = () => {
-    console.log(formData);
+export default function PricingPanel({
+  formData,
+  onChange,
+  register,
+  errors,
+}: PanelProps) {
+  const handleChange = (field: keyof FormData, value: any) => {
+    onChange(field, value);
   };
 
   return (
@@ -32,18 +39,28 @@ export default function PricingPanel({ formData, onChange }: panelProps) {
         <Typography className="mb-2 font-bold">Regular price</Typography>
         <TextField
           type="text"
+          {...register("regularPrice", {
+            pattern: {
+              value: /^[0-9]*\.?[0-9]+$/,
+              message: "Invalid price format",
+            },
+          })}
           value={formData.regularPrice}
           onChange={(e) => handleChange("regularPrice", e.target.value)}
+          error={!!errors.regularPrice}
+          helperText={errors.regularPrice?.message}
           fullWidth
         />
         <span className="mt-1 block text-xs text-secondary">
           Set a regular price (USD). Leave it blank for Free.
         </span>
       </div>
+
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Price Suffix</Typography>
         <TextField
           type="text"
+          {...register("priceSuffix")}
           value={formData.priceSuffix}
           onChange={(e) => handleChange("priceSuffix", e.target.value)}
           fullWidth
@@ -53,6 +70,7 @@ export default function PricingPanel({ formData, onChange }: panelProps) {
           From, Up to...
         </span>
       </div>
+
       <div className="mb-4">
         <Typography className="mb-2 font-bold">
           There is no enrollment requirement
@@ -60,6 +78,7 @@ export default function PricingPanel({ formData, onChange }: panelProps) {
         <FormControlLabel
           control={
             <Checkbox
+              {...register("enrollmentRequirement")}
               checked={formData.enrollmentRequirement}
               onChange={(e) =>
                 handleChange("enrollmentRequirement", e.target.checked)

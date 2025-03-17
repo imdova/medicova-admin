@@ -18,13 +18,23 @@ import ExtraInformationPanel from "@/app/courses/admin/add-course/panels/ExtraIn
 import AssessmentPanel from "@/app/courses/admin/add-course/panels/AssessmentPanel";
 import DownloadablePanel from "@/app/courses/admin/add-course/panels/DownloadablePanel";
 import AuthorPanel from "@/app/courses/admin/add-course/panels/AuthorPanel";
+import { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form";
 
 interface TabsProps {
   formData: any; // Define a proper interface for formData
   onChange: (field: string, value: any) => void;
+  register: UseFormRegister<any>;
+  setValue: UseFormSetValue<any>;
+  errors: FieldErrors<any>;
 }
 
-const Tabs: React.FC<TabsProps> = ({ formData, onChange }) => {
+const Tabs: React.FC<TabsProps> = ({
+  formData,
+  onChange,
+  register,
+  setValue,
+  errors,
+}) => {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = [
     {
@@ -52,6 +62,9 @@ const Tabs: React.FC<TabsProps> = ({ formData, onChange }) => {
             extrnalLink: formData.extrnalLink,
           }}
           onChange={onChange}
+          register={register}
+          setValue={setValue}
+          errors={errors}
         />
       ),
     },
@@ -72,6 +85,9 @@ const Tabs: React.FC<TabsProps> = ({ formData, onChange }) => {
             address: formData.address,
           }}
           onChange={onChange}
+          register={register}
+          setValue={setValue}
+          errors={errors}
         />
       ),
     },
@@ -91,6 +107,9 @@ const Tabs: React.FC<TabsProps> = ({ formData, onChange }) => {
             priceSuffix: formData.priceSuffix,
           }}
           onChange={onChange}
+          register={register}
+          setValue={setValue}
+          errors={errors}
         />
       ),
     },
@@ -128,6 +147,8 @@ const Tabs: React.FC<TabsProps> = ({ formData, onChange }) => {
             passingGrade: formData.passingGrade,
           }}
           onChange={onChange}
+          register={register}
+          errors={errors}
         />
       ),
     },
@@ -147,7 +168,16 @@ const Tabs: React.FC<TabsProps> = ({ formData, onChange }) => {
           <span className="text-sm">Downloadable</span>
         </div>
       ),
-      content: <DownloadablePanel />,
+      content: (
+        <DownloadablePanel
+          materialFiles={{
+            fileTitle: formData.fileTitle || "", // Ensure a string value
+            method: (formData.method as "Upload" | "Link") || "Upload", // Ensure the correct type
+            selectedFiles: (formData.selectedFiles || []) as File[], // Ensure an array of File objects
+          }}
+          onChange={onChange}
+        />
+      ),
     },
   ];
   return (

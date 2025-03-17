@@ -1,32 +1,32 @@
 "use client";
-import { useState } from "react";
 import {
   TextField,
-  Button,
   FormControlLabel,
   Typography,
   Radio,
   RadioGroup,
 } from "@mui/material";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 
 interface FormData {
   finishButton: boolean;
   evaluation: string;
   passingGrade: number;
 }
-interface panelProps {
-  formData: {
-    finishButton: boolean;
-    evaluation: string;
-    passingGrade: number;
-  };
-  onChange: (field: string, value: any) => void;
-}
-export default function AssessmentPanel({ formData, onChange }: panelProps) {
-  const handleChange = (field: string, value: any) => {
-    onChange(field, value);
-  };
 
+interface PanelProps {
+  formData: FormData;
+  onChange: (field: keyof FormData, value: any) => void;
+  register: UseFormRegister<FormData>;
+  errors: FieldErrors<FormData>;
+}
+
+export default function AssessmentPanel({
+  formData,
+  onChange,
+  register,
+  errors,
+}: PanelProps) {
   return (
     <div>
       {/* Evaluation Section */}
@@ -34,7 +34,7 @@ export default function AssessmentPanel({ formData, onChange }: panelProps) {
         <Typography className="mb-2 font-bold">Evaluation</Typography>
         <RadioGroup
           value={formData.evaluation}
-          onChange={(e) => handleChange("evaluation", e.target.value)}
+          onChange={(e) => onChange("evaluation", e.target.value)}
         >
           {[
             { value: "lessons", label: "Evaluate via lessons." },
@@ -68,14 +68,17 @@ export default function AssessmentPanel({ formData, onChange }: panelProps) {
         <Typography className="mb-2 font-bold">Passing Grade (%)</Typography>
         <TextField
           type="number"
-          value={formData.passingGrade}
-          onChange={(e) =>
-            handleChange("passingGrade", Number(e.target.value) || 0)
-          }
+          {...register("passingGrade", {
+            required: "Passing grade is required",
+            min: { value: 1, message: "Passing grade must be at least 1%" },
+            max: { value: 100, message: "Passing grade cannot exceed 100%" },
+          })}
+          error={!!errors.passingGrade}
+          helperText={errors.passingGrade?.message}
           fullWidth
         />
         <Typography variant="body2" color="textSecondary">
-          How many students have taken this course?
+          The minimum percentage required to pass the course.
         </Typography>
       </div>
     </div>

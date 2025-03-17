@@ -1,5 +1,4 @@
 "use client";
-
 import { useForm, Controller } from "react-hook-form";
 import {
   TextField,
@@ -39,6 +38,7 @@ import SettingsTab from "@/components/UI/SettingsTab";
 import TextEditor from "@/components/editor/editor";
 import Image from "next/image";
 import { useState } from "react";
+import useUpdateApi from "@/hooks/useUpdateApi";
 
 interface Lesson {
   id: string;
@@ -67,7 +67,9 @@ interface FormData {
   newTag: string;
   curriculum: Section[];
   activeTab: "all" | "mostUsed";
-  Images: string[];
+  featuredImages: string[];
+  mobileImages: string[];
+  viewportImages: string[];
   durationWeeks: number;
   blockOnCompletion: boolean;
   blockOnExpire: boolean;
@@ -92,19 +94,35 @@ interface FormData {
   targetAudience: string[];
   keyFeatures: string[];
   faqs: string[];
+  allowComments: boolean;
+  allowTrackbacks: boolean;
 
   // AssessmentPanel data
   evaluation: "";
   passingGrade: 3.12;
+
+  // downloadable panel
+  materialFiles: {
+    fileTitle: string;
+    method: string;
+    selectedFiles: File[];
+  };
 }
 
-export default function AddCoursePage() {
+interface FolderFormProps {
+  onClose: () => void;
+  title?: string;
+  description?: string;
+}
+
+const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
   const {
     register,
     handleSubmit,
     control,
     setValue,
     watch,
+    getValues,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -113,12 +131,21 @@ export default function AddCoursePage() {
       excerpt: "",
       newCategory: "",
       parentCategory: "",
+      activeTab: "all",
+      categories: ["Category 1", "Category 2"],
       disableCache: false,
       disableLazyLoad: false,
       disableWi: true,
-      categories: [],
       tags: [],
-      Images: [
+      featuredImages: [
+        "https://img.freepik.com/free-photo/close-up-view-happy-woman-smiling-camera_197531-32299.jpg?t=st=1741520594~exp=1741524194~hmac=f988e62c1747b43abccf65eecd0c1687d22dc74f90b6eeb0bf4d766c85001a34&w=1380",
+        "https://img.freepik.com/free-photo/young-woman-wearing-standing-with-folded-arms-looking-with-serious-expression-isolated_231208-204.jpg?t=st=1741520635~exp=1741524235~hmac=8d600bcd4f6a82b848967be2c641a7724facaf8acf289e7434894f20f9cc8fbb&w=1380",
+      ],
+      mobileImages: [
+        "https://img.freepik.com/free-photo/close-up-view-happy-woman-smiling-camera_197531-32299.jpg?t=st=1741520594~exp=1741524194~hmac=f988e62c1747b43abccf65eecd0c1687d22dc74f90b6eeb0bf4d766c85001a34&w=1380",
+        "https://img.freepik.com/free-photo/young-woman-wearing-standing-with-folded-arms-looking-with-serious-expression-isolated_231208-204.jpg?t=st=1741520635~exp=1741524235~hmac=8d600bcd4f6a82b848967be2c641a7724facaf8acf289e7434894f20f9cc8fbb&w=1380",
+      ],
+      viewportImages: [
         "https://img.freepik.com/free-photo/close-up-view-happy-woman-smiling-camera_197531-32299.jpg?t=st=1741520594~exp=1741524194~hmac=f988e62c1747b43abccf65eecd0c1687d22dc74f90b6eeb0bf4d766c85001a34&w=1380",
         "https://img.freepik.com/free-photo/young-woman-wearing-standing-with-folded-arms-looking-with-serious-expression-isolated_231208-204.jpg?t=st=1741520635~exp=1741524235~hmac=8d600bcd4f6a82b848967be2c641a7724facaf8acf289e7434894f20f9cc8fbb&w=1380",
       ],
@@ -133,7 +160,8 @@ export default function AddCoursePage() {
           ],
         },
       ],
-      activeTab: "all",
+      allowComments: true,
+      allowTrackbacks: true,
       // GeneralPanel data
       durationWeeks: 10,
       blockOnCompletion: false,
@@ -169,14 +197,17 @@ export default function AddCoursePage() {
       // AssessmentPanel data
       evaluation: "",
       passingGrade: 3.12,
+      //downlaodable panel
+      materialFiles: {
+        fileTitle: "",
+        method: "",
+        selectedFiles: [],
+      },
     },
   });
   // Handler for updating any field in the form data
   const handleChange = (field: any, value: any) => {
     setValue(field, value); // Update form values using setValue
-  };
-  const onSubmit = (data: FormData) => {
-    console.log(data);
   };
 
   // tags controls
@@ -197,25 +228,63 @@ export default function AddCoursePage() {
     );
   };
 
-  // images controls
-  const images: string[] = watch("Images") || [];
+  // categories controle
+  const [categories, setCategories] = useState(watch("categories"));
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setValue("Images", [...images, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
+  // 🟢 Function to add a new category
+  const addCategory = () => {
+    const newCategory = watch("newCategory").trim();
+    if (newCategory && !categories.includes(newCategory)) {
+      const updatedCategories = [...categories, newCategory];
+
+      setCategories(updatedCategories); // Update state
+      setValue("categories", updatedCategories); // Sync with form
+      setValue("parentCategory", newCategory); // Select the newly added category
+      setValue("newCategory", ""); // Clear input field
     }
   };
 
-  const removeImage = (index: number) => {
-    setValue(
-      "Images",
-      images.filter((_, i) => i !== index),
-    );
+  // handel change images
+  const handleImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    fieldName: keyof FormData, // Allow dynamic field selection
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type (ensure it's an image)
+    if (!file.type.startsWith("image/")) {
+      console.error("Only image files are allowed.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      // Get current images from the correct field
+      const currentImages = (getValues(fieldName) as string[]) || [];
+
+      // Ensure it's an array (to prevent issues)
+      const updatedImages = Array.isArray(currentImages)
+        ? [...currentImages, reader.result as string]
+        : [reader.result as string];
+
+      // Update the form field with the new images
+      setValue(fieldName, updatedImages);
+    };
+
+    // Read the file as a data URL
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = (fieldName: keyof FormData, index: number) => {
+    // Get current images from the correct field
+    const currentImages = (getValues(fieldName) as string[]) || [];
+
+    // Filter out the image at the specified index
+    const updatedImages = currentImages.filter((_, i) => i !== index);
+
+    // Update the form field with the filtered images
+    setValue(fieldName, updatedImages);
   };
 
   // curriculum Controls
@@ -350,6 +419,27 @@ export default function AddCoursePage() {
 
     setValue("curriculum", updatedCurriculum);
   };
+  const { update, isLoading, error } = useUpdateApi<any>(onSuccess);
+
+  const onSubmit = async (formData: FormData) => {
+    try {
+      await update("/api/update-course", {
+        method: "POST",
+        body: formData, // Send FormData directly
+        headers: {}, // No headers for FormData (browser sets automatically)
+      });
+
+      console.log("Course updated successfully!");
+    } catch (err) {
+      console.error("Failed to update course:", err);
+    }
+  };
+
+  // Define the onSuccess function
+  function onSuccess(data: any) {
+    console.log("Success callback triggered!", data);
+    onClose(); // Ensure onClose is defined in your component
+  }
 
   return (
     <div>
@@ -378,7 +468,7 @@ export default function AddCoursePage() {
                     message: "Must be 50 characters or less",
                   },
                 })}
-                className="mb-2 mt-2 w-full rounded border p-2 outline-none"
+                className="w-full"
               />
               {errors.courseName && (
                 <p className="mt-1 text-xs text-red-500">
@@ -469,7 +559,6 @@ export default function AddCoursePage() {
                   </Button>
                 </div>
               </Card>
-
               {/* Curriculum Sections */}
               <Card className="mb-6 p-4">
                 <h2 className="mb-6 font-semibold">Curriculum</h2>
@@ -558,7 +647,6 @@ export default function AddCoursePage() {
                             </List>
                           )}
                         </Droppable>
-
                         {/* Add Lesson */}
                         <div className="mt-2 flex gap-2 p-2">
                           <TextField
@@ -584,16 +672,19 @@ export default function AddCoursePage() {
               <Card className="p-4">
                 <h2 className="mb-6 font-semibold">Discussion</h2>
                 <FormGroup>
+                  {/* Allow Comments */}
                   <FormControlLabel
-                    control={<Checkbox defaultChecked />}
+                    control={<Checkbox {...register("allowComments")} />}
                     label={
                       <span className="text-xs text-secondary">
                         Allow Comments
                       </span>
                     }
                   />
+
+                  {/* Allow Trackbacks & Pingbacks */}
                   <FormControlLabel
-                    control={<Checkbox />}
+                    control={<Checkbox {...register("allowTrackbacks")} />}
                     label={
                       <span className="text-xs text-secondary">
                         Allow trackbacks and pingbacks
@@ -606,7 +697,13 @@ export default function AddCoursePage() {
             {/* Course Setting */}
             <Card className="p-4">
               <h2 className="mb-6 font-semibold">Course Setting</h2>
-              <SettingsTab formData={watch()} onChange={handleChange} />
+              <SettingsTab
+                register={register}
+                setValue={setValue}
+                errors={errors}
+                formData={watch()}
+                onChange={handleChange}
+              />
             </Card>
           </div>
           <div className="col-span-3 flex flex-col gap-4 xl:col-span-1">
@@ -614,21 +711,23 @@ export default function AddCoursePage() {
             <Card className="p-4">
               <div className="mb-3 flex gap-2">
                 <button
+                  type="button"
                   onClick={() => setValue("activeTab", "all")}
                   className={`rounded-md px-3 py-2 text-sm ${watch("activeTab") === "all" ? "bg-primary text-white" : "border border-primary text-primary"} flex-1`}
                 >
                   All Categorized
                 </button>
                 <button
+                  type="button"
                   onClick={() => setValue("activeTab", "mostUsed")}
                   className={`rounded-md px-3 py-2 text-sm ${watch("activeTab") === "mostUsed" ? "bg-primary text-white" : "border border-primary text-primary"} flex-1`}
                 >
                   Most used
                 </button>
               </div>
-              <button className="mb-2 text-sm text-green-600">
-                + Add new category
-              </button>
+
+              {/*  Add New Category Input */}
+              <h2 className="mb-2 text-sm text-green-600">Add new category</h2>
               <TextField
                 variant="outlined"
                 fullWidth
@@ -639,20 +738,43 @@ export default function AddCoursePage() {
 
               <Select
                 fullWidth
-                {...register("parentCategory")}
-                className="mt-2 border-green-500"
+                {...register("parentCategory", {
+                  required: "Category is required",
+                })}
+                className={`mt-2 border-green-500 ${
+                  errors.parentCategory ? "border-red-500" : ""
+                }`}
                 displayEmpty
+                defaultValue=""
+                renderValue={(selected) =>
+                  selected ? selected : "Choose Category"
+                }
               >
-                <MenuItem value="">Parent Category</MenuItem>
-                <MenuItem value="cat1">Category 1</MenuItem>
-                <MenuItem value="cat2">Category 2</MenuItem>
+                <MenuItem value="" disabled>
+                  Choose Category
+                </MenuItem>
+                {categories.map((category, index) => (
+                  <MenuItem key={index} value={category}>
+                    {category}
+                  </MenuItem>
+                ))}
               </Select>
 
+              {/* Show error message */}
+              {errors.parentCategory && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.parentCategory.message}
+                </p>
+              )}
+
+              {/*  Add Category Button */}
               <Button
                 variant="outlined"
                 color="success"
                 fullWidth
                 className="mt-3 w-fit"
+                type="button"
+                onClick={addCategory} // Add new category
               >
                 Add new category
               </Button>
@@ -663,20 +785,22 @@ export default function AddCoursePage() {
               <p className="text-xs text-secondary">Type your Product tag</p>
 
               <div className="flex gap-2">
-                <TextField fullWidth {...register("newTag")} className="mt-2" />
+                <TextField
+                  placeholder="Enter to add tags"
+                  fullWidth
+                  {...register("newTag")}
+                  className="mt-2"
+                />
                 <Button onClick={addTag} variant="contained" className="mt-2">
                   Add
                 </Button>
               </div>
-
               <p className="mb-6 mt-2 text-xs text-secondary">
                 Separate tags with commas
               </p>
-
               <h2 className="text-sm font-semibold">
                 Choose from the used tags
               </h2>
-
               <div className="mt-2 min-h-[50px] rounded-md border p-2">
                 {tags.length > 0 ? (
                   tags.map((tag) => (
@@ -742,16 +866,182 @@ export default function AddCoursePage() {
               </div>
               <div>
                 <div className="mb-6">
-                  <h2 className="mb-2 text-sm font-semibold">
-                    Viewport Images
-                  </h2>
-                  <div className="h-[100px] rounded-md border"></div>
+                  <div className="p-4">
+                    <h2 className="mb-6 font-semibold">Viewport Images</h2>
+                    <div className="flex min-h-[100px] rounded-md border p-4">
+                      <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                        {watch("viewportImages")?.map((img, index) => (
+                          <div key={index} className="group relative">
+                            <Image
+                              className="h-[200px] w-full rounded-lg object-cover transition group-hover:brightness-75 md:h-[100px]"
+                              src={img}
+                              width={100}
+                              height={100}
+                              alt="Uploaded Image"
+                            />
+                            <div className="absolute right-1 top-1 flex w-5 items-center justify-center opacity-0 transition group-hover:opacity-100">
+                              <button
+                                onClick={() =>
+                                  removeImage("viewportImages", index)
+                                }
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 p-1 text-xs text-black"
+                              >
+                                <Close className="text-sm" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Upload Button */}
+                        <div className="h-full">
+                          <label
+                            htmlFor="dropzone-file"
+                            className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:text-primary md:h-[100px] md:min-h-full"
+                          >
+                            <div className="flex flex-col items-center justify-center">
+                              <svg
+                                width="25"
+                                height="25"
+                                viewBox="0 0 34 34"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path d="M23 9H23.02H23Z" fill="#A0AEC0" />
+                                <path
+                                  d="M23 9H23.02"
+                                  stroke="#A0AEC0"
+                                  strokeWidth="3"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M27 1H7C3.68629 1 1 3.68629 1 7V27C1 30.3137 3.68629 33 7 33H27C30.3137 33 33 30.3137 33 27V7C33 3.68629 30.3137 1 27 1Z"
+                                  stroke="#A0AEC0"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M1 22.9999L9 14.9999C9.91212 14.1222 10.9468 13.6602 12 13.6602C13.0532 13.6602 14.0879 14.1222 15 14.9999L25 24.9999"
+                                  stroke="#A0AEC0"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M21 20.9999L23 18.9999C23.9121 18.1222 24.9468 17.6602 26 17.6602C27.0532 17.6602 28.0879 18.1222 29 18.9999L33 22.9999"
+                                  stroke="#A0AEC0"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <input
+                              id="dropzone-file"
+                              type="file"
+                              className="hidden"
+                              accept="image/*"
+                              onChange={(event) =>
+                                handleImageChange(event, "viewportImages")
+                              }
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="mb-6">
-                  <h2 className="mb-2 text-sm font-semibold">
-                    Viewport Images - Mobile
-                  </h2>
-                  <div className="h-[100px] rounded-md border"></div>
+                  <div className="mb-6">
+                    <div className="p-4">
+                      <h2 className="mb-6 font-semibold">
+                        Viewport Images - Mobile
+                      </h2>
+                      <div className="flex min-h-[100px] rounded-md border p-4">
+                        <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                          {watch("mobileImages")?.map((img, index) => (
+                            <div key={index} className="group relative">
+                              <Image
+                                className="h-[200px] w-full rounded-lg object-cover transition group-hover:brightness-75 md:h-[100px]"
+                                src={img}
+                                width={100}
+                                height={100}
+                                alt="Uploaded Image"
+                              />
+                              <div className="absolute right-1 top-1 flex w-5 items-center justify-center opacity-0 transition group-hover:opacity-100">
+                                <button
+                                  onClick={() =>
+                                    removeImage("mobileImages", index)
+                                  }
+                                  className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 p-1 text-xs text-black"
+                                >
+                                  <Close className="text-sm" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+
+                          {/* Upload Button */}
+                          <div className="h-full">
+                            <label
+                              htmlFor="dropzone-file2"
+                              className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:text-primary md:h-[100px] md:min-h-full"
+                            >
+                              <div className="flex flex-col items-center justify-center">
+                                <svg
+                                  width="25"
+                                  height="25"
+                                  viewBox="0 0 34 34"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path d="M23 9H23.02H23Z" fill="#A0AEC0" />
+                                  <path
+                                    d="M23 9H23.02"
+                                    stroke="#A0AEC0"
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                  <path
+                                    d="M27 1H7C3.68629 1 1 3.68629 1 7V27C1 30.3137 3.68629 33 7 33H27C30.3137 33 33 30.3137 33 27V7C33 3.68629 30.3137 1 27 1Z"
+                                    stroke="#A0AEC0"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                  <path
+                                    d="M1 22.9999L9 14.9999C9.91212 14.1222 10.9468 13.6602 12 13.6602C13.0532 13.6602 14.0879 14.1222 15 14.9999L25 24.9999"
+                                    stroke="#A0AEC0"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                  <path
+                                    d="M21 20.9999L23 18.9999C23.9121 18.1222 24.9468 17.6602 26 17.6602C27.0532 17.6602 28.0879 18.1222 29 18.9999L33 22.9999"
+                                    stroke="#A0AEC0"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </div>
+                              <input
+                                id="dropzone-file2"
+                                type="file"
+                                className="hidden"
+                                accept="image/*"
+                                onChange={(event) =>
+                                  handleImageChange(event, "mobileImages")
+                                }
+                              />
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Card>
@@ -760,19 +1050,19 @@ export default function AddCoursePage() {
               <h2 className="mb-6 font-semibold">Featured Image</h2>
               <div className="flex min-h-[100px] rounded-md border p-4">
                 <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  {images.map((image, index) => (
+                  {watch("featuredImages")?.map((img, index) => (
                     <div key={index} className="group relative">
                       <Image
-                        className="h-[160px] w-full rounded-lg object-cover md:h-[100px]"
-                        src={image}
+                        className="h-[200px] w-full rounded-lg object-cover transition group-hover:brightness-75 md:h-[100px]"
+                        src={img}
                         width={100}
                         height={100}
                         alt="Uploaded Image"
                       />
                       <div className="absolute right-1 top-1 flex w-5 items-center justify-center opacity-0 transition group-hover:opacity-100">
                         <button
-                          onClick={() => removeImage(index)}
-                          className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 p-1 text-xs text-white"
+                          onClick={() => removeImage("featuredImages", index)}
+                          className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 p-1 text-xs text-black"
                         >
                           <Close className="text-sm" />
                         </button>
@@ -783,14 +1073,13 @@ export default function AddCoursePage() {
                   {/* Upload Button */}
                   <div className="h-full">
                     <label
-                      htmlFor="dropzone-file"
-                      className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:border-primary hover:text-primary md:h-[100px]"
+                      htmlFor="dropzone-file3"
+                      className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:text-primary md:h-[100px] md:min-h-full"
                     >
-                      <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                      <div className="flex flex-col items-center justify-center">
                         <svg
-                          className="mb-2"
-                          width="18"
-                          height="18"
+                          width="25"
+                          height="25"
                           viewBox="0 0 34 34"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -825,21 +1114,15 @@ export default function AddCoursePage() {
                             strokeLinejoin="round"
                           />
                         </svg>
-                        <p>
-                          <span className="text-[8px] font-semibold">
-                            Click to upload
-                          </span>
-                        </p>
-                        <p className="text-center text-[6px]">
-                          SVG, PNG, JPG or GIF (MAX. 800x400px)
-                        </p>
                       </div>
                       <input
-                        id="dropzone-file"
+                        id="dropzone-file3"
                         type="file"
                         className="hidden"
                         accept="image/*"
-                        onChange={handleImageUpload}
+                        onChange={(event) =>
+                          handleImageChange(event, "featuredImages")
+                        }
                       />
                     </label>
                   </div>
@@ -854,4 +1137,6 @@ export default function AddCoursePage() {
       </form>
     </div>
   );
-}
+};
+
+export default AddCoursePage;

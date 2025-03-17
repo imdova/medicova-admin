@@ -32,7 +32,8 @@
     "react-dropzone": "^14.3.5",
     "react-hook-form": "^7.53.2",
     "react-phone-number-input": "^3.4.9",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "revalidate": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",

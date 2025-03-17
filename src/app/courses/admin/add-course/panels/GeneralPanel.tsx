@@ -1,7 +1,6 @@
 "use client";
 import {
   TextField,
-  Button,
   Checkbox,
   FormControlLabel,
   Radio,
@@ -10,7 +9,9 @@ import {
   FormControl,
   Select,
   MenuItem,
+  FormHelperText,
 } from "@mui/material";
+import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 interface FormData {
   durationWeeks: number;
@@ -31,35 +32,46 @@ interface FormData {
 interface GeneralPanelProps {
   formData: FormData;
   onChange: (field: keyof FormData, value: any) => void;
+  register: UseFormRegister<FormData>;
+  setValue: UseFormSetValue<FormData>;
+  errors: FieldErrors<FormData>;
 }
 
 export default function GeneralPanel({
   formData,
   onChange,
+  register,
+  setValue,
+  errors,
 }: GeneralPanelProps) {
   const handleChange = (field: keyof FormData, value: any) => {
     onChange(field, value);
   };
-  const onSubmit = () => {
-    console.log(formData);
-  };
 
   return (
     <div>
+      {/* Duration */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Duration</Typography>
         <TextField
           type="number"
-          value={formData.durationWeeks}
-          onChange={(e) =>
-            handleChange("durationWeeks", parseInt(e.target.value, 10))
-          }
+          {...register("durationWeeks", {
+            required: "Duration is required",
+            min: { value: 0, message: "Duration cannot be negative" },
+          })}
           fullWidth
+          onChange={(e) =>
+            setValue("durationWeeks", parseInt(e.target.value, 10) || 0)
+          }
+          error={!!errors.durationWeeks}
+          helperText={errors.durationWeeks?.message}
         />
         <span className="mt-1 block text-xs text-secondary">
           Set to 0 for the lifetime course
         </span>
       </div>
+
+      {/* Block Content */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Block Content</Typography>
         <FormControlLabel
@@ -69,11 +81,7 @@ export default function GeneralPanel({
               onChange={(e) => handleChange("blockOnExpire", e.target.checked)}
             />
           }
-          label={
-            <span className="text-sm">
-              When the duration expires, the course is blocked.
-            </span>
-          }
+          label="Block the course when the duration expires"
         />
         <FormControlLabel
           control={
@@ -84,13 +92,11 @@ export default function GeneralPanel({
               }
             />
           }
-          label={
-            <span className="text-sm">
-              Block the course after the student finishes this course.
-            </span>
-          }
+          label="Block the course after the student finishes it"
         />
       </div>
+
+      {/* Repurchase */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Allow Repurchase</Typography>
         <FormControlLabel
@@ -102,15 +108,11 @@ export default function GeneralPanel({
               }
             />
           }
-          label={
-            <span className="text-sm">
-              Allow users to repurchase this course after a fee has been paid or
-              blocked (not applicable to free courses or Critical Order manual).
-            </span>
-          }
+          label="Allow users to repurchase this course"
         />
       </div>
 
+      {/* Repurchase Action */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Repurchase Action</Typography>
         <RadioGroup
@@ -120,40 +122,27 @@ export default function GeneralPanel({
           <FormControlLabel
             value="read"
             control={<Radio />}
-            className="text-sm"
-            label={
-              <span className="text-sm">
-                Read course progress: The course progress and results of
-                students will be removed.
-              </span>
-            }
+            label="Read progress"
           />
           <FormControlLabel
             value="write"
             control={<Radio />}
-            label={
-              <span className="text-sm">
-                Write course progress: The course progress and results of
-                students will return.
-              </span>
-            }
+            label="Write progress"
           />
           <FormControlLabel
             value="open-policy"
             control={<Radio />}
-            label={
-              <span className="text-sm">
-                Open-policy for students to see the number of free course
-                progress in all cases with the confirm people.
-              </span>
-            }
+            label="Open policy"
           />
         </RadioGroup>
       </div>
+
+      {/* Difficulty Level */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Level</Typography>
-        <FormControl fullWidth size="small">
+        <FormControl fullWidth size="small" error={!!errors.difficultyLevel}>
           <Select
+            {...register("difficultyLevel", { required: "Level is required" })}
             value={formData.difficultyLevel}
             onChange={(e) => handleChange("difficultyLevel", e.target.value)}
           >
@@ -162,115 +151,84 @@ export default function GeneralPanel({
             <MenuItem value="Intermediate">Intermediate</MenuItem>
             <MenuItem value="Advanced">Advanced</MenuItem>
           </Select>
+          {errors.difficultyLevel && (
+            <FormHelperText>{errors.difficultyLevel.message}</FormHelperText>
+          )}
         </FormControl>
-        <span className="mt-1 block text-xs text-secondary">
-          Choose a difficulty level.
-        </span>
       </div>
+
+      {/* Role Students Enrolled */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">
           Role Students Enrolled
         </Typography>
         <TextField
           type="number"
-          value={formData.roleStudentsEnrolled}
-          onChange={(e) =>
-            handleChange("roleStudentsEnrolled", parseInt(e.target.value, 10))
-          }
+          {...register("roleStudentsEnrolled", {
+            min: { value: 0, message: "Cannot be negative" },
+          })}
           fullWidth
+          error={!!errors.roleStudentsEnrolled}
+          helperText={errors.roleStudentsEnrolled?.message}
         />
-        <span className="mt-1 block text-xs text-secondary">
-          How many students have taken this course?
-        </span>
       </div>
+
+      {/* Max Student */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Max Student</Typography>
         <TextField
           type="number"
-          value={formData.maxStudent}
-          onChange={(e) =>
-            handleChange("maxStudent", parseInt(e.target.value, 10))
-          }
+          {...register("maxStudent", {
+            min: { value: 0, message: "Cannot be negative" },
+          })}
           fullWidth
+          error={!!errors.maxStudent}
+          helperText={errors.maxStudent?.message}
         />
-        <span className="mt-1 block text-xs text-secondary">
-          The maximum number of students that can join a course Set 0 for
-          unlimited Not apply for case No enroll requirement
-        </span>
       </div>
 
+      {/* Re-take Course */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Re-take Course</Typography>
         <TextField
           type="number"
-          value={formData.retackeCourse}
-          onChange={(e) =>
-            handleChange("retackeCourse", parseInt(e.target.value, 10))
-          }
+          {...register("retackeCourse", {
+            min: { value: 0, message: "Cannot be negative" },
+          })}
           fullWidth
-        />
-        <span className="mt-1 block text-xs text-secondary">
-          The number of times a user can learn again from this course To disable
-          set to 0.
-        </span>
-      </div>
-      <div className="mb-4">
-        <Typography className="mb-2 font-bold">Finish Button</Typography>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={formData.finishButton}
-              onChange={(e) => handleChange("finishButton", e.target.checked)}
-            />
-          }
-          label={
-            <span className="text-sm">
-              Allow showing the finish button when the student has completed all
-              items but has not passed the course assessment yet.e.
-            </span>
-          }
+          error={!!errors.retackeCourse}
+          helperText={errors.retackeCourse?.message}
         />
       </div>
-      <div className="mb-4">
-        <Typography className="mb-2 font-bold">Featured list</Typography>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={formData.featuredlist}
-              onChange={(e) => handleChange("featuredlist", e.target.checked)}
-            />
-          }
-          label={
-            <span className="text-sm">
-              Add the course to the Featured List.
-            </span>
-          }
-        />
-      </div>
+
+      {/* Featured Review */}
       <div className="mb-4">
         <Typography className="mb-2 font-bold">Featured Review</Typography>
         <TextField
           type="text"
-          value={formData.featuredReview}
-          onChange={(e) => handleChange("featuredReview", e.target.value)}
+          {...register("featuredReview", { required: "Review is required" })}
           fullWidth
+          error={!!errors.featuredReview}
+          helperText={errors.featuredReview?.message}
         />
-        <span className="mt-1 block text-xs text-secondary">
-          A good review to promote the course.
-        </span>
       </div>
+
+      {/* External Link */}
       <div className="mb-4">
-        <Typography className="mb-2 font-bold">Extrnal Link</Typography>
+        <Typography className="mb-2 font-bold">External Link</Typography>
         <TextField
           type="text"
-          value={formData.extrnalLink}
-          onChange={(e) => handleChange("extrnalLink", e.target.value)}
+          {...register("extrnalLink", {
+            required: "External link is required",
+            pattern: {
+              value: /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]*)*$/,
+              message: "Enter a valid URL",
+            },
+          })}
           fullWidth
+          error={!!errors.extrnalLink}
+          helperText={errors.extrnalLink?.message}
         />
-        <span className="mt-1 block text-xs text-secondary">
-          Normally used for offline classes. Ex: link to a contact page. Format:
-          https://google.com
-        </span>
       </div>
     </div>
   );
