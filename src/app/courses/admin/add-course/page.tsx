@@ -18,6 +18,8 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
+  Modal,
+  Box,
 } from "@mui/material";
 import {
   Add,
@@ -26,6 +28,7 @@ import {
   Delete,
   Edit,
   ExpandMore,
+  FilterDrama,
   Reorder,
 } from "@mui/icons-material";
 import {
@@ -109,13 +112,7 @@ interface FormData {
   };
 }
 
-interface FolderFormProps {
-  onClose: () => void;
-  title?: string;
-  description?: string;
-}
-
-const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
+const AddCoursePage: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -353,21 +350,43 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
     setLessonName("");
   };
 
-  // Edit a lesson
-  const editLesson = (sectionId: string, lessonId: string, newName: string) => {
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState({
+    sectionId: "",
+    lessonId: "",
+    name: "",
+  });
+
+  const openEditModal = (
+    sectionId: string,
+    lessonId: string,
+    currentName: string,
+  ) => {
+    setSelectedLesson({ sectionId, lessonId, name: currentName });
+    setEditModalOpen(true);
+  };
+
+  const handleLessonNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedLesson((prev) => ({ ...prev, name: e.target.value }));
+  };
+
+  const saveEditedLesson = () => {
     setValue(
       "curriculum",
       watch("curriculum").map((section) =>
-        section.id === sectionId
+        section.id === selectedLesson.sectionId
           ? {
               ...section,
               lessons: section.lessons.map((lesson) =>
-                lesson.id === lessonId ? { ...lesson, name: newName } : lesson,
+                lesson.id === selectedLesson.lessonId
+                  ? { ...lesson, name: selectedLesson.name }
+                  : lesson,
               ),
             }
           : section,
       ),
     );
+    setEditModalOpen(false);
   };
 
   // Delete a lesson
@@ -387,39 +406,54 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
     );
   };
 
-  // Handle drag & drop
+  // handel drag & drop
   const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
+    const { source, destination, type } = result;
 
-    const { source, destination } = result;
-    let updatedCurriculum = [...watch("curriculum")];
+    // If dropped outside of a droppable area, do nothing
+    if (!destination) return;
 
-    if (source.droppableId === destination.droppableId) {
-      // Reordering within the same section
-      const section = updatedCurriculum.find(
-        (sec) => sec.id === source.droppableId,
-      );
-      if (!section) return;
+    const sections = Array.from(watch("curriculum"));
 
-      const [movedLesson] = section.lessons.splice(source.index, 1);
-      section.lessons.splice(destination.index, 0, movedLesson);
-    } else {
-      // Moving lessons between sections
-      const sourceSection = updatedCurriculum.find(
-        (sec) => sec.id === source.droppableId,
-      );
-      const destinationSection = updatedCurriculum.find(
-        (sec) => sec.id === destination.droppableId,
-      );
-      if (!sourceSection || !destinationSection) return;
+    if (type === "section") {
+      if (source.index === destination.index) return; // Avoid unnecessary updates
 
-      const [movedLesson] = sourceSection.lessons.splice(source.index, 1);
-      destinationSection.lessons.splice(destination.index, 0, movedLesson);
+      const [movedSection] = sections.splice(source.index, 1);
+      sections.splice(destination.index, 0, movedSection);
+      setValue("curriculum", sections);
     }
 
-    setValue("curriculum", updatedCurriculum);
+    if (type === "lesson") {
+      const sourceSectionIndex = sections.findIndex(
+        (s) => s.id.toString() === source.droppableId,
+      );
+      const destSectionIndex = sections.findIndex(
+        (s) => s.id.toString() === destination.droppableId,
+      );
+
+      if (sourceSectionIndex === -1 || destSectionIndex === -1) return;
+
+      const sourceLessons = Array.from(sections[sourceSectionIndex].lessons);
+      const [movedLesson] = sourceLessons.splice(source.index, 1);
+
+      if (source.droppableId === destination.droppableId) {
+        // Reorder lessons in the same section
+        sourceLessons.splice(destination.index, 0, movedLesson);
+        sections[sourceSectionIndex].lessons = sourceLessons;
+      } else {
+        // Move lesson to a different section
+        const destLessons = Array.from(sections[destSectionIndex].lessons);
+        destLessons.splice(destination.index, 0, movedLesson);
+
+        sections[sourceSectionIndex].lessons = sourceLessons;
+        sections[destSectionIndex].lessons = destLessons;
+      }
+
+      setValue("curriculum", sections);
+    }
   };
-  const { update, isLoading, error } = useUpdateApi<any>(onSuccess);
+
+  const { update, isLoading, error } = useUpdateApi<any>();
 
   const onSubmit = async (formData: FormData) => {
     try {
@@ -434,12 +468,6 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
       console.error("Failed to update course:", err);
     }
   };
-
-  // Define the onSuccess function
-  function onSuccess(data: any) {
-    console.log("Success callback triggered!", data);
-    onClose(); // Ensure onClose is defined in your component
-  }
 
   return (
     <div>
@@ -563,109 +591,193 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
               <Card className="mb-6 p-4">
                 <h2 className="mb-6 font-semibold">Curriculum</h2>
                 <DragDropContext onDragEnd={onDragEnd}>
-                  {watch("curriculum").map((section) => (
-                    <Accordion
-                      key={section.id}
-                      className="mt-2 border bg-white shadow-none"
-                    >
-                      <AccordionSummary expandIcon={<ExpandMore />}>
-                        <input
-                          value={section.name}
-                          onChange={(e) =>
-                            editSection(section.id, e.target.value)
-                          }
-                          className="flex-grow rounded-md bg-transparent p-2 outline-none"
-                        />
-                        <div className="mr-4 flex items-center text-sm text-secondary">
-                          {section.lessons.length} items
-                        </div>
-                        <IconButton
-                          onClick={() => deleteSection(section.id)}
-                          className="text-secondary hover:text-red-500"
-                        >
-                          <Delete />
-                        </IconButton>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {/* Droppable Lessons */}
-                        <Droppable droppableId={section.id}>
-                          {(provided) => (
-                            <List
-                              {...provided.droppableProps}
-                              ref={provided.innerRef}
-                            >
-                              <input
-                                type="text"
-                                placeholder="Section Description..."
-                                onChange={(e) => setDescription(e.target.value)}
-                                className="w-full rounded-md p-3 outline-none focus:border"
-                              />
-                              {section.lessons.map((lesson, index) => (
-                                <Draggable
-                                  key={lesson.id}
-                                  draggableId={lesson.id}
-                                  index={index}
-                                >
-                                  {(provided) => (
-                                    <ListItem
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      className="mt-2 flex items-center gap-2 rounded-lg border bg-white p-2"
-                                    >
-                                      <IconButton {...provided.dragHandleProps}>
-                                        <Reorder />
-                                      </IconButton>
-                                      <Book className="text-primary" />
-                                      <ListItemText primary={lesson.name} />
-                                      <IconButton
-                                        onClick={() =>
-                                          editLesson(
-                                            section.id,
-                                            lesson.id,
-                                            prompt(
-                                              "Edit lesson name:",
-                                              lesson.name,
-                                            ) || lesson.name,
-                                          )
-                                        }
-                                      >
-                                        <Edit />
-                                      </IconButton>
-                                      <IconButton
-                                        onClick={() =>
-                                          deleteLesson(section.id, lesson.id)
-                                        }
-                                        className="text-secondary hover:text-red-500"
-                                      >
-                                        <Delete />
-                                      </IconButton>
-                                    </ListItem>
-                                  )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </List>
-                          )}
-                        </Droppable>
-                        {/* Add Lesson */}
-                        <div className="mt-2 flex gap-2 p-2">
-                          <TextField
-                            fullWidth
-                            variant="outlined"
-                            placeholder="Add Lesson"
-                            value={lessonName}
-                            onChange={(e) => setLessonName(e.target.value)}
-                          />
-                          <Button
-                            variant="contained"
-                            onClick={() => addLesson(section.id)}
+                  {/* Section Drag and Drop */}
+                  <Droppable droppableId="sections" type="section">
+                    {(provided) => (
+                      <div ref={provided.innerRef} {...provided.droppableProps}>
+                        {watch("curriculum").map((section, index) => (
+                          <Draggable
+                            key={section.id.toString()}
+                            draggableId={section.id.toString()}
+                            index={index}
                           >
-                            <Add />
-                          </Button>
-                        </div>
-                      </AccordionDetails>
-                    </Accordion>
-                  ))}
+                            {(provided) => (
+                              <Accordion
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                className="mt-2 border bg-white shadow-none"
+                              >
+                                <AccordionSummary
+                                  {...provided.dragHandleProps}
+                                  expandIcon={<ExpandMore />}
+                                >
+                                  <IconButton>
+                                    <Reorder />
+                                  </IconButton>
+                                  <input
+                                    value={section.name}
+                                    onChange={(e) =>
+                                      editSection(section.id, e.target.value)
+                                    }
+                                    className="flex-grow rounded-md bg-transparent p-2 outline-none"
+                                  />
+                                  <IconButton
+                                    onClick={() => deleteSection(section.id)}
+                                  >
+                                    <Delete />
+                                  </IconButton>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  {/* Lessons Drag and Drop */}
+                                  <DragDropContext onDragEnd={onDragEnd}>
+                                    <Droppable
+                                      droppableId={section.id.toString()}
+                                      type="lesson"
+                                    >
+                                      {(provided) => (
+                                        <List
+                                          ref={provided.innerRef}
+                                          {...provided.droppableProps}
+                                        >
+                                          {section.lessons.map(
+                                            (lesson, index) => (
+                                              <Draggable
+                                                key={lesson.id.toString()}
+                                                draggableId={lesson.id.toString()}
+                                                index={index}
+                                              >
+                                                {(provided) => (
+                                                  <ListItem
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    className="mt-2 flex items-center gap-2 rounded-lg border bg-white p-2"
+                                                  >
+                                                    <IconButton
+                                                      {...provided.dragHandleProps}
+                                                    >
+                                                      <Reorder />
+                                                    </IconButton>
+                                                    <ListItemText
+                                                      primary={lesson.name}
+                                                    />
+                                                    <IconButton
+                                                      onClick={() =>
+                                                        openEditModal(
+                                                          section.id,
+                                                          lesson.id,
+                                                          lesson.name,
+                                                        )
+                                                      }
+                                                    >
+                                                      <Edit />
+                                                    </IconButton>
+                                                    {isEditModalOpen && (
+                                                      <Modal
+                                                        open={isEditModalOpen}
+                                                        onClose={() =>
+                                                          setEditModalOpen(
+                                                            false,
+                                                          )
+                                                        }
+                                                      >
+                                                        <Box
+                                                          sx={{
+                                                            position:
+                                                              "absolute",
+                                                            top: "50%",
+                                                            left: "50%",
+                                                            transform:
+                                                              "translate(-50%, -50%)",
+                                                            width: 400,
+                                                            bgcolor:
+                                                              "background.paper",
+                                                            boxShadow: 24,
+                                                            p: 4,
+                                                            borderRadius: 2,
+                                                          }}
+                                                        >
+                                                          <h2 className="mb-4 text-lg font-semibold">
+                                                            Edit Lesson
+                                                          </h2>
+                                                          <TextField
+                                                            fullWidth
+                                                            value={
+                                                              selectedLesson.name
+                                                            }
+                                                            onChange={
+                                                              handleLessonNameChange
+                                                            }
+                                                          />
+                                                          <div className="mt-4 flex justify-end gap-2">
+                                                            <Button
+                                                              variant="outlined"
+                                                              onClick={() =>
+                                                                setEditModalOpen(
+                                                                  false,
+                                                                )
+                                                              }
+                                                            >
+                                                              Cancel
+                                                            </Button>
+                                                            <Button
+                                                              variant="contained"
+                                                              onClick={
+                                                                saveEditedLesson
+                                                              }
+                                                            >
+                                                              Save
+                                                            </Button>
+                                                          </div>
+                                                        </Box>
+                                                      </Modal>
+                                                    )}
+                                                    <IconButton
+                                                      onClick={() =>
+                                                        deleteLesson(
+                                                          section.id,
+                                                          lesson.id,
+                                                        )
+                                                      }
+                                                    >
+                                                      <Delete />
+                                                    </IconButton>
+                                                  </ListItem>
+                                                )}
+                                              </Draggable>
+                                            ),
+                                          )}
+                                          {provided.placeholder}
+                                        </List>
+                                      )}
+                                    </Droppable>
+                                  </DragDropContext>
+                                </AccordionDetails>
+                                {/* Add Lesson */}
+                                <div className="mt-2 flex gap-2 p-2">
+                                  <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    placeholder="Add Lesson"
+                                    value={lessonName}
+                                    onChange={(e) =>
+                                      setLessonName(e.target.value)
+                                    }
+                                  />
+                                  <Button
+                                    variant="contained"
+                                    onClick={() => addLesson(section.id)}
+                                  >
+                                    <Add />
+                                  </Button>
+                                </div>
+                              </Accordion>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
                 </DragDropContext>
               </Card>
               {/* Discussion */}
@@ -884,7 +996,7 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
                                 onClick={() =>
                                   removeImage("viewportImages", index)
                                 }
-                                className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 p-1 text-xs text-black"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 p-1 text-xs text-gray-700"
                               >
                                 <Close className="text-sm" />
                               </button>
@@ -896,46 +1008,10 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
                         <div className="h-full">
                           <label
                             htmlFor="dropzone-file"
-                            className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:text-primary md:h-[100px] md:min-h-full"
+                            className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:border-primary hover:text-primary md:h-[100px] md:min-h-full"
                           >
                             <div className="flex flex-col items-center justify-center">
-                              <svg
-                                width="25"
-                                height="25"
-                                viewBox="0 0 34 34"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path d="M23 9H23.02H23Z" fill="#A0AEC0" />
-                                <path
-                                  d="M23 9H23.02"
-                                  stroke="#A0AEC0"
-                                  strokeWidth="3"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M27 1H7C3.68629 1 1 3.68629 1 7V27C1 30.3137 3.68629 33 7 33H27C30.3137 33 33 30.3137 33 27V7C33 3.68629 30.3137 1 27 1Z"
-                                  stroke="#A0AEC0"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M1 22.9999L9 14.9999C9.91212 14.1222 10.9468 13.6602 12 13.6602C13.0532 13.6602 14.0879 14.1222 15 14.9999L25 24.9999"
-                                  stroke="#A0AEC0"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M21 20.9999L23 18.9999C23.9121 18.1222 24.9468 17.6602 26 17.6602C27.0532 17.6602 28.0879 18.1222 29 18.9999L33 22.9999"
-                                  stroke="#A0AEC0"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
+                              <FilterDrama />
                             </div>
                             <input
                               id="dropzone-file"
@@ -974,7 +1050,7 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
                                   onClick={() =>
                                     removeImage("mobileImages", index)
                                   }
-                                  className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 p-1 text-xs text-black"
+                                  className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 p-1 text-xs text-gray-700"
                                 >
                                   <Close className="text-sm" />
                                 </button>
@@ -986,46 +1062,10 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
                           <div className="h-full">
                             <label
                               htmlFor="dropzone-file2"
-                              className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:text-primary md:h-[100px] md:min-h-full"
+                              className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:border-primary hover:text-primary md:h-[100px] md:min-h-full"
                             >
                               <div className="flex flex-col items-center justify-center">
-                                <svg
-                                  width="25"
-                                  height="25"
-                                  viewBox="0 0 34 34"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path d="M23 9H23.02H23Z" fill="#A0AEC0" />
-                                  <path
-                                    d="M23 9H23.02"
-                                    stroke="#A0AEC0"
-                                    strokeWidth="3"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                  <path
-                                    d="M27 1H7C3.68629 1 1 3.68629 1 7V27C1 30.3137 3.68629 33 7 33H27C30.3137 33 33 30.3137 33 27V7C33 3.68629 30.3137 1 27 1Z"
-                                    stroke="#A0AEC0"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                  <path
-                                    d="M1 22.9999L9 14.9999C9.91212 14.1222 10.9468 13.6602 12 13.6602C13.0532 13.6602 14.0879 14.1222 15 14.9999L25 24.9999"
-                                    stroke="#A0AEC0"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                  <path
-                                    d="M21 20.9999L23 18.9999C23.9121 18.1222 24.9468 17.6602 26 17.6602C27.0532 17.6602 28.0879 18.1222 29 18.9999L33 22.9999"
-                                    stroke="#A0AEC0"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
+                                <FilterDrama />
                               </div>
                               <input
                                 id="dropzone-file2"
@@ -1062,7 +1102,7 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
                       <div className="absolute right-1 top-1 flex w-5 items-center justify-center opacity-0 transition group-hover:opacity-100">
                         <button
                           onClick={() => removeImage("featuredImages", index)}
-                          className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 p-1 text-xs text-black"
+                          className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 p-1 text-xs text-gray-700"
                         >
                           <Close className="text-sm" />
                         </button>
@@ -1074,46 +1114,10 @@ const AddCoursePage: React.FC<FolderFormProps> = ({ onClose }) => {
                   <div className="h-full">
                     <label
                       htmlFor="dropzone-file3"
-                      className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:text-primary md:h-[100px] md:min-h-full"
+                      className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:border-primary hover:text-primary md:h-[100px] md:min-h-full"
                     >
                       <div className="flex flex-col items-center justify-center">
-                        <svg
-                          width="25"
-                          height="25"
-                          viewBox="0 0 34 34"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M23 9H23.02H23Z" fill="#A0AEC0" />
-                          <path
-                            d="M23 9H23.02"
-                            stroke="#A0AEC0"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M27 1H7C3.68629 1 1 3.68629 1 7V27C1 30.3137 3.68629 33 7 33H27C30.3137 33 33 30.3137 33 27V7C33 3.68629 30.3137 1 27 1Z"
-                            stroke="#A0AEC0"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M1 22.9999L9 14.9999C9.91212 14.1222 10.9468 13.6602 12 13.6602C13.0532 13.6602 14.0879 14.1222 15 14.9999L25 24.9999"
-                            stroke="#A0AEC0"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M21 20.9999L23 18.9999C23.9121 18.1222 24.9468 17.6602 26 17.6602C27.0532 17.6602 28.0879 18.1222 29 18.9999L33 22.9999"
-                            stroke="#A0AEC0"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+                        <FilterDrama />
                       </div>
                       <input
                         id="dropzone-file3"

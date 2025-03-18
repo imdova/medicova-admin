@@ -36,9 +36,12 @@ export default function DownloadablePanel({
     (updatedFields: Partial<MaterialFiles>) => {
       setFilesData((prev) => {
         const updatedData = { ...prev, ...updatedFields };
+
+        // Iterate through keys and call onChange for each updated field
         Object.entries(updatedFields).forEach(([key, value]) => {
           onChange(key as keyof MaterialFiles, value);
         });
+
         return updatedData;
       });
     },
@@ -47,25 +50,27 @@ export default function DownloadablePanel({
 
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files;
-      if (files) {
-        const validFiles = Array.from(files).filter(
-          (file) =>
-            (file.type === "application/pdf" || file.type === "text/plain") &&
-            file.size <= 2 * 1024 * 1024,
-        );
+      if (!event.target.files) return;
 
-        setFilesData((prev) => {
-          if (prev.selectedFiles.length + validFiles.length > 2) {
-            alert("You can upload a maximum of 2 files.");
-            return prev;
-          }
+      const validFiles = Array.from(event.target.files).filter(
+        (file) =>
+          (file.type === "application/pdf" || file.type === "text/plain") &&
+          file.size <= 2 * 1024 * 1024,
+      );
 
-          const updatedFiles = [...prev.selectedFiles, ...validFiles];
-          updateMaterialFiles({ selectedFiles: updatedFiles });
-          return { ...prev, selectedFiles: updatedFiles };
-        });
-      }
+      setFilesData((prev) => {
+        if (prev.selectedFiles.length + validFiles.length > 2) {
+          alert("You can upload a maximum of 2 files.");
+          return prev;
+        }
+
+        const updatedFiles = [...prev.selectedFiles, ...validFiles];
+        updateMaterialFiles({ selectedFiles: updatedFiles });
+        return { ...prev, selectedFiles: updatedFiles };
+      });
+
+      // Clear file input value after selection
+      event.target.value = "";
     },
     [updateMaterialFiles],
   );
@@ -111,9 +116,14 @@ export default function DownloadablePanel({
       {/* Select upload method */}
       <Select
         value={filesData.method}
-        onChange={(e) =>
-          updateMaterialFiles({ method: e.target.value as "Upload" | "Link" })
-        }
+        onChange={(e) => {
+          const newMethod = e.target.value as "Upload" | "Link";
+          updateMaterialFiles({
+            method: newMethod,
+            selectedFiles:
+              newMethod === "Upload" ? filesData.selectedFiles : [],
+          });
+        }}
         fullWidth
         className="mt-4"
       >
@@ -121,13 +131,15 @@ export default function DownloadablePanel({
         <MenuItem value="Link">Link</MenuItem>
       </Select>
 
-      {/* File upload input */}
-      <div className="mt-4 flex items-center gap-3">
-        <label className="inline-block cursor-pointer rounded-md border bg-gray-200 p-2">
-          <input type="file" multiple onChange={handleFileChange} hidden />
-          Choose file
-        </label>
-      </div>
+      {/* File upload input (only show if method is Upload) */}
+      {filesData.method === "Upload" && (
+        <div className="mt-4 flex items-center gap-3">
+          <label className="inline-block cursor-pointer rounded-md border bg-gray-200 p-2">
+            <input type="file" multiple onChange={handleFileChange} hidden />
+            Choose file
+          </label>
+        </div>
+      )}
 
       {/* Display selected files */}
       {filesData.selectedFiles.length > 0 && (
