@@ -20,10 +20,11 @@ import {
   Checkbox,
   Modal,
   Box,
+  FormControl,
+  FormHelperText,
 } from "@mui/material";
 import {
   Add,
-  Book,
   Close,
   Delete,
   Edit,
@@ -122,6 +123,7 @@ const AddCoursePage: React.FC = () => {
     getValues,
     formState: { errors },
   } = useForm<FormData>({
+    mode: "onChange",
     defaultValues: {
       courseName: "",
       courseDescription: "",
@@ -217,6 +219,13 @@ const AddCoursePage: React.FC = () => {
       setValue("newTag", ""); // Clear input field
     }
   };
+  // Handle Enter key in input
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent form submission
+      addTag(); // Add tag
+    }
+  };
 
   const removeTag = (tagToRemove: string) => {
     setValue(
@@ -228,7 +237,7 @@ const AddCoursePage: React.FC = () => {
   // categories controle
   const [categories, setCategories] = useState(watch("categories"));
 
-  // 🟢 Function to add a new category
+  //  Function to add a new category
   const addCategory = () => {
     const newCategory = watch("newCategory").trim();
     if (newCategory && !categories.includes(newCategory)) {
@@ -304,6 +313,13 @@ const AddCoursePage: React.FC = () => {
 
     setSectionName("");
   };
+  // Handle Enter key in input
+  const handleKeyDownSection = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent form submission
+      addSection(); // Add lesson
+    }
+  };
 
   // Edit section name & description
   const editSection = (id: string, newName: string) => {
@@ -325,7 +341,6 @@ const AddCoursePage: React.FC = () => {
     );
   };
 
-  // Add a lesson to a section
   const addLesson = (sectionId: string) => {
     if (!lessonName.trim()) return;
 
@@ -347,8 +362,17 @@ const AddCoursePage: React.FC = () => {
       ),
     );
 
-    setLessonName("");
+    setLessonName(""); // Clear input after adding
   };
+
+  // Handle Enter key in input
+  const handleKeyDownLesson =
+    (sectionId: string) => (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault(); // Prevent form submission
+        addLesson(sectionId); // Add lesson
+      }
+    };
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState({
@@ -452,10 +476,14 @@ const AddCoursePage: React.FC = () => {
       setValue("curriculum", sections);
     }
   };
-
+  // handel submit Data
   const { update, isLoading, error } = useUpdateApi<any>();
 
   const onSubmit = async (formData: FormData) => {
+    if (Object.keys(errors).length > 0) {
+      console.error("Validation failed, cannot submit.");
+      return;
+    }
     try {
       await update("/api/update-course", {
         method: "POST",
@@ -475,7 +503,10 @@ const AddCoursePage: React.FC = () => {
         <h1 className="mb-1 text-2xl font-bold">Add a New Course</h1>
         <p className="text-sm text-gray-500">Lets check your update today</p>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+      >
         <div className="mt-6 grid grid-cols-3 gap-6">
           <div className="col-span-3 flex flex-col gap-6 xl:col-span-2">
             {/* General Information */}
@@ -496,13 +527,11 @@ const AddCoursePage: React.FC = () => {
                     message: "Must be 50 characters or less",
                   },
                 })}
-                className="w-full"
+                className="mt-2 w-full"
+                error={!!errors.courseName}
+                helperText={errors.courseName?.message}
               />
-              {errors.courseName && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.courseName.message}
-                </p>
-              )}
+
               <label className="mb-3 mt-4 block text-xs text-secondary">
                 Course Description
               </label>
@@ -511,26 +540,10 @@ const AddCoursePage: React.FC = () => {
                 control={control}
                 rules={{
                   required: "Course Description is required",
-                  minLength: {
-                    value: 10,
-                    message: "Must be at least 10 characters",
-                  },
-                  maxLength: {
-                    value: 500,
-                    message: "Must be 500 characters or less",
-                  },
                 }}
                 render={({ field, fieldState: { error } }) => (
                   <div>
-                    <TextEditor
-                      value={field.value}
-                      onChange={(value) => field.onChange(value)}
-                    />
-                    {error && (
-                      <p className="mt-1 text-xs text-red-500">
-                        {error.message}
-                      </p>
-                    )}
+                    <TextEditor {...field} value={field.value || ""} />
                   </div>
                 )}
               />
@@ -545,14 +558,6 @@ const AddCoursePage: React.FC = () => {
                 control={control}
                 rules={{
                   required: "Excerpt is required",
-                  minLength: {
-                    value: 10,
-                    message: "Must be at least 10 characters",
-                  },
-                  maxLength: {
-                    value: 200,
-                    message: "Must be 200 characters or less",
-                  },
                 }}
                 render={({ field, fieldState: { error } }) => (
                   <div>
@@ -561,9 +566,9 @@ const AddCoursePage: React.FC = () => {
                       onChange={(value) => field.onChange(value)}
                     />
                     {error && (
-                      <p className="mt-1 text-xs text-red-500">
+                      <FormHelperText className="text-red-500">
                         {error.message}
-                      </p>
+                      </FormHelperText>
                     )}
                   </div>
                 )}
@@ -580,6 +585,7 @@ const AddCoursePage: React.FC = () => {
                     variant="outlined"
                     placeholder="Add Section"
                     value={sectionName}
+                    onKeyDown={handleKeyDownSection}
                     onChange={(e) => setSectionName(e.target.value)}
                   />
                   <Button variant="contained" onClick={addSection}>
@@ -759,6 +765,7 @@ const AddCoursePage: React.FC = () => {
                                     variant="outlined"
                                     placeholder="Add Lesson"
                                     value={lessonName}
+                                    onKeyDown={handleKeyDownLesson(section.id)}
                                     onChange={(e) =>
                                       setLessonName(e.target.value)
                                     }
@@ -816,6 +823,12 @@ const AddCoursePage: React.FC = () => {
                 formData={watch()}
                 onChange={handleChange}
               />
+
+              {Object.keys(errors).length > 0 && (
+                <p className="mt-2 text-red-500">
+                  Please Complete all tabs before submitting.
+                </p>
+              )}
             </Card>
           </div>
           <div className="col-span-3 flex flex-col gap-4 xl:col-span-1">
@@ -848,36 +861,38 @@ const AddCoursePage: React.FC = () => {
                 className="mt-2 border-green-500"
               />
 
-              <Select
-                fullWidth
-                {...register("parentCategory", {
-                  required: "Category is required",
-                })}
-                className={`mt-2 border-green-500 ${
-                  errors.parentCategory ? "border-red-500" : ""
-                }`}
-                displayEmpty
-                defaultValue=""
-                renderValue={(selected) =>
-                  selected ? selected : "Choose Category"
-                }
-              >
-                <MenuItem value="" disabled>
-                  Choose Category
-                </MenuItem>
-                {categories.map((category, index) => (
-                  <MenuItem key={index} value={category}>
-                    {category}
-                  </MenuItem>
-                ))}
-              </Select>
-
-              {/* Show error message */}
-              {errors.parentCategory && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.parentCategory.message}
-                </p>
-              )}
+              <Controller
+                name="parentCategory"
+                control={control}
+                rules={{ required: "Category is required" }}
+                render={({ field, fieldState: { error } }) => (
+                  <FormControl fullWidth error={!!error} className="mt-2">
+                    <Select
+                      {...field}
+                      displayEmpty
+                      defaultValue=""
+                      className={`border-green-500 ${error ? "border-red-500" : ""}`}
+                      renderValue={(selected) =>
+                        selected ? selected : "Choose Category"
+                      }
+                    >
+                      <MenuItem value="" disabled>
+                        Choose Category
+                      </MenuItem>
+                      {categories.map((category, index) => (
+                        <MenuItem key={index} value={category}>
+                          {category}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {error && (
+                      <FormHelperText className="text-red-500">
+                        {error.message}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                )}
+              />
 
               {/*  Add Category Button */}
               <Button
@@ -901,6 +916,7 @@ const AddCoursePage: React.FC = () => {
                   placeholder="Enter to add tags"
                   fullWidth
                   {...register("newTag")}
+                  onKeyDown={handleKeyDown}
                   className="mt-2"
                 />
                 <Button onClick={addTag} variant="contained" className="mt-2">

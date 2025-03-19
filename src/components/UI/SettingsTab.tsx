@@ -129,6 +129,9 @@ const Tabs: React.FC<TabsProps> = ({
             faqs: formData.faqs,
           }}
           onChange={onChange}
+          register={register}
+          setValue={setValue}
+          errors={errors}
         />
       ),
     },

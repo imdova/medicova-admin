@@ -4,17 +4,24 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, IconButton } from "@mui/material";
+import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 type Section = "requirements" | "targetAudience" | "keyFeatures" | "faqs";
 
 interface PanelProps {
   formData: Record<Section, string[]>;
   onChange: (field: Section, value: string[]) => void;
+  register: UseFormRegister<FormData>;
+  setValue: UseFormSetValue<FormData>;
+  errors: FieldErrors<FormData>;
 }
 
 export default function ExtraInformationPanel({
   formData,
   onChange,
+  register,
+  setValue,
+  errors,
 }: PanelProps) {
   // Prevent adding empty fields
   const handleAddField = useCallback(

@@ -40,6 +40,7 @@ export default function PricingPanel({
         <TextField
           type="text"
           {...register("regularPrice", {
+            required: "Regular price is required",
             pattern: {
               value: /^[0-9]*\.?[0-9]+$/,
               message: "Invalid price format",
@@ -60,8 +61,16 @@ export default function PricingPanel({
         <Typography className="mb-2 font-bold">Price Suffix</Typography>
         <TextField
           type="text"
-          {...register("priceSuffix")}
+          {...register("priceSuffix", {
+            required: "Price Suffix is required",
+            pattern: {
+              value: /^[0-9]*\.?[0-9]+$/,
+              message: "Invalid price format",
+            },
+          })}
           value={formData.priceSuffix}
+          error={!!errors.priceSuffix}
+          helperText={errors.priceSuffix?.message}
           onChange={(e) => handleChange("priceSuffix", e.target.value)}
           fullWidth
         />
