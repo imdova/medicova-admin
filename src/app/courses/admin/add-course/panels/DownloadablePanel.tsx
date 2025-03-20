@@ -7,37 +7,40 @@ interface MaterialFiles {
   fileTitle: string;
   method: "Upload" | "Link";
   selectedFiles: File[];
+  linkUrl: string;
 }
 
 interface DownloadablePanelProps {
-  materialFiles: MaterialFiles;
+  formData: MaterialFiles;
   onChange: (field: keyof MaterialFiles, value: any) => void;
 }
 
 export default function DownloadablePanel({
-  materialFiles,
+  formData,
   onChange,
 }: DownloadablePanelProps) {
   const [filesData, setFilesData] = useState<MaterialFiles>({
-    fileTitle: materialFiles.fileTitle || "",
-    method: materialFiles.method || "Upload",
-    selectedFiles: materialFiles.selectedFiles || [],
+    fileTitle: formData.fileTitle || "",
+    method: formData.method || "Upload",
+    selectedFiles: formData.selectedFiles || [],
+    linkUrl: formData.linkUrl || "",
   });
 
   useEffect(() => {
     setFilesData({
-      fileTitle: materialFiles.fileTitle || "",
-      method: materialFiles.method || "Upload",
-      selectedFiles: materialFiles.selectedFiles || [],
+      fileTitle: formData.fileTitle || "",
+      method: formData.method || "Upload",
+      selectedFiles: formData.selectedFiles || [],
+      linkUrl: formData.linkUrl || "",
     });
-  }, [materialFiles]);
+  }, [formData]);
 
   const updateMaterialFiles = useCallback(
     (updatedFields: Partial<MaterialFiles>) => {
       setFilesData((prev) => {
         const updatedData = { ...prev, ...updatedFields };
 
-        // Iterate through keys and call onChange for each updated field
+        // Call onChange for each updated field
         Object.entries(updatedFields).forEach(([key, value]) => {
           onChange(key as keyof MaterialFiles, value);
         });
@@ -58,38 +61,38 @@ export default function DownloadablePanel({
           file.size <= 2 * 1024 * 1024,
       );
 
-      setFilesData((prev) => {
-        if (prev.selectedFiles.length + validFiles.length > 2) {
-          alert("You can upload a maximum of 2 files.");
-          return prev;
-        }
+      // Prevent duplicate uploads
+      const newFiles = validFiles.filter(
+        (file) =>
+          !filesData.selectedFiles.some(
+            (existingFile) => existingFile.name === file.name,
+          ),
+      );
 
-        const updatedFiles = [...prev.selectedFiles, ...validFiles];
-        updateMaterialFiles({ selectedFiles: updatedFiles });
-        return { ...prev, selectedFiles: updatedFiles };
+      if (filesData.selectedFiles.length + newFiles.length > 2) {
+        alert("You can upload a maximum of 2 files.");
+        return;
+      }
+
+      updateMaterialFiles({
+        selectedFiles: [...filesData.selectedFiles, ...newFiles],
       });
 
       // Clear file input value after selection
       event.target.value = "";
     },
-    [updateMaterialFiles],
+    [filesData.selectedFiles, updateMaterialFiles],
   );
 
   const handleRemoveFile = useCallback(
     (index: number) => {
-      setFilesData((prev) => {
-        const updatedFiles = prev.selectedFiles.filter((_, i) => i !== index);
-        updateMaterialFiles({ selectedFiles: updatedFiles });
-        return { ...prev, selectedFiles: updatedFiles };
-      });
+      const updatedFiles = filesData.selectedFiles.filter(
+        (_, i) => i !== index,
+      );
+      updateMaterialFiles({ selectedFiles: updatedFiles });
     },
-    [updateMaterialFiles],
+    [filesData.selectedFiles, updateMaterialFiles],
   );
-
-  const handleSave = () => {
-    console.log("Saving data:", filesData);
-    alert("Files saved successfully!"); // Replace with API call if needed
-  };
 
   return (
     <div>
@@ -104,13 +107,14 @@ export default function DownloadablePanel({
       </Typography>
 
       {/* File title input */}
+      <Typography className="mb-2 font-bold">File Title</Typography>
+
       <TextField
-        label="File Title"
+        placeholder="Enter File Title"
         fullWidth
         variant="outlined"
         value={filesData.fileTitle}
         onChange={(e) => updateMaterialFiles({ fileTitle: e.target.value })}
-        className="mt-4"
       />
 
       {/* Select upload method */}
@@ -122,6 +126,7 @@ export default function DownloadablePanel({
             method: newMethod,
             selectedFiles:
               newMethod === "Upload" ? filesData.selectedFiles : [],
+            linkUrl: newMethod === "Link" ? filesData.linkUrl : "",
           });
         }}
         fullWidth
@@ -130,6 +135,20 @@ export default function DownloadablePanel({
         <MenuItem value="Upload">Upload</MenuItem>
         <MenuItem value="Link">Link</MenuItem>
       </Select>
+
+      {/* Show text field for entering a link if method is "Link" */}
+      {filesData.method === "Link" && (
+        <div className="mt-4">
+          <Typography className="mb-2 font-bold">File Link</Typography>
+          <TextField
+            placeholder="Enter File Link"
+            fullWidth
+            variant="outlined"
+            value={filesData.linkUrl}
+            onChange={(e) => updateMaterialFiles({ linkUrl: e.target.value })}
+          />
+        </div>
+      )}
 
       {/* File upload input (only show if method is Upload) */}
       {filesData.method === "Upload" && (

@@ -85,10 +85,14 @@ export default function OfflineCoursesPanel({
             {...register("deliveryType", {
               required: "Delivery type is required",
             })}
-            value={formData.deliveryType}
+            defaultValue=""
             onChange={(e) => handleChange("deliveryType", e.target.value)}
             error={!!errors.deliveryType}
+            displayEmpty
           >
+            <MenuItem value="" disabled>
+              Select a delivery type
+            </MenuItem>
             <MenuItem value="Private">Private</MenuItem>
             <MenuItem value="Beginner">Beginner</MenuItem>
             <MenuItem value="Intermediate">Intermediate</MenuItem>
@@ -96,7 +100,7 @@ export default function OfflineCoursesPanel({
           </Select>
         </FormControl>
         {errors.deliveryType && (
-          <p className="text-sm text-red-500">{errors.deliveryType.message}</p>
+          <p className="text-xs text-red-500">{errors.deliveryType.message}</p>
         )}
         <span className="mt-1 block text-xs text-secondary">
           How your content is conveyed to students.
@@ -115,6 +119,7 @@ export default function OfflineCoursesPanel({
             },
           })}
           fullWidth
+          placeholder="Enter Address"
           error={!!errors.address}
           helperText={errors.address?.message}
           onChange={(e) => handleChange("address", e.target.value)}

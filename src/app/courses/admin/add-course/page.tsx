@@ -29,7 +29,7 @@ import {
   Delete,
   Edit,
   ExpandMore,
-  FilterDrama,
+  AddPhotoAlternateOutlined,
   Reorder,
 } from "@mui/icons-material";
 import {
@@ -74,7 +74,9 @@ interface FormData {
   featuredImages: string[];
   mobileImages: string[];
   viewportImages: string[];
-  durationWeeks: number;
+
+  // genral panel data
+  durationWeeks: string;
   blockOnCompletion: boolean;
   blockOnExpire: boolean;
   allowRepurchase: boolean;
@@ -100,16 +102,18 @@ interface FormData {
   faqs: string[];
   allowComments: boolean;
   allowTrackbacks: boolean;
+  durationQuantity: number;
 
   // AssessmentPanel data
   evaluation: "";
-  passingGrade: 3.12;
+  passingGrade: string;
 
   // downloadable panel
   materialFiles: {
     fileTitle: string;
     method: string;
     selectedFiles: File[];
+    linkUrl: string;
   };
 }
 
@@ -123,6 +127,7 @@ const AddCoursePage: React.FC = () => {
     getValues,
     formState: { errors },
   } = useForm<FormData>({
+    shouldUnregister: false,
     mode: "onChange",
     defaultValues: {
       courseName: "",
@@ -162,7 +167,7 @@ const AddCoursePage: React.FC = () => {
       allowComments: true,
       allowTrackbacks: true,
       // GeneralPanel data
-      durationWeeks: 10,
+      durationWeeks: "weekly",
       blockOnCompletion: false,
       blockOnExpire: false,
       allowRepurchase: false,
@@ -175,6 +180,7 @@ const AddCoursePage: React.FC = () => {
       featuredlist: false,
       featuredReview: "",
       extrnalLink: "",
+      durationQuantity: 10,
 
       // OfflineCoursesPanel data
       enableOffline: true,
@@ -195,15 +201,31 @@ const AddCoursePage: React.FC = () => {
 
       // AssessmentPanel data
       evaluation: "",
-      passingGrade: 3.12,
+      passingGrade: "",
       //downlaodable panel
       materialFiles: {
         fileTitle: "",
         method: "",
         selectedFiles: [],
+        linkUrl: "",
       },
     },
   });
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState({
+    sectionId: "",
+    lessonId: "",
+    name: "",
+  });
+
+  // categories controle
+  const [categories, setCategories] = useState(watch("categories"));
+
+  // curriculum Controls
+  const [sectionName, setSectionName] = useState<string>("");
+  const [lessonName, setLessonName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+
   // Handler for updating any field in the form data
   const handleChange = (field: any, value: any) => {
     setValue(field, value); // Update form values using setValue
@@ -233,9 +255,6 @@ const AddCoursePage: React.FC = () => {
       tags.filter((tag) => tag !== tagToRemove),
     );
   };
-
-  // categories controle
-  const [categories, setCategories] = useState(watch("categories"));
 
   //  Function to add a new category
   const addCategory = () => {
@@ -293,10 +312,6 @@ const AddCoursePage: React.FC = () => {
     setValue(fieldName, updatedImages);
   };
 
-  // curriculum Controls
-  const [sectionName, setSectionName] = useState<string>("");
-  const [lessonName, setLessonName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
   // Add a new section
   const addSection = () => {
     if (!sectionName.trim()) return; // Prevent empty sections
@@ -341,6 +356,7 @@ const AddCoursePage: React.FC = () => {
     );
   };
 
+  // add lesson
   const addLesson = (sectionId: string) => {
     if (!lessonName.trim()) return;
 
@@ -374,13 +390,7 @@ const AddCoursePage: React.FC = () => {
       }
     };
 
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [selectedLesson, setSelectedLesson] = useState({
-    sectionId: "",
-    lessonId: "",
-    name: "",
-  });
-
+  // handel open modal
   const openEditModal = (
     sectionId: string,
     lessonId: string,
@@ -390,6 +400,7 @@ const AddCoursePage: React.FC = () => {
     setEditModalOpen(true);
   };
 
+  // handel change Lesson Name
   const handleLessonNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedLesson((prev) => ({ ...prev, name: e.target.value }));
   };
@@ -413,7 +424,7 @@ const AddCoursePage: React.FC = () => {
     setEditModalOpen(false);
   };
 
-  // Delete a lesson
+  // handel Delete a lesson
   const deleteLesson = (sectionId: string, lessonId: string) => {
     setValue(
       "curriculum",
@@ -476,19 +487,16 @@ const AddCoursePage: React.FC = () => {
       setValue("curriculum", sections);
     }
   };
+
   // handel submit Data
   const { update, isLoading, error } = useUpdateApi<any>();
 
   const onSubmit = async (formData: FormData) => {
-    if (Object.keys(errors).length > 0) {
-      console.error("Validation failed, cannot submit.");
-      return;
-    }
     try {
       await update("/api/update-course", {
         method: "POST",
-        body: formData, // Send FormData directly
-        headers: {}, // No headers for FormData (browser sets automatically)
+        body: formData,
+        headers: {},
       });
 
       console.log("Course updated successfully!");
@@ -515,7 +523,7 @@ const AddCoursePage: React.FC = () => {
               <label className="mb-3 text-xs text-secondary">Course Name</label>
               <TextField
                 type="text"
-                placeholder="Course Name"
+                placeholder="Enter Course Name"
                 {...register("courseName", {
                   required: "Course Name is required",
                   minLength: {
@@ -820,15 +828,9 @@ const AddCoursePage: React.FC = () => {
                 register={register}
                 setValue={setValue}
                 errors={errors}
-                formData={watch()}
+                formData={watch() as FormData}
                 onChange={handleChange}
               />
-
-              {Object.keys(errors).length > 0 && (
-                <p className="mt-2 text-red-500">
-                  Please Complete all tabs before submitting.
-                </p>
-              )}
             </Card>
           </div>
           <div className="col-span-3 flex flex-col gap-4 xl:col-span-1">
@@ -856,7 +858,7 @@ const AddCoursePage: React.FC = () => {
               <TextField
                 variant="outlined"
                 fullWidth
-                placeholder="Category name"
+                placeholder="Enter Category name"
                 {...register("newCategory")}
                 className="mt-2 border-green-500"
               />
@@ -1027,7 +1029,7 @@ const AddCoursePage: React.FC = () => {
                             className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:border-primary hover:text-primary md:h-[100px] md:min-h-full"
                           >
                             <div className="flex flex-col items-center justify-center">
-                              <FilterDrama />
+                              <AddPhotoAlternateOutlined />
                             </div>
                             <input
                               id="dropzone-file"
@@ -1081,7 +1083,7 @@ const AddCoursePage: React.FC = () => {
                               className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:border-primary hover:text-primary md:h-[100px] md:min-h-full"
                             >
                               <div className="flex flex-col items-center justify-center">
-                                <FilterDrama />
+                                <AddPhotoAlternateOutlined />
                               </div>
                               <input
                                 id="dropzone-file2"
@@ -1133,7 +1135,7 @@ const AddCoursePage: React.FC = () => {
                       className="flex h-full min-h-[160px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-2 text-gray-400 hover:border-primary hover:text-primary md:h-[100px] md:min-h-full"
                     >
                       <div className="flex flex-col items-center justify-center">
-                        <FilterDrama />
+                        <AddPhotoAlternateOutlined />
                       </div>
                       <input
                         id="dropzone-file3"

@@ -1,6 +1,5 @@
 "use client";
 import * as React from "react";
-
 import {
   CloudOffOutlined,
   FileDownloadDoneOutlined,
@@ -21,7 +20,7 @@ import AuthorPanel from "@/app/courses/admin/add-course/panels/AuthorPanel";
 import { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form";
 
 interface TabsProps {
-  formData: any; // Define a proper interface for formData
+  formData: any;
   onChange: (field: string, value: any) => void;
   register: UseFormRegister<any>;
   setValue: UseFormSetValue<any>;
@@ -36,31 +35,28 @@ const Tabs: React.FC<TabsProps> = ({
   errors,
 }) => {
   const [activeTab, setActiveTab] = useState(0);
+
+  const hasErrors = (fields: string[]) => fields.some((field) => errors[field]);
+
   const tabs = [
     {
       label: (
         <div className="flex w-full items-center justify-start gap-3">
           <SettingsOutlined className="text-xl" />
           <span className="text-sm">General</span>
+          {hasErrors([
+            "durationWeeks",
+            "blockOnCompletion",
+            "difficultyLevel",
+            "maxStudent",
+            "featuredReview",
+            "extrnalLink",
+          ]) && <span className="text-red-600">*</span>}
         </div>
       ),
       content: (
         <GeneralPanel
-          formData={{
-            durationWeeks: formData.durationWeeks,
-            blockOnCompletion: formData.blockOnCompletion,
-            blockOnExpire: formData.blockOnExpire,
-            allowRepurchase: formData.allowRepurchase,
-            repurchaseAction: formData.repurchaseAction,
-            difficultyLevel: formData.difficultyLevel,
-            roleStudentsEnrolled: formData.roleStudentsEnrolled,
-            maxStudent: formData.maxStudent,
-            retackeCourse: formData.retackeCourse,
-            finishButton: formData.finishButton,
-            featuredlist: formData.featuredlist,
-            featuredReview: formData.featuredReview,
-            extrnalLink: formData.extrnalLink,
-          }}
+          formData={formData}
           onChange={onChange}
           register={register}
           setValue={setValue}
@@ -73,17 +69,14 @@ const Tabs: React.FC<TabsProps> = ({
         <div className="flex w-full items-center justify-start gap-3">
           <CloudOffOutlined className="text-xl" />
           <span className="text-sm">Offline courses</span>
+          {hasErrors(["enableOffline", "deliveryType", "address"]) && (
+            <span className="text-red-600">*</span>
+          )}
         </div>
       ),
       content: (
         <OfflineCoursesPanel
-          formData={{
-            enableOffline: formData.enableOffline,
-            deliveryType: formData.deliveryType,
-            lessons: formData.lessons,
-            finishButton: formData.finishButton,
-            address: formData.address,
-          }}
+          formData={formData}
           onChange={onChange}
           register={register}
           setValue={setValue}
@@ -96,16 +89,14 @@ const Tabs: React.FC<TabsProps> = ({
         <div className="flex w-full items-center justify-start gap-3">
           <PaidOutlined className="text-xl" />
           <span className="text-sm">Pricing</span>
+          {hasErrors(["regularPrice", "priceSuffix"]) && (
+            <span className="text-red-600">*</span>
+          )}
         </div>
       ),
       content: (
         <PricingPanel
-          formData={{
-            finishButton: formData.finishButton,
-            enrollmentRequirement: formData.enrollmentRequirement,
-            regularPrice: formData.regularPrice,
-            priceSuffix: formData.priceSuffix,
-          }}
+          formData={formData}
           onChange={onChange}
           register={register}
           setValue={setValue}
@@ -118,16 +109,14 @@ const Tabs: React.FC<TabsProps> = ({
         <div className="flex w-full items-center justify-start gap-3">
           <TextSnippetOutlined className="text-xl" />
           <span className="text-sm">Extra Information</span>
+          {hasErrors(["requirements", "targetAudience", "keyFeatures"]) && (
+            <span className="text-red-600">*</span>
+          )}
         </div>
       ),
       content: (
         <ExtraInformationPanel
-          formData={{
-            requirements: formData.requirements,
-            targetAudience: formData.targetAudience,
-            keyFeatures: formData.keyFeatures,
-            faqs: formData.faqs,
-          }}
+          formData={formData}
           onChange={onChange}
           register={register}
           setValue={setValue}
@@ -140,15 +129,14 @@ const Tabs: React.FC<TabsProps> = ({
         <div className="flex w-full items-center justify-start gap-3">
           <SupportOutlined className="text-xl" />
           <span className="text-sm">Assessment</span>
+          {hasErrors(["evaluation", "passingGrade"]) && (
+            <span className="text-red-600">*</span>
+          )}
         </div>
       ),
       content: (
         <AssessmentPanel
-          formData={{
-            finishButton: formData.finishButton,
-            evaluation: formData.evaluation,
-            passingGrade: formData.passingGrade,
-          }}
+          formData={formData}
           onChange={onChange}
           register={register}
           errors={errors}
@@ -169,23 +157,17 @@ const Tabs: React.FC<TabsProps> = ({
         <div className="flex w-full items-center justify-start gap-3">
           <FileDownloadDoneOutlined className="text-xl" />
           <span className="text-sm">Downloadable</span>
+          {hasErrors(["fileTitle", "method", "linkUrl"]) && (
+            <span className="text-red-600">*</span>
+          )}
         </div>
       ),
-      content: (
-        <DownloadablePanel
-          materialFiles={{
-            fileTitle: formData.fileTitle || "", // Ensure a string value
-            method: (formData.method as "Upload" | "Link") || "Upload", // Ensure the correct type
-            selectedFiles: (formData.selectedFiles || []) as File[], // Ensure an array of File objects
-          }}
-          onChange={onChange}
-        />
-      ),
+      content: <DownloadablePanel formData={formData} onChange={onChange} />,
     },
   ];
+
   return (
     <div className="flex w-full flex-col gap-4 lg:flex-row">
-      {/* Tab Buttons */}
       <div className="mb-7 flex flex-col gap-2">
         {tabs.map((tab, index) => (
           <button
@@ -202,10 +184,12 @@ const Tabs: React.FC<TabsProps> = ({
           </button>
         ))}
       </div>
-
-      {/* Tab Content */}
       <div className="w-full rounded-md border p-4">
-        {tabs[activeTab].content}
+        {tabs.map((tab, index) => (
+          <div className={activeTab === index ? "block" : "hidden"} key={index}>
+            {tab.content}
+          </div>
+        ))}
       </div>
     </div>
   );

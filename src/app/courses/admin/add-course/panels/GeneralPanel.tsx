@@ -10,11 +10,12 @@ import {
   Select,
   MenuItem,
   FormHelperText,
+  InputLabel,
 } from "@mui/material";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 interface FormData {
-  durationWeeks: number;
+  durationWeeks: string;
   blockOnCompletion: boolean;
   blockOnExpire: boolean;
   allowRepurchase: boolean;
@@ -27,6 +28,7 @@ interface FormData {
   featuredlist: boolean;
   featuredReview: string;
   extrnalLink: string;
+  durationQuantity: number;
 }
 
 interface GeneralPanelProps {
@@ -50,22 +52,47 @@ export default function GeneralPanel({
 
   return (
     <div>
-      {/* Duration */}
       <div className="mb-4">
+        {/* Duration */}
         <Typography className="mb-2 font-bold">Duration</Typography>
-        <TextField
-          type="number"
-          {...register("durationWeeks", {
-            required: "Duration is required",
-            min: { value: 0, message: "Duration cannot be negative" },
-          })}
-          fullWidth
-          onChange={(e) =>
-            setValue("durationWeeks", parseInt(e.target.value, 10) || 0)
-          }
-          error={!!errors.durationWeeks}
-          helperText={errors.durationWeeks?.message}
-        />
+        <div className="flex flex-col gap-3 md:flex-row">
+          <div className="w-full">
+            <TextField
+              type="number"
+              {...register("durationQuantity", {
+                required: "Duration is required",
+                min: { value: 0, message: "Duration cannot be negative" },
+              })}
+              fullWidth
+              placeholder="Enter Duration Quantity"
+              onChange={(e) =>
+                setValue("durationQuantity", parseInt(e.target.value, 10) || 0)
+              }
+              error={!!errors.durationQuantity}
+              helperText={errors.durationQuantity?.message}
+            />
+          </div>
+          <div className="w-full">
+            <FormControl fullWidth error={!!errors.durationWeeks}>
+              <Select
+                {...register("durationWeeks", {
+                  required: "Duration is required",
+                })}
+                defaultValue="weekly"
+                onChange={(e) => handleChange("durationWeeks", e.target.value)}
+              >
+                <MenuItem value="weekly">Weekly</MenuItem>
+                <MenuItem value="daily">Daily</MenuItem>
+                <MenuItem value="monthly">Monthly</MenuItem>
+              </Select>
+            </FormControl>
+            {errors.durationWeeks && (
+              <Typography color="error">
+                {errors.durationWeeks.message}
+              </Typography>
+            )}
+          </div>
+        </div>
         <span className="mt-1 block text-xs text-secondary">
           Set to 0 for the lifetime course
         </span>
@@ -167,6 +194,7 @@ export default function GeneralPanel({
           {...register("roleStudentsEnrolled", {
             min: { value: 0, message: "Cannot be negative" },
           })}
+          placeholder="Enter Role Students Enrolled"
           fullWidth
           error={!!errors.roleStudentsEnrolled}
           helperText={errors.roleStudentsEnrolled?.message}
@@ -182,6 +210,7 @@ export default function GeneralPanel({
             min: { value: 0, message: "Cannot be negative" },
           })}
           fullWidth
+          placeholder="Enter Max Student"
           error={!!errors.maxStudent}
           helperText={errors.maxStudent?.message}
         />
@@ -196,6 +225,7 @@ export default function GeneralPanel({
             min: { value: 0, message: "Cannot be negative" },
           })}
           fullWidth
+          placeholder="Enter Re-take Course"
           error={!!errors.retackeCourse}
           helperText={errors.retackeCourse?.message}
         />
@@ -208,6 +238,7 @@ export default function GeneralPanel({
           type="text"
           {...register("featuredReview", { required: "Review is required" })}
           fullWidth
+          placeholder="Enter Featured Review"
           error={!!errors.featuredReview}
           helperText={errors.featuredReview?.message}
         />
@@ -226,6 +257,7 @@ export default function GeneralPanel({
             },
           })}
           fullWidth
+          placeholder="Enter External Link"
           error={!!errors.extrnalLink}
           helperText={errors.extrnalLink?.message}
         />

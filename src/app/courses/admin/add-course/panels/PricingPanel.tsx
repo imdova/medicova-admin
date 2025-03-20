@@ -47,6 +47,7 @@ export default function PricingPanel({
             },
           })}
           value={formData.regularPrice}
+          placeholder="Enter Regular price"
           onChange={(e) => handleChange("regularPrice", e.target.value)}
           error={!!errors.regularPrice}
           helperText={errors.regularPrice?.message}
@@ -68,6 +69,7 @@ export default function PricingPanel({
               message: "Invalid price format",
             },
           })}
+          placeholder="Enter Price Suffix"
           value={formData.priceSuffix}
           error={!!errors.priceSuffix}
           helperText={errors.priceSuffix?.message}
