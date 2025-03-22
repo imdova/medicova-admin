@@ -16,15 +16,28 @@ import { useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateField } from "@mui/x-date-pickers/DateField";
-import { MoreVert, Tune } from "@mui/icons-material";
+import { Tune } from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import TableDropMenu from "../TableDropMenu";
 
+type rowType = {
+  id: number;
+  name: string;
+  applyDay: string;
+  phone: string;
+  location: string;
+  category: string;
+  specialty: string;
+  careerLevel: string;
+  education: string;
+  age: number;
+  experience: string;
+};
 const columns: GridColDef[] = [
   {
-    field: "Name",
+    field: "name",
     headerName: "Name",
     width: 160,
     editable: false,
@@ -36,66 +49,65 @@ const columns: GridColDef[] = [
           sx={{ width: 32, height: 32, mr: 2 }}
         />
         <div>
-          <h3 className="mb-2 text-xs">{params.row.Name}</h3>
-          <p className="text-[8px] leading-none">{params.row.Email}</p>
+          <h3 className="mb-2 text-xs">{params.row.name}</h3>
         </div>
       </div>
     ),
   },
   {
-    field: "ApplyDay",
+    field: "applyDay",
     headerName: "Applied Day",
     flex: 1,
     editable: true,
   },
   {
-    field: "Phone",
+    field: "phone",
     headerName: "Phone",
     flex: 1,
     editable: true,
   },
   {
-    field: "Location",
+    field: "location",
     headerName: "Location",
     sortable: true,
     flex: 1,
   },
 
   {
-    field: "Category",
+    field: "category",
     headerName: "Category",
     sortable: true,
     flex: 1,
   },
 
   {
-    field: "Specialty",
+    field: "specialty",
     headerName: "Specialty ",
     sortable: true,
     flex: 1,
   },
 
   {
-    field: "CareerLevel",
+    field: "careerLevel",
     headerName: "CareerLevel",
     sortable: true,
     flex: 1,
   },
   {
-    field: "Education",
+    field: "education",
     headerName: "Education",
     sortable: true,
     flex: 1,
   },
   {
-    field: "Age",
+    field: "age",
     headerName: "Age",
     sortable: true,
     flex: 1,
     width: 60,
   },
   {
-    field: "Experience",
+    field: "experience",
     headerName: "Experience",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
@@ -103,7 +115,7 @@ const columns: GridColDef[] = [
   },
 
   {
-    field: "Action",
+    field: "action",
     headerName: "Action",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
@@ -116,66 +128,68 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+const rows: rowType[] = [
   {
     id: 1,
-    Name: "said ahmed",
-    ApplyDay: "13 July, 2021",
-    Phone: "+201144789587",
-    Location: "Egypt",
-    Category: "Doctor",
-    Specialty: "Cardiology",
-    CareerLevel: "General",
-    Education: "Bachelor of Medicine",
-    Age: 30,
-    Experience: "2v",
+    name: "John Doe",
+    applyDay: "05 March, 2022",
+    phone: "+11234567890",
+    location: "USA",
+    category: "Engineer",
+    specialty: "Software Development",
+    careerLevel: "Senior",
+    education: "Master of Computer Science",
+    age: 35,
+    experience: "10 years",
   },
   {
-    id: 1,
-    Name: "said ahmed",
-    ApplyDay: "13 July, 2021",
-    Phone: "+201144789587",
-    Location: "Egypt",
-    Category: "Doctor",
-    Specialty: "Cardiology",
-    CareerLevel: "General",
-    Education: "Bachelor of Medicine",
-    Age: 30,
-    Experience: "2v",
+    id: 2,
+    name: "Maria Gonzalez",
+    applyDay: "20 June, 2023",
+    phone: "+34987654321",
+    location: "Spain",
+    category: "Designer",
+    specialty: "Graphic Design",
+    careerLevel: "Mid-Level",
+    education: "Bachelor of Fine Arts",
+    age: 28,
+    experience: "5 years",
   },
   {
-    id: 1,
-    Name: "said ahmed",
-    ApplyDay: "13 July, 2021",
-    Phone: "+201144789587",
-    Location: "Egypt",
-    Category: "Doctor",
-    Specialty: "Cardiology",
-    CareerLevel: "General",
-    Education: "Bachelor of Medicine",
-    Age: 30,
-    Experience: "2v",
+    id: 3,
+    name: "Ahmed Khan",
+    applyDay: "15 September, 2021",
+    phone: "+923001234567",
+    location: "Pakistan",
+    category: "Doctor",
+    specialty: "Neurology",
+    careerLevel: "Consultant",
+    education: "Doctor of Medicine",
+    age: 40,
+    experience: "15 years",
   },
   {
-    id: 1,
-    Name: "said ahmed",
-    ApplyDay: "13 July, 2021",
-    Phone: "+201144789587",
-    Location: "Egypt",
-    Category: "Doctor",
-    Specialty: "Cardiology",
-    CareerLevel: "General",
-    Education: "Bachelor of Medicine",
-    Age: 30,
-    Experience: "2v",
+    id: 4,
+    name: "Emily Smith",
+    applyDay: "10 December, 2022",
+    phone: "+447911223344",
+    location: "UK",
+    category: "Teacher",
+    specialty: "Mathematics",
+    careerLevel: "Experienced",
+    education: "Master of Education",
+    age: 32,
+    experience: "8 years",
   },
 ];
 
 interface OverviewEmployersTableProps {
-  Filtring?: boolean; // `Filtring` is optional
+  Filtring?: boolean;
+  endPoint: string;
 }
 const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
+  endPoint,
 }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
@@ -192,8 +206,44 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
   };
   // Filter data based on selection
   const filteredData = rows.filter((row) =>
-    row.Name.toLowerCase().includes(searchQuery.toLowerCase()),
+    row.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [UserData, setUserData] = useState<rowType[]>(filteredData);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        // In a real implementation, these would be actual API calls
+        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
+        // const statsData = await statsResponse.json();
+        // setEmployerStats(statsData);
+        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
+        // const topEmployersData = await topEmployersResponse.json();
+        // setTopEmployers(topEmployersData);
+        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
+        // const chartDataResponseData = await chartDataResponse.json();
+        // setChartData(chartDataResponseData);
+        // For now, we'll use the dummy data
+        setUserData(rows);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Users Table data...
+      </div>
+    );
+  }
   return (
     <>
       {/* start content table Employers  */}

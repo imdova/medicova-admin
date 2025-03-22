@@ -3,9 +3,17 @@ import NestedMenu from "../NestedMenu";
 
 type ChartUserProps = {
   labelX: string;
+  category: string[];
+  endPoint: string;
+  newEmployers: number[];
 };
 
-const ChartUserReport: React.FC<ChartUserProps> = ({ labelX }) => {
+const ChartUserReport: React.FC<ChartUserProps> = ({
+  labelX,
+  category,
+  newEmployers,
+  endPoint,
+}) => {
   return (
     <>
       <div className="flex w-full items-center justify-between p-4">
@@ -41,14 +49,7 @@ const ChartUserReport: React.FC<ChartUserProps> = ({ labelX }) => {
         xAxis={[
           {
             scaleType: "band",
-            data: [
-              "Doctors",
-              "Dentists",
-              "Pharmacists",
-              "Physiot...",
-              "Nurses",
-              "Technicians",
-            ],
+            data: category,
             barGapRatio: 0.8,
             categoryGapRatio: 0.6,
           } as AxisConfig<"band", unknown, ChartsXAxisProps>,
@@ -56,7 +57,7 @@ const ChartUserReport: React.FC<ChartUserProps> = ({ labelX }) => {
         series={[
           {
             label: labelX,
-            data: [2423, 2200, 2100, 2500, 1900, 2300], // Data matches each x-axis category
+            data: newEmployers, // Data matches each x-axis category
             color: "#2ba149e5",
           },
         ]}

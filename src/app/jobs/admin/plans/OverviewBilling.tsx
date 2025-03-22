@@ -12,6 +12,7 @@ import Image from "next/image";
 import ChartEmployerReport from "@/components/UI/Charts/ChartEmployerReport";
 import CountiresTable from "@/components/UI/Tables/CountiresTable";
 import OverviewBillingTable from "@/components/UI/Tables/OverviewBillingTable";
+import React from "react";
 
 const OvarviewBilling: React.FC = () => {
   return (
@@ -67,7 +68,19 @@ const OvarviewBilling: React.FC = () => {
             </div>
           </div>
           <div className="relative mt-3 box-content">
-            <ChartEmployerReport labelX="new" labelY="Apply for a job" />
+            {/* <ChartEmployerReport
+              endPoint={""}
+              labelX="new Employers"
+              newEmployers={[2423, 2200, 2100, 2500, 1900, 2300]}
+              category={[
+                "Doctors",
+                "Dentists",
+                "Pharmacists",
+                "Physiot...",
+                "Nurses",
+                "Technicians",
+              ]}
+            /> */}
           </div>
         </div>
         <div className="flex flex-col">
@@ -218,7 +231,7 @@ const OvarviewBilling: React.FC = () => {
                 <MoreVertIcon />
               </button>
             </div>
-            <CountiresTable />
+            <CountiresTable endPoint={""} />
           </div>
         </div>
       </div>

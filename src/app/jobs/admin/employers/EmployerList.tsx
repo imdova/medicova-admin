@@ -1,10 +1,14 @@
 "use client";
 import OverviewEmployersTable from "@/components/UI/Tables/OverviewEmployersTable";
 const EmployerList: React.FC = () => {
+  const API_GET_EMPLOYERS_TABLE_DATA = "/api/employers/table-data";
   return (
     <>
       <div className="box-content !p-0">
-        <OverviewEmployersTable Filtring={true} />
+        <OverviewEmployersTable
+          endPoint={API_GET_EMPLOYERS_TABLE_DATA}
+          Filtring={true}
+        />
       </div>
     </>
   );

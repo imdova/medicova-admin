@@ -80,8 +80,8 @@ const columns: GridColDef[] = [
   },
 
   {
-    field: "Veiws",
-    headerName: "Veiws",
+    field: "Views",
+    headerName: "Views",
     sortable: true,
     flex: 1,
   },
@@ -116,54 +116,67 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+type JobRow = {
+  id: number;
+  JobTitle: string;
+  Date: string;
+  Employer: string;
+  Location: string;
+  Views: string;
+  Applicants: string;
+  Status: string;
+};
+
+const rows: JobRow[] = [
   {
-    id: 2546,
-    JobTitle: "Consultannt Cardiiology",
-    Date: "13 July, 2021",
-    Employer: "Saudi German",
-    Location: "Egypt",
-    Veiws: "123",
-    Applicants: "12",
+    id: 1001,
+    JobTitle: "Software Engineer",
+    Date: "10 March, 2022",
+    Employer: "Google",
+    Location: "USA",
+    Views: "150",
+    Applicants: "20",
     Status: "Active",
   },
   {
-    id: 2546,
-    JobTitle: "Consultannt Cardiiology",
-    Date: "13 July, 2021",
-    Employer: "Saudi German",
-    Location: "Egypt",
-    Veiws: "123",
-    Applicants: "12",
+    id: 1002,
+    JobTitle: "Data Scientist",
+    Date: "25 May, 2022",
+    Employer: "Amazon",
+    Location: "UK",
+    Views: "180",
+    Applicants: "25",
+    Status: "Closed",
+  },
+  {
+    id: 1003,
+    JobTitle: "Product Manager",
+    Date: "17 August, 2022",
+    Employer: "Microsoft",
+    Location: "Canada",
+    Views: "200",
+    Applicants: "30",
     Status: "Active",
   },
   {
-    id: 2546,
-    JobTitle: "Consultannt Cardiiology",
-    Date: "13 July, 2021",
-    Employer: "Saudi German",
-    Location: "Egypt",
-    Veiws: "123",
-    Applicants: "12",
-    Status: "Active",
-  },
-  {
-    id: 2546,
-    JobTitle: "Consultannt Cardiiology",
-    Date: "13 July, 2021",
-    Employer: "Saudi German",
-    Location: "Egypt",
-    Veiws: "123",
-    Applicants: "12",
-    Status: "Active",
+    id: 1004,
+    JobTitle: "UX Designer",
+    Date: "5 December, 2022",
+    Employer: "Apple",
+    Location: "Germany",
+    Views: "120",
+    Applicants: "15",
+    Status: "Pending",
   },
 ];
 
 interface OverviewEmployersTableProps {
-  Filtring?: boolean; // `Filtring` is optional
+  Filtring?: boolean;
+  endPoint: string;
 }
 const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
+  endPoint,
 }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
@@ -186,6 +199,42 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
   const filteredData = rows.filter((row) =>
     row.JobTitle.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [JobData, setJobData] = useState<JobRow[]>(filteredData);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        // In a real implementation, these would be actual API calls
+        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
+        // const statsData = await statsResponse.json();
+        // setEmployerStats(statsData);
+        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
+        // const topEmployersData = await topEmployersResponse.json();
+        // setTopEmployers(topEmployersData);
+        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
+        // const chartDataResponseData = await chartDataResponse.json();
+        // setChartData(chartDataResponseData);
+        // For now, we'll use the dummy data
+        setJobData(rows);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Users Table data...
+      </div>
+    );
+  }
   return (
     <>
       {/* start content table Employers  */}

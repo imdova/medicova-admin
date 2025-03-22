@@ -5,13 +5,11 @@ import {
   FormControl,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Switch,
   Tab,
   Tabs,
   Typography,
 } from "@mui/material";
-
 import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
 import { useState } from "react";
@@ -26,7 +24,8 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import TableDropMenu from "../TableDropMenu";
 
 interface OverviewEmployersTableProps {
-  Filtring?: boolean; // `Filtring` is optional
+  Filtring?: boolean;
+  endPoint: string;
 }
 
 // handel function status of Employers
@@ -105,8 +104,8 @@ const columns: GridColDef[] = [
   },
 
   {
-    field: "Plane",
-    headerName: "Plane",
+    field: "Plan",
+    headerName: "Plan",
     sortable: true,
     flex: 1,
   },
@@ -141,64 +140,80 @@ const columns: GridColDef[] = [
     ),
   },
 ];
+// Define TypeScript type for the data structure
+type RowDataEmployer = {
+  id: number;
+  Name: string;
+  Email: string;
+  RegDate: string;
+  Phone: string;
+  Country: string;
+  Type: string;
+  Sector: string;
+  Plan: string;
+  Status: string;
+  Jobs: number;
+};
 
-const rows = [
+// Updated employer data with unique entries
+const DummyEmployers: RowDataEmployer[] = [
   {
     id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
+    Name: "Saudi German Hospital",
+    Email: "saudigerman@gmail.com",
     RegDate: "13 July, 2021",
     Phone: "123456789",
     Country: "Saudi Arabia",
     Type: "Hospital",
     Sector: "Healthcare",
-    Plane: "Premium",
+    Plan: "Premium",
     Status: "Active",
     Jobs: 25,
   },
   {
-    id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
+    id: 2,
+    Name: "Mayo Clinic",
+    Email: "mayoclinic@email.com",
+    RegDate: "22 March, 2020",
+    Phone: "987654321",
+    Country: "United States",
     Type: "Hospital",
     Sector: "Healthcare",
-    Plane: "Premium",
-    Status: "Active",
-    Jobs: 25,
+    Plan: "Standard",
+    Status: "Inactive",
+    Jobs: 40,
   },
   {
-    id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plane: "Premium",
+    id: 3,
+    Name: "Siemens Healthineers",
+    Email: "siemens@healthcare.com",
+    RegDate: "05 September, 2019",
+    Phone: "456789123",
+    Country: "Germany",
+    Type: "Healthcare Tech",
+    Sector: "Medical Devices",
+    Plan: "Enterprise",
     Status: "Active",
-    Jobs: 25,
+    Jobs: 60,
   },
   {
-    id: 1,
-    Name: "Saudi German",
-    Email: "suadiger@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
+    id: 4,
+    Name: "Apollo Hospitals",
+    Email: "apollo@hospitals.com",
+    RegDate: "30 June, 2022",
+    Phone: "159357486",
+    Country: "India",
     Type: "Hospital",
     Sector: "Healthcare",
-    Plane: "Premium",
+    Plan: "Basic",
     Status: "Active",
-    Jobs: 25,
+    Jobs: 18,
   },
 ];
 
 const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
+  endPoint,
 }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
@@ -214,9 +229,46 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
     setValue(newValue);
   };
   // Filter data based on selection
-  const filteredData = rows.filter((row) =>
+  const filteredData = DummyEmployers.filter((row) =>
     row.Name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [EmployerData, setEmployerData] =
+    useState<RowDataEmployer[]>(filteredData);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        // In a real implementation, these would be actual API calls
+        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
+        // const statsData = await statsResponse.json();
+        // setEmployerStats(statsData);
+        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
+        // const topEmployersData = await topEmployersResponse.json();
+        // setTopEmployers(topEmployersData);
+        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
+        // const chartDataResponseData = await chartDataResponse.json();
+        // setChartData(chartDataResponseData);
+        // For now, we'll use the dummy data
+        setEmployerData(DummyEmployers);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Employers Table data...
+      </div>
+    );
+  }
   return (
     <>
       {/* start content table Employers  */}
