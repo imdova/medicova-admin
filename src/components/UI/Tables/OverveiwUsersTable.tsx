@@ -254,7 +254,7 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
             variant="h6"
             gutterBottom
           >
-            Total Users : 19
+            Total Users : {rows.length}
           </Typography>
         ) : (
           <Box

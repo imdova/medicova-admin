@@ -15,7 +15,8 @@ import {
   South,
   LocationOnOutlined,
 } from "@mui/icons-material";
-import DummyActionMenu from "../../../../components/UI/DummyActionMenu";
+import DummyActionMenu from "@/components/UI/DummyActionMenu";
+
 // Type definitions
 interface EmployerStats {
   totalEmployers: number;
@@ -335,7 +336,7 @@ const OverviewPage: React.FC = () => {
           </div>
           {/* Top Countries */}
           <div className="box-content flex-1 rounded-lg p-4">
-            <div className="mb-3 flex items-center justify-between gap-8 border-b pb-2">
+            <div className="mb-3 flex justify-between gap-8 border-b pb-2">
               <Typography>
                 Top Countries
                 <span className="ml-1 text-xs text-secondary">(Revenue)</span>

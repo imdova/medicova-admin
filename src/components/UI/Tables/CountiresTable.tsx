@@ -111,7 +111,7 @@ const CountiresTable: React.FC<countryTableProps> = ({ endPoint }) => {
   return (
     <TableContainer
       sx={{
-        maxHeight: 210,
+        maxHeight: 250,
       }}
     >
       <Table

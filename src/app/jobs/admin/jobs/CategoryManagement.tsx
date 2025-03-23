@@ -8,7 +8,7 @@ import {
   ListItemText,
   TextField,
 } from "@mui/material";
-import { MoreVert, Add } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import MoreVertButton from "@/components/UI/MoreVertButton";
 
 const initialCategories = [

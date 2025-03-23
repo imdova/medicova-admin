@@ -11,8 +11,7 @@ import { LocationOnOutlined, MoreVert } from "@mui/icons-material";
 import ChartUserReport from "@/components/UI/Charts/ChartUserReport";
 import OverveiwUsersTable from "@/components/UI/Tables/OverveiwUsersTable";
 import { useEffect, useState } from "react";
-import React from "react";
-import DummyActionMenu from "../../../../components/UI/DummyActionMenu";
+import DummyActionMenu from "@/components/UI/DummyActionMenu";
 
 // Type definitions
 interface UserStats {

@@ -31,9 +31,20 @@ import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 interface OverviewEmployersTableProps {
-  Filtring?: boolean; // `Filtring` is optional
-  MainTabs?: boolean; // `Filtring` is optional
+  Filtring?: boolean;
+  MainTabs?: boolean;
+  endPoint: string;
 }
+
+type OrderRecord = {
+  id: number;
+  Orders: string;
+  Name: string;
+  Revenue: string;
+  Amount: number;
+  Status: string;
+  Recipt: number;
+};
 
 // handel function status of Employers
 const handleState = (state: StateType) => {
@@ -144,7 +155,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+const rows: OrderRecord[] = [
   {
     id: 1,
     Orders: "2",
@@ -155,37 +166,38 @@ const rows = [
     Recipt: 209,
   },
   {
-    id: 1,
-    Orders: "2",
-    Name: "Jack",
-    Revenue: "25,000K",
-    Amount: 8.12,
-    Status: "Active",
-    Recipt: 209,
+    id: 2,
+    Orders: "5",
+    Name: "Alice",
+    Revenue: "50,000K",
+    Amount: 15.75,
+    Status: "Pending",
+    Recipt: 310,
   },
   {
-    id: 1,
-    Orders: "2",
-    Name: "Jack",
-    Revenue: "25,000K",
-    Amount: 8.12,
+    id: 3,
+    Orders: "3",
+    Name: "Bob",
+    Revenue: "35,000K",
+    Amount: 12.99,
     Status: "Active",
-    Recipt: 209,
+    Recipt: 450,
   },
   {
-    id: 1,
-    Orders: "2",
-    Name: "Jack",
-    Revenue: "25,000K",
-    Amount: 8.12,
-    Status: "Active",
-    Recipt: 209,
+    id: 4,
+    Orders: "4",
+    Name: "Sophia",
+    Revenue: "40,000K",
+    Amount: 9.5,
+    Status: "Cancelled",
+    Recipt: 178,
   },
 ];
 
 const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
   MainTabs = false,
+  endPoint,
 }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
@@ -205,6 +217,43 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
   const filteredData = rows.filter((row) =>
     row.Name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [plansData, setPlansData] = useState<OrderRecord[]>(filteredData);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        // In a real implementation, these would be actual API calls
+        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
+        // const statsData = await statsResponse.json();
+        // setEmployerStats(statsData);
+        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
+        // const topEmployersData = await topEmployersResponse.json();
+        // setTopEmployers(topEmployersData);
+        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
+        // const chartDataResponseData = await chartDataResponse.json();
+        // setChartData(chartDataResponseData);
+        // For now, we'll use the dummy data
+        setPlansData(filteredData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [filteredData]);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Tranactions Table data...
+      </div>
+    );
+  }
   return (
     <>
       {/* start content table Employers  */}
@@ -471,7 +520,7 @@ const TotalPlansTable: React.FC<OverviewEmployersTableProps> = ({
               columnSpacing: 2, // Add spacing between column headers
             },
           }}
-          rows={filteredData}
+          rows={plansData}
           columns={columns}
           initialState={{
             pagination: {

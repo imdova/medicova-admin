@@ -13,82 +13,125 @@ import {
 import TotalPlansTable from "@/components/UI/Tables/TotalPlansTable";
 import PlanSettingTable from "@/components/UI/Tables/planSettingTable";
 
+type Plan = {
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  highlight: boolean;
+};
+const plans: Plan[] = [
+  {
+    name: "Basic",
+    price: "3,500",
+    description: "Best for small companies with less than 2 employees",
+    features: [
+      "Unlimited Views",
+      "90 Unlocks",
+      "6 Jobs",
+      "30 Invitations",
+      "2 Users",
+      "Access unlocked profiles for up to 3 months",
+    ],
+    highlight: false,
+  },
+  {
+    name: "Pro",
+    price: "5,500",
+    description: "Best for small companies hiring 1-2 people per month",
+    features: [
+      "Unlimited Views",
+      "150 Unlocks",
+      "60 Invitations",
+      "3 Users",
+      "Premium Support",
+      "Access unlocked profiles for up to 3 months",
+    ],
+    highlight: false,
+  },
+  {
+    name: "Gold",
+    price: "8,400",
+    description:
+      "Best for companies with medium hiring needs or changing roles on the team",
+    features: [
+      "Unlimited Views",
+      "300 Unlocks",
+      "15 Jobs",
+      "105 Invitations",
+      "25 Users",
+      "Featured Support",
+      "Premium Support",
+      "Access unlocked profiles for up to 3 months 0",
+    ],
+    highlight: true,
+  },
+  {
+    name: "Platinum",
+    price: "12,000",
+    description:
+      "Best for companies with large hiring needs or needing support with",
+    features: [
+      "Unlimited Views",
+      "750+ Unlocks",
+      "60+ Jobs",
+      "300+ Invitations",
+      "Premium Support",
+      "Access unlocked profiles",
+    ],
+    highlight: true,
+  },
+];
 const SubscriptionPlansPage: React.FC = () => {
   const [selectedAccess, setSelectedAccess] =
     useState<string>("1 Month Access");
-
-  const plans = [
-    {
-      name: "Basic",
-      price: "3,500",
-      description: "Best for small companies with less than 2 employees",
-      features: [
-        "Unlimited Views",
-        "90 Unlocks",
-        "6 Jobs",
-        "30 Invitations",
-        "2 Users",
-        "Access unlocked profiles for up to 3 months",
-      ],
-      highlight: false,
-    },
-    {
-      name: "Pro",
-      price: "5,500",
-      description: "Best for small companies hiring 1-2 people per month",
-      features: [
-        "Unlimited Views",
-        "150 Unlocks",
-        "60 Invitations",
-        "3 Users",
-        "Premium Support",
-        "Access unlocked profiles for up to 3 months",
-      ],
-      highlight: false,
-    },
-    {
-      name: "Gold",
-      price: "8,400",
-      description:
-        "Best for companies with medium hiring needs or changing roles on the team",
-      features: [
-        "Unlimited Views",
-        "300 Unlocks",
-        "15 Jobs",
-        "105 Invitations",
-        "25 Users",
-        "Featured Support",
-        "Premium Support",
-        "Access unlocked profiles for up to 3 months 0",
-      ],
-      highlight: true,
-    },
-    {
-      name: "Platinum",
-      price: "12,000",
-      description:
-        "Best for companies with large hiring needs or needing support with",
-      features: [
-        "Unlimited Views",
-        "750+ Unlocks",
-        "60+ Jobs",
-        "300+ Invitations",
-        "Premium Support",
-        "Access unlocked profiles",
-      ],
-      highlight: true,
-    },
-  ];
 
   const handleAccessSelection = (access: string) => {
     setSelectedAccess(access);
   };
 
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [plansData, setPlansData] = useState<Plan[]>(plans);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        // In a real implementation, these would be actual API calls
+        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
+        // const statsData = await statsResponse.json();
+        // setEmployerStats(statsData);
+        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
+        // const topEmployersData = await topEmployersResponse.json();
+        // setTopEmployers(topEmployersData);
+        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
+        // const chartDataResponseData = await chartDataResponse.json();
+        // setChartData(chartDataResponseData);
+        // For now, we'll use the dummy data
+        setPlansData(plans);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Plans data...
+      </div>
+    );
+  }
+
   return (
     <Box sx={{ pt: 2 }}>
       {/* Table total Plans */}
       <div className="mb-6">
-        <TotalPlansTable />
+        <TotalPlansTable endPoint={""} />
       </div>
       {/* Heading */}
       <Typography
@@ -152,7 +195,7 @@ const SubscriptionPlansPage: React.FC = () => {
       </Box>
 
       <Grid container spacing={3} justifyContent="center" sx={{ mt: 3, mb: 4 }}>
-        {plans.map((plan, index) => (
+        {plansData.map((plan, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <Card
               sx={{
@@ -440,7 +483,7 @@ const SubscriptionPlansPage: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <PlanSettingTable />
+      <PlanSettingTable endPoint={""} />
     </Box>
   );
 };

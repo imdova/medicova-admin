@@ -1,6 +1,5 @@
 "use client";
 import OverveiwJobTable from "@/components/UI/Tables/OverveiwJobTable";
-import React from "react";
 const JobList: React.FC = () => {
   const API_GET_JOBS_TABLE_DATA = "/api/employers/table-data";
 

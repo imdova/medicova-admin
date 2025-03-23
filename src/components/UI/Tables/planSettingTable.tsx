@@ -22,9 +22,19 @@ import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 interface PlanSettingTable {
-  Filtring?: boolean; // `Filtring` is optional
-  MainTabs?: boolean; // `Filtring` is optional
+  Filtring?: boolean;
+  MainTabs?: boolean;
+  endPoint: string;
 }
+
+type PricingRecord = {
+  id: number;
+  Features: string;
+  Basic: string;
+  Pro: string;
+  Gold: string;
+  Platinum: string;
+};
 
 // handel function status of Employers
 const handleState = (state: StateType) => {
@@ -100,7 +110,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+const rows: PricingRecord[] = [
   {
     id: 1,
     Features: "Price",
@@ -110,42 +120,42 @@ const rows = [
     Platinum: "$209",
   },
   {
-    id: 1,
-    Features: "Price",
-    Basic: "$3.733",
-    Pro: "$5.533",
-    Gold: "$8.533",
-    Platinum: "$209",
+    id: 2,
+    Features: "Discount",
+    Basic: "5%",
+    Pro: "10%",
+    Gold: "15%",
+    Platinum: "20%",
   },
   {
-    id: 1,
-    Features: "Price",
-    Basic: "$3.733",
-    Pro: "$5.533",
-    Gold: "$8.533",
-    Platinum: "$209",
+    id: 3,
+    Features: "Storage",
+    Basic: "50GB",
+    Pro: "100GB",
+    Gold: "200GB",
+    Platinum: "1TB",
   },
   {
-    id: 1,
-    Features: "Price",
-    Basic: "$3.733",
-    Pro: "$5.533",
-    Gold: "$8.533",
-    Platinum: "$209",
+    id: 4,
+    Features: "Support",
+    Basic: "Email",
+    Pro: "Chat & Email",
+    Gold: "Phone, Chat & Email",
+    Platinum: "24/7 Priority Support",
   },
   {
-    id: 1,
-    Features: "Price",
-    Basic: "$3.733",
-    Pro: "$5.533",
-    Gold: "$8.533",
-    Platinum: "$209",
+    id: 5,
+    Features: "Custom Reports",
+    Basic: "No",
+    Pro: "Yes",
+    Gold: "Yes",
+    Platinum: "Yes",
   },
 ];
-
 const PlanSettingTable: React.FC<PlanSettingTable> = ({
   Filtring = false,
   MainTabs = false,
+  endPoint,
 }) => {
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
@@ -161,6 +171,42 @@ const PlanSettingTable: React.FC<PlanSettingTable> = ({
   const handleChangeCountry = (event: SelectChangeEvent) => {
     setCountry(event.target.value as string);
   };
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [plansData, setPlansData] = useState<PricingRecord[]>(rows);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        // In a real implementation, these would be actual API calls
+        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
+        // const statsData = await statsResponse.json();
+        // setEmployerStats(statsData);
+        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
+        // const topEmployersData = await topEmployersResponse.json();
+        // setTopEmployers(topEmployersData);
+        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
+        // const chartDataResponseData = await chartDataResponse.json();
+        // setChartData(chartDataResponseData);
+        // For now, we'll use the dummy data
+        setPlansData(rows);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Tranactions Table data...
+      </div>
+    );
+  }
   return (
     <>
       {/* start content table Employers  */}
@@ -422,7 +468,7 @@ const PlanSettingTable: React.FC<PlanSettingTable> = ({
               fontSize: "12px", // Row font size
             },
           }}
-          rows={rows}
+          rows={plansData}
           columns={columns}
           initialState={{
             pagination: {

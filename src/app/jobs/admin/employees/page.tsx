@@ -50,6 +50,8 @@ const EmployessPage: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  // endPoints
+  const API_GET_EMPLOYERS_TABLE_DATA = "/api/employers/table-data";
 
   return (
     <div>
@@ -111,7 +113,10 @@ const EmployessPage: React.FC = () => {
       </div>
       <CustomTabPanel value={value} index={0}>
         <div className="box-content">
-          <EmployeesTableList Filtring={true} />
+          <EmployeesTableList
+            Filtring={true}
+            endPoint={API_GET_EMPLOYERS_TABLE_DATA}
+          />
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>

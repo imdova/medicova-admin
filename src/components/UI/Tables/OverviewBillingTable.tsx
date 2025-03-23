@@ -6,7 +6,6 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  Switch,
   Tab,
   Tabs,
   Typography,
@@ -29,9 +28,22 @@ import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 interface OverviewEmployersTableProps {
-  Filtring?: boolean; // `Filtring` is optional
-  MainTabs?: boolean; // `Filtring` is optional
+  Filtring?: boolean;
+  MainTabs?: boolean;
+  endPoint: string;
 }
+
+type InvoiceRecord = {
+  id: number;
+  Date: string;
+  Invoice: number;
+  Plane: string;
+  Name: string;
+  Payment: string;
+  Amount: number;
+  Status: string;
+  Recipt: number;
+};
 
 // handel function status of Employers
 const handleState = (state: StateType) => {
@@ -144,7 +156,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+const rows: InvoiceRecord[] = [
   {
     id: 1,
     Date: "13 July, 2021",
@@ -157,43 +169,44 @@ const rows = [
     Recipt: 209,
   },
   {
-    id: 1,
-    Date: "13 July, 2021",
-    Invoice: 12,
-    Plane: "Basic",
-    Name: "Jack",
-    Payment: "VISA",
-    Amount: 8.12,
-    Status: "Active",
-    Recipt: 209,
+    id: 2,
+    Date: "15 August, 2021",
+    Invoice: 14,
+    Plane: "Premium",
+    Name: "Alice",
+    Payment: "MasterCard",
+    Amount: 15.99,
+    Status: "Pending",
+    Recipt: 310,
   },
   {
-    id: 1,
-    Date: "13 July, 2021",
-    Invoice: 12,
-    Plane: "Basic",
-    Name: "Jack",
-    Payment: "VISA",
-    Amount: 8.12,
+    id: 3,
+    Date: "22 September, 2021",
+    Invoice: 18,
+    Plane: "Enterprise",
+    Name: "Bob",
+    Payment: "PayPal",
+    Amount: 29.99,
     Status: "Active",
-    Recipt: 209,
+    Recipt: 450,
   },
   {
-    id: 1,
-    Date: "13 July, 2021",
-    Invoice: 12,
+    id: 4,
+    Date: "30 October, 2021",
+    Invoice: 20,
     Plane: "Basic",
-    Name: "Jack",
+    Name: "Sophia",
     Payment: "VISA",
-    Amount: 8.12,
-    Status: "Active",
-    Recipt: 209,
+    Amount: 9.5,
+    Status: "Cancelled",
+    Recipt: 178,
   },
 ];
 
 const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
   MainTabs = false,
+  endPoint,
 }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
@@ -204,7 +217,6 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
   };
 
   //   values of Filters inputs
-
   const [Country, setCountry] = useState("");
 
   const handleChangeCountry = (event: SelectChangeEvent) => {
@@ -214,6 +226,44 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
   const filteredData = rows.filter((row) =>
     row.Name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [tranactionData, setTranactionData] =
+    useState<InvoiceRecord[]>(filteredData);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        // In a real implementation, these would be actual API calls
+        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
+        // const statsData = await statsResponse.json();
+        // setEmployerStats(statsData);
+        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
+        // const topEmployersData = await topEmployersResponse.json();
+        // setTopEmployers(topEmployersData);
+        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
+        // const chartDataResponseData = await chartDataResponse.json();
+        // setChartData(chartDataResponseData);
+        // For now, we'll use the dummy data
+        setTranactionData(filteredData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [filteredData]);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Tranactions Table data...
+      </div>
+    );
+  }
   return (
     <>
       {/* start content table Employers  */}
@@ -479,7 +529,7 @@ const OverviewBillingTable: React.FC<OverviewEmployersTableProps> = ({
               fontSize: "12px", // Row font size
             },
           }}
-          rows={filteredData}
+          rows={tranactionData}
           columns={columns}
           initialState={{
             pagination: {

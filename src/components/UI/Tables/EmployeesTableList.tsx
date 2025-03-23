@@ -28,6 +28,22 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import CardEmployees from "../CardEmployees";
 import TableDropMenu from "../TableDropMenu";
 
+type Employee = {
+  id: number;
+  Name: string;
+  Email: string;
+  ApplyDay: string;
+  Address: string;
+  Department: string;
+  Title: string;
+  Role: string;
+  Age: number;
+  employmentType: string;
+  Status: "Active" | "On leave" | "Remote";
+  phone: string;
+  avatar: string;
+};
+
 // handel function status of Employers
 const handleState = (state: StateType) => {
   const stateStyles: Record<StateType, string> = {
@@ -59,7 +75,7 @@ const columns: GridColDef[] = [
     renderCell: (params) => (
       <div className="flex h-full items-center justify-start gap-2">
         <Avatar
-          src="https://s3-alpha-sig.figma.com/img/3d5c/b72f/ae1e058c2ed75ab981a9f8bb62e96a13?Expires=1739145600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=a18VE~FGFT~v8D9-O~88JSK~y9SE~MefKeuzvSlS0w4mGSL22pIspT3NCxcrlQRWIA7Jm9l5T06ss0sTIxZvYVNnjXZsXNS6-vJjjzvlei5he8HJx4rRgyI3A7IhiSRow90EBIWTjk-SHnh0pZ2M6UurtH5ydxPtGDJyLGaG8vjZo86gmxyeJoYXYIHXsyn5~ILsGVMSiXohp5M0oSdpiR4TTYuPpycTV-qtUMqaq9bjDVZNHP9hfy5Ekip9IInRsI8MfB5jJJ-GCtMirfH0lO2s8IX9GjvtB1aSEuV7rcdHolzjeWoLX3KQeTFwAbDCkNZ5NWDVsYYEvhw91DyaJw__"
+          src={params.row.avatar}
           alt="Ralph Edwards"
           sx={{ width: 32, height: 32, mr: 1 }}
         />
@@ -139,66 +155,136 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+const rows: Employee[] = [
   {
     id: 1,
-    Name: "said ahmed",
-    Email: "Example@gmail.com",
+    Name: "Said Ahmed",
+    Email: "said.ahmed@example.com",
     ApplyDay: "13 July, 2021",
-    Address: "Cairo ,Egypt",
+    Address: "Cairo, Egypt",
     Department: "Marketing",
     Title: "Account Manager",
     Role: "admin",
     Age: 30,
     employmentType: "remote",
     Status: "Active",
+    phone: "(+20) 102-345-6789",
+    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
   },
   {
-    id: 1,
-    Name: "said ahmed",
-    Email: "Example@gmail.com",
-    ApplyDay: "13 July, 2021",
-    Address: "Cairo ,Egypt",
-    Department: "Marketing",
-    Title: "Account Manager",
-    Role: "admin",
-    Age: 30,
-    employmentType: "remote",
+    id: 2,
+    Name: "Amira Hassan",
+    Email: "amira.hassan@example.com",
+    ApplyDay: "20 March, 2022",
+    Address: "Alexandria, Egypt",
+    Department: "Sales",
+    Title: "Sales Representative",
+    Role: "user",
+    Age: 28,
+    employmentType: "onsite",
     Status: "Active",
+    phone: "(+20) 103-456-7890",
+    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
   },
   {
-    id: 1,
-    Name: "said ahmed",
-    Email: "Example@gmail.com",
-    ApplyDay: "13 July, 2021",
-    Address: "Cairo ,Egypt",
-    Department: "Marketing",
-    Title: "Account Manager",
-    Role: "admin",
-    Age: 30,
-    employmentType: "remote",
+    id: 3,
+    Name: "Omar Khaled",
+    Email: "omar.khaled@example.com",
+    ApplyDay: "5 September, 2020",
+    Address: "Giza, Egypt",
+    Department: "IT",
+    Title: "Software Engineer",
+    Role: "user",
+    Age: 32,
+    employmentType: "hybrid",
     Status: "Active",
+    phone: "(+20) 104-567-8901",
+    avatar: "https://randomuser.me/api/portraits/men/3.jpg",
   },
   {
-    id: 1,
-    Name: "said ahmed",
-    Email: "Example@gmail.com",
-    ApplyDay: "13 July, 2021",
-    Address: "Cairo ,Egypt",
-    Department: "Marketing",
-    Title: "Account Manager",
-    Role: "admin",
-    Age: 30,
+    id: 4,
+    Name: "Laila Mostafa",
+    Email: "laila.mostafa@example.com",
+    ApplyDay: "10 June, 2019",
+    Address: "Cairo, Egypt",
+    Department: "HR",
+    Title: "HR Manager",
+    Role: "manager",
+    Age: 35,
+    employmentType: "onsite",
+    Status: "Active",
+    phone: "(+20) 105-678-9012",
+    avatar: "https://randomuser.me/api/portraits/women/4.jpg",
+  },
+  {
+    id: 5,
+    Name: "Youssef Ali",
+    Email: "youssef.ali@example.com",
+    ApplyDay: "15 February, 2023",
+    Address: "Mansoura, Egypt",
+    Department: "Finance",
+    Title: "Financial Analyst",
+    Role: "user",
+    Age: 29,
     employmentType: "remote",
     Status: "Active",
+    phone: "(+20) 106-789-0123",
+    avatar: "https://randomuser.me/api/portraits/men/5.jpg",
+  },
+  {
+    id: 6,
+    Name: "Nourhan Adel",
+    Email: "nourhan.adel@example.com",
+    ApplyDay: "8 April, 2021",
+    Address: "Ismailia, Egypt",
+    Department: "Marketing",
+    Title: "Content Creator",
+    Role: "user",
+    Age: 26,
+    employmentType: "hybrid",
+    Status: "Active",
+    phone: "(+20) 107-890-1234",
+    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+  },
+  {
+    id: 7,
+    Name: "Kareem Mohamed",
+    Email: "kareem.mohamed@example.com",
+    ApplyDay: "30 December, 2018",
+    Address: "Cairo, Egypt",
+    Department: "Operations",
+    Title: "Operations Manager",
+    Role: "manager",
+    Age: 40,
+    employmentType: "onsite",
+    Status: "Active",
+    phone: "(+20) 108-901-2345",
+    avatar: "https://randomuser.me/api/portraits/men/7.jpg",
+  },
+  {
+    id: 8,
+    Name: "Dina Samir",
+    Email: "dina.samir@example.com",
+    ApplyDay: "25 November, 2022",
+    Address: "Luxor, Egypt",
+    Department: "Customer Support",
+    Title: "Support Specialist",
+    Role: "user",
+    Age: 27,
+    employmentType: "remote",
+    Status: "Active",
+    phone: "(+20) 109-012-3456",
+    avatar: "https://randomuser.me/api/portraits/women/8.jpg",
   },
 ];
 
 interface EmployeesTableList {
-  Filtring?: boolean; // `Filtring` is optional
+  Filtring?: boolean;
+  endPoint: string;
 }
 const EmployeesTableList: React.FC<EmployeesTableList> = ({
   Filtring = false,
+  endPoint,
 }) => {
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
@@ -213,6 +299,43 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [EmployeeData, setEmployeeData] = useState<Employee[]>(rows);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        // In a real implementation, these would be actual API calls
+        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
+        // const statsData = await statsResponse.json();
+        // setEmployerStats(statsData);
+        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
+        // const topEmployersData = await topEmployersResponse.json();
+        // setTopEmployers(topEmployersData);
+        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
+        // const chartDataResponseData = await chartDataResponse.json();
+        // setChartData(chartDataResponseData);
+        // For now, we'll use the dummy data
+        setEmployeeData(rows);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Employee Table data...
+      </div>
+    );
+  }
 
   return (
     <>
@@ -246,7 +369,7 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
             variant="h6"
             gutterBottom
           >
-            Total Employees : 19
+            Total Employees : {EmployeeData.length}
           </Typography>
         ) : (
           <Box
@@ -553,8 +676,23 @@ const EmployeesTableList: React.FC<EmployeesTableList> = ({
         </Box>
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          {rows.map((e) => {
-            return <CardEmployees key={e.id} />;
+          {rows.map((employee) => {
+            return (
+              <CardEmployees
+                key={employee.id}
+                employee={{
+                  id: employee.id,
+                  name: employee.Name,
+                  email: employee.Email,
+                  phone: employee.phone,
+                  joinDate: employee.ApplyDay,
+                  department: employee.Department,
+                  title: employee.Title,
+                  status: employee.Status,
+                  avatar: employee.avatar,
+                }}
+              />
+            );
           })}
         </div>
       )}
