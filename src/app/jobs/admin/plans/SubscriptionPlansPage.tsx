@@ -98,17 +98,6 @@ const SubscriptionPlansPage: React.FC = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        // In a real implementation, these would be actual API calls
-        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
-        // const statsData = await statsResponse.json();
-        // setEmployerStats(statsData);
-        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
-        // const topEmployersData = await topEmployersResponse.json();
-        // setTopEmployers(topEmployersData);
-        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
-        // const chartDataResponseData = await chartDataResponse.json();
-        // setChartData(chartDataResponseData);
-        // For now, we'll use the dummy data
         setPlansData(plans);
         setIsLoading(false);
       } catch (error) {
@@ -157,8 +146,8 @@ const SubscriptionPlansPage: React.FC = () => {
         className="flex-col bg-primary-100 md:flex-row"
         sx={{
           display: "flex",
-          justifyContent: "center", // Centers horizontally
-          alignItems: "center", // Centers vertically
+          justifyContent: "center",
+          alignItems: "center",
           gap: 2,
           padding: 1,
           width: "60%",

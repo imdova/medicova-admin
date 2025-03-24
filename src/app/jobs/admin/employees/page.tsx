@@ -52,6 +52,7 @@ const EmployessPage: React.FC = () => {
   };
   // endPoints
   const API_GET_EMPLOYERS_TABLE_DATA = "/api/employers/table-data";
+  const API_POST_NEW_EMPLOYERS_DATA = "/api/submit-form";
 
   return (
     <div>
@@ -109,6 +110,7 @@ const EmployessPage: React.FC = () => {
         <AddNewEmployee
           isModalOpen={isModalOpen}
           handleCloseModal={handleCloseModal}
+          endPoint={API_POST_NEW_EMPLOYERS_DATA}
         />
       </div>
       <CustomTabPanel value={value} index={0}>

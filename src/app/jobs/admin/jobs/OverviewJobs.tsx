@@ -131,17 +131,6 @@ const OvarviewJobs: React.FC = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        // In a real implementation, these would be actual API calls
-        // const statsResponse = await fetch(API_GET_EMPLOYER_STATS);
-        // const statsData = await statsResponse.json();
-        // setEmployerStats(statsData);
-        // const topEmployersResponse = await fetch(API_GET_TOP_EMPLOYERS);
-        // const topEmployersData = await topEmployersResponse.json();
-        // setTopEmployers(topEmployersData);
-        // const chartDataResponse = await fetch(API_GET_CHART_DATA);
-        // const chartDataResponseData = await chartDataResponse.json();
-        // setChartData(chartDataResponseData);
-        // For now, we'll use the dummy data
         setJobsStats(dummyJobstats);
         setTopEmployers(dummyTopEmployers);
         setChartData(dummyChartData);
@@ -164,8 +153,8 @@ const OvarviewJobs: React.FC = () => {
   return (
     <>
       {/* start Overveiw page */}
-      <div className="flex flex-col gap-3 lg:flex-row">
-        <div className="flex-1 lg:w-3/5">
+      <div className="flex flex-col gap-3 xl:flex-row">
+        <div className="flex-1 xl:w-3/5">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
             {/* Total Employers */}
             <div className="box-content flex items-center justify-between gap-3 rounded-lg p-4">

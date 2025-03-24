@@ -29,23 +29,16 @@ interface FormData {
   phone: string;
 }
 
-// Assume this function will call the API
-const submitFormData = async (data: FormData) => {
-  const response = await fetch("/api/submit-form", {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" },
-  });
-  return response.json();
-};
 interface AddNewEmployeeProps {
   handleCloseModal: () => void; // Function to close the modal
   isModalOpen: boolean; // State to control the modal's visibility
+  endPoint: string;
 }
 
 const AddNewEmployee: React.FC<AddNewEmployeeProps> = ({
   handleCloseModal,
   isModalOpen,
+  endPoint,
 }) => {
   const {
     control,
@@ -57,6 +50,15 @@ const AddNewEmployee: React.FC<AddNewEmployeeProps> = ({
   const [errorMessage, setErrorMessage] = useState<string>(""); // Error state
   const [phone, setPhone] = useState("");
 
+  // Assume this function will call the API
+  const submitFormData = async (data: FormData) => {
+    const response = await fetch(endPoint, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.json();
+  };
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
     setLoading(true); // Start loading when form is submitted
     setErrorMessage(""); // Reset previous error messages

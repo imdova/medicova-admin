@@ -36,6 +36,8 @@ function aProps(index: number) {
     "aria-controls": `simple-tabpanel-${index}`, // Links the tab to its corresponding panel
   };
 }
+// end points
+const API_GET_TRANSACTION_TABLE_DATA = "/api/employers/table-data";
 
 const BillingPage: React.FC = () => {
   const [value, setValue] = useState(0);
@@ -120,7 +122,7 @@ const BillingPage: React.FC = () => {
         <OvarviewBilling />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <TranactionsPage />
+        <TranactionsPage endPoint={API_GET_TRANSACTION_TABLE_DATA} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <SubscriptionPlansPage />

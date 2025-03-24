@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Checkbox,
   IconButton,
@@ -11,41 +11,35 @@ import {
 import { Add } from "@mui/icons-material";
 import MoreVertButton from "@/components/UI/MoreVertButton";
 
-const initialCareerLevels = [
-  "Doctors",
-  "Dentists",
-  "Physiotherapists",
-  "Pharmacists",
-  "Nurses",
-  "Allied Health Professionals",
-  "Research & development",
-  "Pharmaceutical sales and Marketing",
-  "Quality Management",
-];
+type CategoryData = {
+  name: string;
+  careerLevels: string[];
+};
 
-const CareerLevels: React.FC<{ category: string }> = ({ category }) => {
-  const [careerLevels, setCareerLevels] = useState(initialCareerLevels);
+const CareerLevels: React.FC<{
+  category: string;
+  categoriesData: CategoryData[];
+  checkedItems: { [key: string]: string[] };
+  onCheck: (category: string, level: string) => void;
+}> = ({ category, categoriesData, checkedItems, onCheck }) => {
+  const categoryData = categoriesData.find((cat) => cat.name === category);
   const [newLevel, setNewLevel] = useState("");
-  const [checked, setChecked] = useState<string[]>([]);
 
-  // handlle checked career level
-  const handleToggle = (level: string) => {
-    setChecked((prev) =>
-      prev.includes(level) ? prev.filter((c) => c !== level) : [...prev, level],
-    );
-  };
-  // handlle add career level
+  // Handle add career level
   const handleAddLevel = () => {
-    if (newLevel.trim()) {
-      setCareerLevels([...careerLevels, newLevel]);
-      setNewLevel("");
+    if (newLevel.trim() && categoryData) {
+      categoryData.careerLevels.push(newLevel); // Directly update categoriesData
+      setNewLevel(""); // Clear input
     }
   };
-  // handlle delete career level
-  const handleDeleteLevel = (LevelToDelete: string) => {
-    setCareerLevels((prevLevels) =>
-      prevLevels.filter((Level) => Level !== LevelToDelete),
-    );
+
+  // Handle delete career level
+  const handleDeleteLevel = (levelToDelete: string) => {
+    if (categoryData) {
+      categoryData.careerLevels = categoryData.careerLevels.filter(
+        (level) => level !== levelToDelete,
+      );
+    }
   };
 
   return (
@@ -71,7 +65,7 @@ const CareerLevels: React.FC<{ category: string }> = ({ category }) => {
       </div>
 
       <List>
-        {careerLevels.map((level) => (
+        {categoryData?.careerLevels.map((level) => (
           <ListItem
             className="mb-2 p-0"
             key={level}
@@ -81,11 +75,11 @@ const CareerLevels: React.FC<{ category: string }> = ({ category }) => {
           >
             <ListItemIcon>
               <Checkbox
-                checked={checked.includes(level)}
-                onChange={() => handleToggle(level)}
+                checked={checkedItems[category]?.includes(level) || false}
+                onChange={() => onCheck(category, level)}
               />
             </ListItemIcon>
-            <ListItemText primary={level} secondary="(Doctors)" />
+            <ListItemText primary={level} />
           </ListItem>
         ))}
       </List>

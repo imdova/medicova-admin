@@ -11,74 +11,45 @@ import {
 } from "@mui/material";
 import { ExpandLess, ExpandMore, Add } from "@mui/icons-material";
 
-interface Specialty {
+type Specialty = {
   name: string;
   subSpecialties: string[];
-}
+};
 
-const specialties: Specialty[] = [
-  {
-    name: "Doctors",
-    subSpecialties: [
-      "Anesthesiology",
-      "Cardiology",
-      "Colon and Rectal Surgery",
-      "Dermatology",
-    ],
-  },
-  { name: "Dentists", subSpecialties: [] },
-  { name: "Physiotherapists", subSpecialties: [] },
-  { name: "General", subSpecialties: [] },
-];
+type CategoryData = {
+  name: string;
+  careerLevels: string[];
+  specialties: Specialty[];
+};
 
-const SpecialtiesList: React.FC<{ category: string }> = ({ category }) => {
+const SpecialtiesList: React.FC<{
+  category: string;
+  categoriesData: CategoryData[];
+  checkedItems: { [key: string]: Specialty[] };
+  onCheck: (
+    category: string,
+    specialty: Specialty,
+    isSubSpecialty?: boolean,
+  ) => void;
+}> = ({ category, categoriesData, checkedItems, onCheck }) => {
   const [openSpecialties, setOpenSpecialties] = useState<
     Record<string, boolean>
   >({});
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [newSpecialty, setNewSpecialty] = useState("");
+
+  const categoryData = categoriesData.find((cat) => cat.name === category);
+  const specialties = categoryData ? categoryData.specialties : [];
 
   const handleToggle = (specialty: string) => {
     setOpenSpecialties((prev) => ({ ...prev, [specialty]: !prev[specialty] }));
   };
 
-  const handleCheck = (specialty: string, subSpecialty?: string) => {
-    setCheckedItems((prev) => {
-      const newState = { ...prev };
-
-      if (subSpecialty) {
-        newState[subSpecialty] = !newState[subSpecialty];
-      } else {
-        newState[specialty] = !newState[specialty];
-        if (
-          (specialties.find((s) => s.name === specialty)?.subSpecialties
-            .length ?? 0) > 0
-        ) {
-          specialties
-            .find((s) => s.name === specialty)
-            ?.subSpecialties.forEach(
-              (sub) => (newState[sub] = newState[specialty]),
-            );
-        }
-      }
-
-      return newState;
-    });
-  };
-
-  const handleAddSpecialty = () => {
-    if (newSpecialty.trim()) {
-      specialties.push({ name: newSpecialty, subSpecialties: [] });
-      setNewSpecialty("");
-    }
-  };
-
   return (
-    <div className="box-content h-full">
+    <div className="box-content h-full p-4">
       <h2 className="mb-3 text-sm font-semibold md:text-lg">
         Manage Specialties for {category}
       </h2>
-      <div className="flex gap-2">
+      <div className="mb-3 flex gap-2">
         <TextField
           size="small"
           value={newSpecialty}
@@ -89,12 +60,16 @@ const SpecialtiesList: React.FC<{ category: string }> = ({ category }) => {
         />
         <IconButton
           className="rounded-lg bg-primary text-white hover:bg-black"
-          onClick={handleAddSpecialty}
+          onClick={() => {
+            if (newSpecialty.trim()) {
+              onCheck(category, { name: newSpecialty, subSpecialties: [] });
+              setNewSpecialty(""); // Clear input after adding
+            }
+          }}
         >
           <Add />
         </IconButton>
       </div>
-
       <List>
         {specialties.map((specialty) => (
           <React.Fragment key={specialty.name}>
@@ -104,8 +79,12 @@ const SpecialtiesList: React.FC<{ category: string }> = ({ category }) => {
             >
               <ListItemIcon>
                 <Checkbox
-                  checked={checkedItems[specialty.name] || false}
-                  onChange={() => handleCheck(specialty.name)}
+                  checked={
+                    checkedItems[category]?.some(
+                      (s) => s.name === specialty.name,
+                    ) || false
+                  }
+                  onChange={() => onCheck(category, specialty)}
                 />
               </ListItemIcon>
               <ListItemText primary={specialty.name} />
@@ -126,8 +105,18 @@ const SpecialtiesList: React.FC<{ category: string }> = ({ category }) => {
                   <ListItemButton key={sub} sx={{ pl: 4 }}>
                     <ListItemIcon>
                       <Checkbox
-                        checked={checkedItems[sub] || false}
-                        onChange={() => handleCheck(specialty.name, sub)}
+                        checked={
+                          checkedItems[category]?.some((s) =>
+                            s.subSpecialties.includes(sub),
+                          ) || false
+                        }
+                        onChange={() =>
+                          onCheck(
+                            category,
+                            { name: sub, subSpecialties: [] },
+                            true,
+                          )
+                        }
                       />
                     </ListItemIcon>
                     <ListItemText primary={sub} />

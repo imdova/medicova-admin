@@ -47,7 +47,7 @@ const MoreVertButton: React.FC<MoreVertButtonProps> = ({ handleDelete }) => {
           <ListItemIcon>
             <DeleteOutlineOutlined className="text-primary" />
           </ListItemIcon>
-          <ListItemText>Delete</ListItemText>
+          <ListItemText onClick={handleDelete}>Delete</ListItemText>
         </MenuItem>
       </Menu>
     </div>

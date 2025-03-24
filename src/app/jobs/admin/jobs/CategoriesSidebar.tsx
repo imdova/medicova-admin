@@ -1,81 +1,44 @@
 import React, { useState } from "react";
-import {
-  List,
-  ListItemButton,
-  ListItemText,
-  IconButton,
-  TextField,
-} from "@mui/material";
-import { MoreVert, Add } from "@mui/icons-material";
+import { List, ListItemButton, ListItemText } from "@mui/material";
 import MoreVertButton from "@/components/UI/MoreVertButton";
 
-const initialCategories = [
-  "Doctors",
-  "Dentists",
-  "Physiotherapists",
-  "Pharmacists",
-  "Nurses",
-  "Allied Health Professionals",
-  "Research & development",
-  "Pharmaceutical sales and Marketing",
-  "Quality Management",
-];
+type Category = {
+  id: number;
+  name: string;
+};
 
 const CategoriesSidebar: React.FC<{
-  onSelect: (category: string) => void;
+  categoriesData: Category[];
   selected: string;
-}> = ({ onSelect, selected }) => {
-  const [categories, setCategories] = useState(initialCategories);
-  const [newCategory, setNewCategory] = useState("");
-
-  const handleAddCategory = () => {
-    if (newCategory.trim()) {
-      setCategories([...categories, newCategory]);
-      setNewCategory("");
-    }
-  };
-
+  onSelect: (category: string) => void;
+  onDeleteCategory: (id: number) => void; // Prop to delete category
+}> = ({ categoriesData, selected, onSelect, onDeleteCategory }) => {
   return (
-    <div className="box-content h-full">
-      <h3 className="mb-3 text-sm font-semibold md:text-lg">Categories</h3>
-      <div className="mb-3 flex gap-2">
-        <TextField
-          size="small"
-          value={newCategory}
-          onChange={(e) => setNewCategory(e.target.value)}
-          placeholder="New Categories"
-          variant="outlined"
-          fullWidth
-        />
-        <IconButton
-          className="rounded-lg bg-primary text-white hover:bg-black"
-          onClick={handleAddCategory}
-        >
-          <Add />
-        </IconButton>
-      </div>
-
+    <div className="h-full border-r p-4">
+      {/* Category List */}
       <List>
-        {categories.map((category) => (
+        {categoriesData.map((category) => (
           <ListItemButton
-            className="mb-3 rounded-md"
-            key={category}
-            selected={selected === category}
-            onClick={() => onSelect(category)}
+            key={category.id}
+            className="mb-2 rounded-md"
+            selected={selected === category.name}
+            onClick={() => onSelect(category.name)}
             sx={{
               backgroundColor:
-                selected === category ? "#2ba149 !important" : "transparent",
-              color: selected === category ? "white" : "inherit",
+                selected === category.name
+                  ? "#2ba149 !important"
+                  : "transparent",
+              color: selected === category.name ? "white" : "inherit",
               "&:hover": {
-                backgroundColor: selected === category ? "#258c3c" : "#f0f0f0",
-              },
-              button: {
-                color: selected === category ? "white" : "inherit",
+                backgroundColor:
+                  selected === category.name ? "#258c3c" : "#f0f0f0",
               },
             }}
           >
-            <ListItemText primary={category} />
-            <MoreVertButton handleDelete={() => console.log("")} />
+            <ListItemText primary={category.name} />
+            <MoreVertButton
+              handleDelete={() => onDeleteCategory(category.id)}
+            />
           </ListItemButton>
         ))}
       </List>
