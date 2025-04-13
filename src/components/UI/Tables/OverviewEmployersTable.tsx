@@ -2,192 +2,272 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
   FormControl,
   MenuItem,
-  Paper,
   Select,
-  SelectChangeEvent,
-  styled,
   Switch,
   Tab,
-  Table,
-  TableBody,
-  TableCell,
-  tableCellClasses,
-  TableContainer,
-  TableHead,
-  TableRow,
   Tabs,
   Typography,
 } from "@mui/material";
-
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
-
 import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
 import { useState } from "react";
-import { RowDataEmployer, StateType } from "@/types";
+import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateField } from "@mui/x-date-pickers/DateField";
 import { Tune } from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import * as React from "react";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import TableDropMenu from "../TableDropMenu";
 
 interface OverviewEmployersTableProps {
-  Filtring?: boolean; // `Filtring` is optional
+  Filtring?: boolean;
+  endPoint: string;
 }
+
+// handel function status of Employers
+const handleState = (state: StateType) => {
+  const stateStyles: Record<StateType, string> = {
+    Active:
+      "bg-green-50 text-green-700 ring-green-600/20 dark:border-green-500 dark:bg-inputDark dark:text-green-500",
+    Inactive:
+      "bg-red-50 text-red-700 ring-red-600/10 dark:border-red-500 dark:bg-inputDark dark:text-red-500",
+    Processing:
+      "bg-orange-50 text-orange-700 ring-orange-600/10 dark:border-orange-500 dark:bg-inputDark dark:text-orange-500",
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
+        stateStyles[state]
+      }`}
+    >
+      {state}
+    </span>
+  );
+};
+
+const columns: GridColDef[] = [
+  {
+    field: "Name",
+    headerName: "Name",
+    width: 180,
+    editable: false,
+    renderCell: (params) => (
+      <div className="flex h-full items-center gap-2">
+        <Avatar
+          src="https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__"
+          alt="Ralph Edwards"
+          sx={{ width: 32, height: 32, mr: 2 }}
+        />
+        <div>
+          <h3 className="mb-2 text-xs">{params.row.Name}</h3>
+          <p className="text-[8px] leading-none">{params.row.Email}</p>
+        </div>
+      </div>
+    ),
+  },
+  {
+    field: "RegDate",
+    headerName: "Reg Date",
+    flex: 1,
+    editable: true,
+  },
+  {
+    field: "Phone",
+    headerName: "Phone",
+    flex: 1,
+    editable: true,
+  },
+  {
+    field: "Country",
+    headerName: "Country",
+    sortable: true,
+    flex: 1,
+  },
+
+  {
+    field: "Type",
+    headerName: "Type",
+    sortable: true,
+    flex: 1,
+  },
+
+  {
+    field: "Sector",
+    headerName: "Sector",
+    sortable: true,
+    flex: 1,
+  },
+
+  {
+    field: "Plan",
+    headerName: "Plan",
+    sortable: true,
+    flex: 1,
+  },
+  {
+    field: "Jobs",
+    headerName: "Jobs",
+    description: "This column has a value getter and is not sortable.",
+    sortable: false,
+    flex: 1,
+  },
+  {
+    field: "Status",
+    headerName: "Status",
+    description: "This column has a value getter and is not sortable.",
+    sortable: false,
+    flex: 1,
+    renderCell: (params) => handleState(params.row.Status),
+  },
+
+  {
+    field: "Action",
+    headerName: "Action",
+    description: "This column has a value getter and is not sortable.",
+    sortable: false,
+    flex: 1,
+    width: 150,
+    renderCell: () => (
+      <div className="flex items-center gap-2">
+        <Switch />
+        <TableDropMenu />
+      </div>
+    ),
+  },
+];
+// Define TypeScript type for the data structure
+type RowDataEmployer = {
+  id: number;
+  Name: string;
+  Email: string;
+  RegDate: string;
+  Phone: string;
+  Country: string;
+  Type: string;
+  Sector: string;
+  Plan: string;
+  Status: string;
+  Jobs: number;
+};
+
+// Updated employer data with unique entries
+const DummyEmployers: RowDataEmployer[] = [
+  {
+    id: 1,
+    Name: "Saudi German Hospital",
+    Email: "saudigerman@gmail.com",
+    RegDate: "13 July, 2021",
+    Phone: "123456789",
+    Country: "Saudi Arabia",
+    Type: "Hospital",
+    Sector: "Healthcare",
+    Plan: "Premium",
+    Status: "Active",
+    Jobs: 25,
+  },
+  {
+    id: 2,
+    Name: "Mayo Clinic",
+    Email: "mayoclinic@email.com",
+    RegDate: "22 March, 2020",
+    Phone: "987654321",
+    Country: "United States",
+    Type: "Hospital",
+    Sector: "Healthcare",
+    Plan: "Standard",
+    Status: "Inactive",
+    Jobs: 40,
+  },
+  {
+    id: 3,
+    Name: "Siemens Healthineers",
+    Email: "siemens@healthcare.com",
+    RegDate: "05 September, 2019",
+    Phone: "456789123",
+    Country: "Germany",
+    Type: "Healthcare Tech",
+    Sector: "Medical Devices",
+    Plan: "Enterprise",
+    Status: "Active",
+    Jobs: 60,
+  },
+  {
+    id: 4,
+    Name: "Apollo Hospitals",
+    Email: "apollo@hospitals.com",
+    RegDate: "30 June, 2022",
+    Phone: "159357486",
+    Country: "India",
+    Type: "Hospital",
+    Sector: "Healthcare",
+    Plan: "Basic",
+    Status: "Active",
+    Jobs: 18,
+  },
+];
+
 const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
+  endPoint,
 }) => {
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
 
-  // Sample data
-  const rows: RowDataEmployer[] = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "suadiger@gmail.com",
-      avatar:
-        "https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__",
-      reg_date: "13 July, 2021",
-      phone: "+201144789587",
-      country: "egypt",
-      type: "X clinic",
-      Sector: "general",
-      Plan: "Plan",
-      job: 12,
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "John Doe",
-      email: "suadiger@gmail.com",
-      avatar:
-        "https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__",
-      reg_date: "13 July, 2021",
-      phone: "+201144789587",
-      country: "egypt",
-      type: "X clinic",
-      Sector: "general",
-      Plan: "Plan",
-      job: 12,
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      email: "suadiger@gmail.com",
-      avatar:
-        "https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__",
-      reg_date: "13 July, 2021",
-      phone: "+201144789587",
-      country: "egypt",
-      type: "X clinic",
-      Sector: "general",
-      Plan: "Plan",
-      job: 12,
-      status: "Active",
-    },
-    {
-      id: 4,
-      name: "John Doe",
-      email: "suadiger@gmail.com",
-      avatar:
-        "https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__",
-      reg_date: "13 July, 2021",
-      phone: "+201144789587",
-      country: "egypt",
-      type: "X clinic",
-      Sector: "general",
-      Plan: "Plan",
-      job: 12,
-      status: "Active",
-    },
-  ];
+  // values of Filters inputs
+  const [Country, setCountry] = useState("");
+  const [Sector, setSector] = useState("");
+  const [Type, setType] = useState("");
+  const [Status, setStatus] = useState("");
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  // Handle checkbox change
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      setSelected(rows.map((row) => row.id));
-    } else {
-      setSelected([]);
-    }
-  };
-
-  const handleSelectRow = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: number,
-  ) => {
-    setSelected((prevSelected) =>
-      event.target.checked
-        ? [...prevSelected, id]
-        : prevSelected.filter((rowId) => rowId !== id),
-    );
-  };
-
-  // Check if a row is selected
-  const isSelected = (id: number) => selected.includes(id);
-  // start styling table
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#2ba149",
-      color: theme.palette.common.white,
-      fontSize: 12,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 10,
-    },
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-
-  // handel function status of Employers
-  const handleState = (state: StateType) => {
-    const stateStyles: Record<StateType, string> = {
-      Active:
-        "bg-green-50 text-green-700 ring-green-600/20 dark:border-green-500 dark:bg-inputDark dark:text-green-500",
-      Inactive:
-        "bg-red-50 text-red-700 ring-red-600/10 dark:border-red-500 dark:bg-inputDark dark:text-red-500",
-      Processing:
-        "bg-orange-50 text-orange-700 ring-orange-600/10 dark:border-orange-500 dark:bg-inputDark dark:text-orange-500",
+  // Filter data based on selection
+  const filteredData = DummyEmployers.filter((row) =>
+    row.Name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [EmployerData, setEmployerData] =
+    useState<RowDataEmployer[]>(filteredData);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setEmployerData(DummyEmployers);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
     };
-
+    fetchData();
+  }, []);
+  // Loading state
+  if (isLoading) {
     return (
-      <span
-        className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
-          stateStyles[state]
-        }`}
-      >
-        {state}
-      </span>
+      <div className="flex h-96 items-center justify-center">
+        Loading Employers Table data...
+      </div>
     );
-  };
-  //   values of Filters inputs
-
-  const [Country, setCountry] = useState("");
-
-  const handleChangeCountry = (event: SelectChangeEvent) => {
-    setCountry(event.target.value as string);
-  };
+  }
   return (
     <>
       {/* start content table Employers  */}
       <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
         {Filtring ? (
-          <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
+          <Typography
+            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
+            variant="h6"
+            gutterBottom
+          >
             Total Employrs : 19
           </Typography>
         ) : (
@@ -212,7 +292,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
             </Tabs>
           </Box>
         )}
-        <SearchInput />
+        <SearchInput SetSearchQuery={setSearchQuery} />
         <ExportButton data="Name,Age\nJohn,30\nJane,25" />
       </div>
       {Filtring ? (
@@ -234,16 +314,22 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Country}
-                onChange={handleChangeCountry}
+                onChange={(e) => setCountry(e.target.value)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Country")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Egypt
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Egypt
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
+                  Egypt
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -284,16 +370,22 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={Sector}
+                onChange={(e) => setSector(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "Sector")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
+                  Sector
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
+                  Sector
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
+                  Sector
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -322,16 +414,22 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={Type}
+                onChange={(e) => setType(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "Type")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Type"}>
+                  Type
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Type"}>
+                  Type
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Type"}>
+                  Type
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -352,16 +450,22 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={Status}
+                onChange={(e) => setStatus(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "Status")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Status"}>
+                  Status
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Status"}>
+                  Status
+                </MenuItem>
+                <MenuItem className="text-xs md:text-sm" value={"Status"}>
+                  Status
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -403,6 +507,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
                   "& .MuiInputBase-root": {
                     pl: 3,
                     overflow: "hidden",
+                    fontSize: 11,
                   },
                   ".css-10o2lyd-MuiStack-root": {
                     width: "100%",
@@ -428,110 +533,36 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
       ) : (
         ""
       )}
+      <Box sx={{ height: 400, overflowX: "auto" }}>
+        <DataGrid
+          sx={{
+            minWidth: "1100px",
+            border: "1px solid rgba(0, 0, 0, 0.12)",
+            "& .MuiDataGrid-container--top [role=row]": {
+              background: "#2ba149", // Custom header background color
+              color: "#ffffff", // Custom header text color
+              fontSize: "16px", // Optional: Larger header font
+            },
 
-      <TableContainer component={Paper}>
-        <Table
-          sx={{ minWidth: 1100, width: "100%" }}
-          aria-label="customized table"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell padding="checkbox">
-                <Checkbox
-                  sx={{
-                    color: "white",
-                    "&.Mui-checked": {
-                      color: "white",
-                    },
-                  }}
-                  checked={selected.length === rows.length && rows.length > 0}
-                  indeterminate={
-                    selected.length > 0 && selected.length < rows.length
-                  }
-                  onChange={handleSelectAll}
-                />
-              </StyledTableCell>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" /> Reg Date
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Phone
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Country
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Type
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Sector
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Plan
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Jobs
-              </StyledTableCell>
-              <StyledTableCell>Status</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => {
-              const isItemSelected = isSelected(row.id);
-              return (
-                <StyledTableRow key={row.id}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isItemSelected}
-                      onChange={(event) => handleSelectRow(event, row.id)}
-                      color="success"
-                    />
-                  </TableCell>
-
-                  <StyledTableCell component="th" scope="row">
-                    <div className="flex items-center gap-2">
-                      <Avatar
-                        src={row.avatar}
-                        alt="Ralph Edwards"
-                        sx={{ width: 32, height: 32, mr: 2 }}
-                      />
-                      <div>
-                        <h3 className="text-xs">{row.name}</h3>
-                        <p className="text-[10px]">{row.email}</p>
-                      </div>
-                    </div>
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.reg_date}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{row.phone}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.country}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{row.type}</StyledTableCell>
-                  <StyledTableCell align="center">{row.Sector}</StyledTableCell>
-                  <StyledTableCell align="center">{row.Plan}</StyledTableCell>
-                  <StyledTableCell align="center">{row.job}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {handleState(row.status)}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <Switch />
-                  </StyledTableCell>
-                </StyledTableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            "& .MuiDataGrid-cell": {
+              fontSize: "12px", // Row font size
+              textAlign: "center",
+            },
+          }}
+          rows={filteredData}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          pageSizeOptions={[5]}
+          checkboxSelection
+          disableRowSelectionOnClick
+        />
+      </Box>
     </>
   );
 };

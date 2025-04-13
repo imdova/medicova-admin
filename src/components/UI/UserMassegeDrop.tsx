@@ -1,7 +1,8 @@
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Avatar, Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 
 import Link from "next/link";
+import Image from "next/image";
 const UserMassegeDrop: React.FC = () => {
   const [anchorElMessage, setAnchorElMessage] = useState<null | HTMLElement>(
     null,
@@ -13,6 +14,28 @@ const UserMassegeDrop: React.FC = () => {
   const handleCloseMessage = () => {
     setAnchorElMessage(null);
   };
+  const messages = [
+    {
+      name: "Ralph Edwards",
+      avatar: "https://mui.com/static/images/avatar/3.jpg",
+      preview: "Are you there? Interested in this...",
+    },
+    {
+      name: "Jane Cooper",
+      avatar: "https://mui.com/static/images/avatar/2.jpg",
+      preview: "Let's meet up tomorrow!",
+    },
+    {
+      name: "Jane Cooper",
+      avatar: "https://mui.com/static/images/avatar/2.jpg",
+      preview: "Let's meet up tomorrow!",
+    },
+    {
+      name: "Jane Cooper",
+      avatar: "https://mui.com/static/images/avatar/2.jpg",
+      preview: "Let's meet up tomorrow!",
+    },
+  ];
   return (
     <>
       {/* massege content menu */}
@@ -51,98 +74,64 @@ const UserMassegeDrop: React.FC = () => {
             vertical: "top",
             horizontal: "left",
           }}
+          slotProps={{
+            paper: {
+              sx: {
+                width: "300px", // Adjust menu width
+                maxHeight: "400px", // Enable scrolling if messages overflow
+                overflowY: "auto", // Allows scroll if too many messages
+                borderRadius: "8px", // Rounded corners
+                padding: "8px", // Inner padding
+                boxShadow: 3, // Adds subtle shadow
+              },
+            },
+          }}
         >
-          <MenuItem onClick={handleCloseMessage}>
-            <Link
-              className="flex items-center gap-2 p-1 hover:bg-hover-link"
-              href="#"
+          {/* Messages List */}
+          {messages.length > 0 ? (
+            messages.map((message, index) => (
+              <MenuItem
+                key={index}
+                onClick={handleCloseMessage}
+                sx={{ padding: "8px 12px" }}
+              >
+                <Link
+                  href="#"
+                  className="flex w-full items-center gap-3 p-2 hover:bg-hover-link"
+                >
+                  {/* Avatar */}
+                  <Avatar alt={message.name} src={message.avatar} />
+
+                  {/* Message Details */}
+                  <div className="flex flex-1 flex-col">
+                    <a className="text-sm font-medium" href="#">
+                      {message.name}
+                    </a>
+                    <p className="max-w-[250px] truncate text-xs text-secondary">
+                      {message.preview}
+                    </p>
+                  </div>
+                </Link>
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem
+              disabled
+              sx={{ justifyContent: "center", fontSize: "12px", color: "gray" }}
             >
-              <span className="h-8 w-8 overflow-hidden rounded-full">
-                <img
-                  src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-                  alt=""
-                  className="h-full w-full"
-                />
-              </span>
-              <div className="flex flex-1 flex-col">
-                <a className="text-sm" href="#">
-                  Ralph Edwards
-                </a>
-                <p className="text-xs text-secondary">
-                  Are you there? interested i this...
-                </p>
-              </div>
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={handleCloseMessage}>
-            <Link
-              className="flex items-center gap-2 p-1 hover:bg-hover-link"
-              href="#"
+              No new messages
+            </MenuItem>
+          )}
+
+          {/* "View All" Button */}
+          <div className="mt-2 flex w-full justify-center px-2">
+            <Button
+              variant="outlined"
+              fullWidth
+              size="small"
+              sx={{ fontSize: "12px", textTransform: "none" }}
             >
-              <span className="h-8 w-8 overflow-hidden rounded-full">
-                <img
-                  src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-                  alt=""
-                  className="h-full w-full"
-                />
-              </span>
-              <div className="flex flex-1 flex-col">
-                <a className="text-sm" href="#">
-                  Ralph Edwards
-                </a>
-                <p className="text-xs text-secondary">
-                  Are you there? interested i this...
-                </p>
-              </div>
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={handleCloseMessage}>
-            <Link
-              className="flex items-center gap-2 p-1 hover:bg-hover-link"
-              href="#"
-            >
-              <span className="h-8 w-8 overflow-hidden rounded-full">
-                <img
-                  src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-                  alt=""
-                  className="h-full w-full"
-                />
-              </span>
-              <div className="flex flex-1 flex-col">
-                <a className="text-sm" href="#">
-                  Ralph Edwards
-                </a>
-                <p className="text-xs text-secondary">
-                  Are you there? interested i this...
-                </p>
-              </div>
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={handleCloseMessage}>
-            <Link
-              className="flex items-center gap-2 p-1 hover:bg-hover-link"
-              href="#"
-            >
-              <span className="h-8 w-8 overflow-hidden rounded-full">
-                <img
-                  src="https://remosnextjs.vercel.app/images/avatar/user-12.png"
-                  alt=""
-                  className="h-full w-full"
-                />
-              </span>
-              <div className="flex flex-1 flex-col">
-                <a className="text-sm" href="#">
-                  Ralph Edwards
-                </a>
-                <p className="text-xs text-secondary">
-                  Are you there? interested i this...
-                </p>
-              </div>
-            </Link>
-          </MenuItem>
-          <div className="mt-3 flex w-full justify-center px-2">
-            <Button className="w-full" variant="outlined">
-              Veiw All
+              View All
             </Button>
           </div>
         </Menu>

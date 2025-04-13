@@ -1,4 +1,3 @@
-import { RowDataCountry, RowDataJobs } from "@/types";
 import {
   Table,
   TableBody,
@@ -8,54 +7,106 @@ import {
   TableRow,
 } from "@mui/material";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const CountiresTable: React.FC = () => {
-  // Sample data
-  const rows: RowDataCountry[] = [
-    {
-      id: 1,
-      country: "egypt",
-      avatar_country:
-        "https://s3-alpha-sig.figma.com/img/7287/73b3/199c69ec2b1d8ca4cbf271947f8b9dd7?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=L7FvQT5wpJ--YXluadYKCltTwTJjyp37uPuMab5DVsee7krzvCqSOzxaTn3QNAYgZAmxdVEC5Zikif1Ci4hCRO6qahfL~HpUFbMNn6I5GKJJ7QJl60GQ0BGAXWl7GnhpZBMW8I98QCaXVSTzx~YRCtoQjOXjX4copUN1j1iiYIm0UKpJs~5JoZ1weFQwUEkwdF~L6mFzzFVL2SgiCZqaBELtg2DcuLc8jFjGAhF5cJhR~Zl3lA9JwBCWpEgkDIJeVhcWu0ppLxuJLvn5TGEjAgZ8MdRPVnz52RIrbpaNuCyAqtAl4QZFgfWYarUSmhX6yuJPHfCFWQrM-xujElTIgQ__",
-      job: 12,
-      Employers_jobs: 22,
-      revenue: "60k",
-    },
-    {
-      id: 2,
-      country: "egypt",
-      avatar_country:
-        "https://s3-alpha-sig.figma.com/img/7287/73b3/199c69ec2b1d8ca4cbf271947f8b9dd7?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=L7FvQT5wpJ--YXluadYKCltTwTJjyp37uPuMab5DVsee7krzvCqSOzxaTn3QNAYgZAmxdVEC5Zikif1Ci4hCRO6qahfL~HpUFbMNn6I5GKJJ7QJl60GQ0BGAXWl7GnhpZBMW8I98QCaXVSTzx~YRCtoQjOXjX4copUN1j1iiYIm0UKpJs~5JoZ1weFQwUEkwdF~L6mFzzFVL2SgiCZqaBELtg2DcuLc8jFjGAhF5cJhR~Zl3lA9JwBCWpEgkDIJeVhcWu0ppLxuJLvn5TGEjAgZ8MdRPVnz52RIrbpaNuCyAqtAl4QZFgfWYarUSmhX6yuJPHfCFWQrM-xujElTIgQ__",
-      job: 12,
-      Employers_jobs: 22,
-      revenue: "60k",
-    },
-    {
-      id: 3,
-      country: "egypt",
-      avatar_country:
-        "https://s3-alpha-sig.figma.com/img/7287/73b3/199c69ec2b1d8ca4cbf271947f8b9dd7?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=L7FvQT5wpJ--YXluadYKCltTwTJjyp37uPuMab5DVsee7krzvCqSOzxaTn3QNAYgZAmxdVEC5Zikif1Ci4hCRO6qahfL~HpUFbMNn6I5GKJJ7QJl60GQ0BGAXWl7GnhpZBMW8I98QCaXVSTzx~YRCtoQjOXjX4copUN1j1iiYIm0UKpJs~5JoZ1weFQwUEkwdF~L6mFzzFVL2SgiCZqaBELtg2DcuLc8jFjGAhF5cJhR~Zl3lA9JwBCWpEgkDIJeVhcWu0ppLxuJLvn5TGEjAgZ8MdRPVnz52RIrbpaNuCyAqtAl4QZFgfWYarUSmhX6yuJPHfCFWQrM-xujElTIgQ__",
-      job: 12,
-      Employers_jobs: 22,
-      revenue: "60k",
-    },
-    {
-      id: 4,
-      country: "egypt",
-      avatar_country:
-        "https://s3-alpha-sig.figma.com/img/7287/73b3/199c69ec2b1d8ca4cbf271947f8b9dd7?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=L7FvQT5wpJ--YXluadYKCltTwTJjyp37uPuMab5DVsee7krzvCqSOzxaTn3QNAYgZAmxdVEC5Zikif1Ci4hCRO6qahfL~HpUFbMNn6I5GKJJ7QJl60GQ0BGAXWl7GnhpZBMW8I98QCaXVSTzx~YRCtoQjOXjX4copUN1j1iiYIm0UKpJs~5JoZ1weFQwUEkwdF~L6mFzzFVL2SgiCZqaBELtg2DcuLc8jFjGAhF5cJhR~Zl3lA9JwBCWpEgkDIJeVhcWu0ppLxuJLvn5TGEjAgZ8MdRPVnz52RIrbpaNuCyAqtAl4QZFgfWYarUSmhX6yuJPHfCFWQrM-xujElTIgQ__",
-      job: 12,
-      Employers_jobs: 22,
-      revenue: "60k",
-    },
-  ];
+type countryTableProps = {
+  endPoint: string;
+};
+type RowDataCountry = {
+  id: number;
+  country: string;
+  avatar_country: string;
+  job: number;
+  Employers_jobs: number;
+  revenue: string;
+};
 
+// Sample data
+const DummyCountryData: RowDataCountry[] = [
+  {
+    id: 1,
+    country: "Egypt",
+    avatar_country:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Egypt.svg/255px-Flag_of_Egypt.svg.png",
+    job: 18,
+    Employers_jobs: 35,
+    revenue: "75k",
+  },
+  {
+    id: 2,
+    country: "United States",
+    avatar_country:
+      "https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg",
+    job: 25,
+    Employers_jobs: 40,
+    revenue: "120k",
+  },
+  {
+    id: 3,
+    country: "Germany",
+    avatar_country:
+      "https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg",
+    job: 20,
+    Employers_jobs: 30,
+    revenue: "90k",
+  },
+  {
+    id: 4,
+    country: "India",
+    avatar_country:
+      "https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg",
+    job: 15,
+    Employers_jobs: 25,
+    revenue: "50k",
+  },
+  {
+    id: 5,
+    country: "Canada",
+    avatar_country:
+      "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg",
+    job: 22,
+    Employers_jobs: 38,
+    revenue: "110k",
+  },
+];
+
+const CountiresTable: React.FC<countryTableProps> = ({ endPoint }) => {
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [CountryData, setCountryData] =
+    useState<RowDataCountry[]>(DummyCountryData);
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setCountryData(DummyCountryData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Table data...
+      </div>
+    );
+  }
   return (
-    <TableContainer>
+    <TableContainer
+      sx={{
+        maxHeight: 250,
+      }}
+    >
       <Table
         sx={{
           minWidth: 300,
+
           ".css-y6a65z-MuiTableCell-root": {
             color: "#2ba149",
           },
@@ -72,7 +123,7 @@ const CountiresTable: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => {
+          {CountryData.map((row) => {
             return (
               <TableRow
                 key={row.id}

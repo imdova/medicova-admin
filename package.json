@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@hello-pangea/dnd": "^18.0.1",
     "@mui/icons-material": "^5.16.7",
-    "@mui/material": "^5.16.14",
+    "@mui/material": "^5.16.7",
     "@mui/x-charts": "^7.24.0",
-    "@mui/x-date-pickers": "^7.24.0",
+    "@mui/x-data-grid": "^7.24.1",
+    "@mui/x-date-pickers": "^7.23.2",
     "@reduxjs/toolkit": "^2.5.0",
     "@tiptap/extension-text-align": "^2.11.0",
     "@tiptap/extension-underline": "^2.11.0",
@@ -22,6 +24,7 @@
     "@tiptap/react": "^2.11.0",
     "@tiptap/starter-kit": "^2.11.0",
     "axios": "^1.7.7",
+    "dayjs": "^1.11.13",
     "next": "14.2.5",
     "next-auth": "^4.24.11",
     "react": "^18.3.1",
@@ -29,7 +32,8 @@
     "react-dropzone": "^14.3.5",
     "react-hook-form": "^7.53.2",
     "react-phone-number-input": "^3.4.9",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "revalidate": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",

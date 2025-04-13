@@ -1,17 +1,20 @@
 import { NavItem } from "@/types";
 import { RoleState } from "@/types/next-auth";
 import {
-  BusinessOutlined,
   DescriptionOutlined,
   HelpOutline,
   HomeOutlined,
-  InfoOutlined,
   MessageOutlined,
   PeopleOutline,
-  NotificationsActiveOutlined,
-  Search,
   SettingsOutlined,
   CalendarToday,
+  MenuBook,
+  GridView,
+  CompareArrows,
+  MailOutline,
+  LiveTv,
+  Category,
+  PersonOutlined,
 } from "@mui/icons-material";
 
 export type CommonLinksType = "home";
@@ -26,12 +29,12 @@ export type CommonLinks = {
 export const roleBasedSideBarLinks: RoleBasedLinks = {
   employer: [],
   seeker: [],
-  admin: [
+  "admin jobs": [
     {
       id: 18,
       icon: HomeOutlined,
       label: "Dashboard",
-      path: "/admin",
+      path: "/jobs/admin",
     },
     {
       id: 19,
@@ -50,25 +53,25 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 21,
       icon: PeopleOutline,
       label: "Medicova Employees",
-      path: "#",
+      path: "/jobs/admin/employees",
     },
     {
       id: 22,
       icon: PeopleOutline,
       label: "Users",
-      path: "#",
+      path: "/jobs/admin/users",
     },
     {
       id: 23,
       icon: PeopleOutline,
       label: "Employers",
-      path: "#",
+      path: "/jobs/admin",
     },
     {
       id: 24,
       icon: HomeOutlined,
       label: "Jobs",
-      path: "/admin/jobs",
+      path: "/jobs/admin/jobs",
     },
     {
       id: 25,
@@ -80,7 +83,7 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 26,
       icon: HomeOutlined,
       label: "Billing& Subscriptions",
-      path: "#",
+      path: "/jobs/admin/plans",
     },
     {
       id: 27,
@@ -126,6 +129,115 @@ export const roleBasedSideBarLinks: RoleBasedLinks = {
       id: 34,
       icon: HelpOutline,
       label: "Help Center",
+      path: "#",
+    },
+  ],
+  "admin courses": [
+    {
+      id: 18,
+      icon: GridView,
+      label: "Dashboard",
+      path: "/courses/admin",
+    },
+    {
+      id: 19,
+      icon: MenuBook,
+      label: "Courses",
+      path: "/courses/admin/courses",
+    },
+    {
+      id: 21,
+      icon: CalendarToday,
+      label: "Schedule",
+      path: "#",
+    },
+    {
+      id: 22,
+      icon: PeopleOutline,
+      label: "Students",
+      path: "/courses/admin/students",
+    },
+    {
+      id: 23,
+      icon: PeopleOutline,
+      label: "Instructors",
+      path: "/courses/admin/instructors",
+    },
+    {
+      id: 24,
+      icon: PeopleOutline,
+      label: "Staff",
+      path: "/courses/admin/staff",
+    },
+    {
+      id: 25,
+      icon: CompareArrows,
+      label: "Transaction",
+      path: "/courses/admin/transactions",
+    },
+    {
+      id: 26,
+      icon: LiveTv,
+      label: "Live Class",
+      path: "#",
+    },
+    {
+      id: 27,
+      icon: MailOutline,
+      label: "Messages",
+      path: "#",
+    },
+    {
+      id: 27,
+      icon: Category,
+      label: "Categories",
+      path: "/courses/admin/courses-category",
+    },
+    {
+      id: 28,
+      icon: PersonOutlined,
+      label: "Student Profile",
+      path: "/courses/admin/student-profile",
+    },
+    {
+      id: 29,
+      icon: PersonOutlined,
+      label: "Instractor Profile",
+      path: "/courses/admin/instractor-profile",
+    },
+    {
+      id: 31,
+      type: "divider",
+    },
+    {
+      id: 32,
+      section: "Settings",
+      type: "text",
+    },
+    {
+      id: 33,
+      icon: SettingsOutlined,
+      label: "Settings",
+      path: "#",
+    },
+    {
+      id: 34,
+      icon: HelpOutline,
+      label: "Help Center",
+      path: "#",
+    },
+  ],
+  admin: [
+    {
+      id: 18,
+      icon: HomeOutlined,
+      label: "Dashboard",
+      path: "/admin/employers",
+    },
+    {
+      id: 19,
+      icon: HomeOutlined,
+      label: "Report&Analytics",
       path: "#",
     },
   ],

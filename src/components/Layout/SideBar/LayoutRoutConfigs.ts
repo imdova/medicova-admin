@@ -8,11 +8,29 @@ interface RouteConfig {
   pattern: string;
   sideBarType: SideBarType;
   linksType?: LinksType;
+  userRole?: RoleState;
 }
 
 export const routeConfigs: RouteConfig[] = [
   // default
-  { pattern: "/admin/*", sideBarType: "full", linksType: "userType" },
+  {
+    pattern: "/admin/*",
+    sideBarType: "full",
+    linksType: "userType",
+    userRole: "admin",
+  },
+  {
+    pattern: "/jobs/*",
+    sideBarType: "full",
+    linksType: "userType",
+    userRole: "admin jobs",
+  },
+  {
+    pattern: "/courses/*",
+    sideBarType: "full",
+    linksType: "userType",
+    userRole: "admin courses",
+  },
 ];
 
 export const matchRoute = (pathname: string) => {

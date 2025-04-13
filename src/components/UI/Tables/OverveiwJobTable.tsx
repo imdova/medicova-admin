@@ -1,173 +1,239 @@
 import {
-  Avatar,
   Box,
   Button,
-  Checkbox,
   FormControl,
   MenuItem,
-  Paper,
   Select,
   SelectChangeEvent,
-  styled,
   Switch,
   Tab,
-  Table,
-  TableBody,
-  TableCell,
-  tableCellClasses,
-  TableContainer,
-  TableHead,
-  TableRow,
   Tabs,
   Typography,
 } from "@mui/material";
 
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
-
 import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
 import { useState } from "react";
-import { RowDataJobs, StateType } from "@/types";
-import { Tune } from "@mui/icons-material";
-import { DateField } from "@mui/x-date-pickers/DateField";
+import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { DateField } from "@mui/x-date-pickers/DateField";
+import { Tune } from "@mui/icons-material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import * as React from "react";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import TableDropMenu from "../TableDropMenu";
 
-interface OverviewJobsTableProps {
-  Filtring?: boolean; // `Filtring` is optional
+// handel function status of Employers
+const handleState = (state: StateType) => {
+  const stateStyles: Record<StateType, string> = {
+    Active:
+      "bg-green-50 text-green-700 ring-green-600/20 dark:border-green-500 dark:bg-inputDark dark:text-green-500",
+    Inactive:
+      "bg-red-50 text-red-700 ring-red-600/10 dark:border-red-500 dark:bg-inputDark dark:text-red-500",
+    Processing:
+      "bg-orange-50 text-orange-700 ring-orange-600/10 dark:border-orange-500 dark:bg-inputDark dark:text-orange-500",
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
+        stateStyles[state]
+      }`}
+    >
+      {state}
+    </span>
+  );
+};
+
+const columns: GridColDef[] = [
+  {
+    field: "id",
+    headerName: "Job Id",
+    flex: 1,
+    editable: false,
+  },
+  {
+    field: "JobTitle",
+    headerName: "Job Title",
+    flex: 1,
+    editable: true,
+  },
+  {
+    field: "Date",
+    headerName: "Date",
+    flex: 1,
+    editable: true,
+  },
+  {
+    field: "Employer",
+    headerName: "Employer",
+    sortable: true,
+    flex: 1,
+  },
+
+  {
+    field: "Location",
+    headerName: "Location",
+    sortable: true,
+    flex: 1,
+  },
+
+  {
+    field: "Views",
+    headerName: "Views",
+    sortable: true,
+    flex: 1,
+  },
+
+  {
+    field: "Applicants",
+    headerName: "Applicants",
+    sortable: true,
+    flex: 1,
+  },
+  {
+    field: "Status",
+    headerName: "Status",
+    description: "This column has a value getter and is not sortable.",
+    sortable: false,
+    flex: 1,
+    renderCell: (params) => handleState(params.row.Status),
+  },
+
+  {
+    field: "Action",
+    headerName: "Action",
+    description: "This column has a value getter and is not sortable.",
+    sortable: false,
+    flex: 1,
+    renderCell: () => (
+      <div className="flex items-center gap-2">
+        <Switch />
+        <TableDropMenu />
+      </div>
+    ),
+  },
+];
+
+type JobRow = {
+  id: number;
+  JobTitle: string;
+  Date: string;
+  Employer: string;
+  Location: string;
+  Views: string;
+  Applicants: string;
+  Status: string;
+};
+
+const rows: JobRow[] = [
+  {
+    id: 1001,
+    JobTitle: "Software Engineer",
+    Date: "10 March, 2022",
+    Employer: "Google",
+    Location: "USA",
+    Views: "150",
+    Applicants: "20",
+    Status: "Active",
+  },
+  {
+    id: 1002,
+    JobTitle: "Data Scientist",
+    Date: "25 May, 2022",
+    Employer: "Amazon",
+    Location: "UK",
+    Views: "180",
+    Applicants: "25",
+    Status: "Closed",
+  },
+  {
+    id: 1003,
+    JobTitle: "Product Manager",
+    Date: "17 August, 2022",
+    Employer: "Microsoft",
+    Location: "Canada",
+    Views: "200",
+    Applicants: "30",
+    Status: "Active",
+  },
+  {
+    id: 1004,
+    JobTitle: "UX Designer",
+    Date: "5 December, 2022",
+    Employer: "Apple",
+    Location: "Germany",
+    Views: "120",
+    Applicants: "15",
+    Status: "Pending",
+  },
+];
+
+interface OverviewEmployersTableProps {
+  Filtring?: boolean;
+  endPoint: string;
 }
-const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
+const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
+  endPoint,
 }) => {
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
-
-  // Sample data
-  const rows: RowDataJobs[] = [
-    {
-      id: 1,
-      job_title: "Consultannt Cardiiology",
-      employer_name: "John Doe",
-      reg_date: "13 July, 2021",
-      country: "egypt",
-      view: 12,
-      applicant: 55,
-      status: "Active",
-    },
-    {
-      id: 2,
-      job_title: "Consultannt Cardiiology",
-      employer_name: "John Doe",
-      reg_date: "13 July, 2021",
-      country: "egypt",
-      view: 12,
-      applicant: 55,
-      status: "Active",
-    },
-    {
-      id: 3,
-      job_title: "Consultannt Cardiiology",
-      employer_name: "John Doe",
-      reg_date: "13 July, 2021",
-      country: "egypt",
-      view: 12,
-      applicant: 55,
-      status: "Active",
-    },
-    {
-      id: 4,
-      job_title: "Consultannt Cardiiology",
-      employer_name: "John Doe",
-      reg_date: "13 July, 2021",
-      country: "egypt",
-      view: 12,
-      applicant: 55,
-      status: "Active",
-    },
-  ];
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  // Handle checkbox change
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      setSelected(rows.map((row) => row.id));
-    } else {
-      setSelected([]);
-    }
-  };
 
-  const handleSelectRow = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: number,
-  ) => {
-    setSelected((prevSelected) =>
-      event.target.checked
-        ? [...prevSelected, id]
-        : prevSelected.filter((rowId) => rowId !== id),
-    );
-  };
-
-  // Check if a row is selected
-  const isSelected = (id: number) => selected.includes(id);
-  // start styling table
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#2ba149",
-      color: theme.palette.common.white,
-      fontSize: 12,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 10,
-    },
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-
-  // handel function status of Employers
-  const handleState = (state: StateType) => {
-    const stateStyles: Record<StateType, string> = {
-      Active:
-        "bg-green-50 text-green-700 ring-green-600/20 dark:border-green-500 dark:bg-inputDark dark:text-green-500",
-      Inactive:
-        "bg-red-50 text-red-700 ring-red-600/10 dark:border-red-500 dark:bg-inputDark dark:text-red-500",
-      Processing:
-        "bg-orange-50 text-orange-700 ring-orange-600/10 dark:border-orange-500 dark:bg-inputDark dark:text-orange-500",
-    };
-
-    return (
-      <span
-        className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
-          stateStyles[state]
-        }`}
-      >
-        {state}
-      </span>
-    );
-  };
   //   values of Filters inputs
-
   const [Country, setCountry] = useState("");
+  const [Industry, setIndustry] = useState("");
+  const [Category, setCategory] = useState("");
+  const [Employer, setEmployer] = useState("");
 
   const handleChangeCountry = (event: SelectChangeEvent) => {
     setCountry(event.target.value as string);
   };
+  // Filter data based on selection
+  const filteredData = rows.filter((row) =>
+    row.JobTitle.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+  // State variables
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [JobData, setJobData] = useState<JobRow[]>(filteredData);
+  // Fetch data on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setJobData(rows);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        Loading Users Table data...
+      </div>
+    );
+  }
   return (
     <>
       {/* start content table Employers  */}
       <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
         {Filtring ? (
-          <Typography className="w-60 p-2 font-bold" variant="h6" gutterBottom>
+          <Typography
+            className="mb-0 flex w-60 items-center justify-center p-2 font-bold"
+            variant="h6"
+            gutterBottom
+          >
             Total Jobs : 19
           </Typography>
         ) : (
@@ -193,7 +259,7 @@ const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
           </Box>
         )}
 
-        <SearchInput />
+        <SearchInput SetSearchQuery={setSearchQuery} />
         <ExportButton data="Name,Age\nJohn,30\nJane,25" />
       </div>
       {Filtring ? (
@@ -215,7 +281,7 @@ const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
                 value={Country}
                 onChange={handleChangeCountry}
@@ -265,54 +331,16 @@ const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={Industry}
+                onChange={(e) => setIndustry(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "Industry")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box sx={{ width: "100%" }}>
-            <FormControl className="relative" fullWidth>
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary"
-                width="20"
-                height="20"
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M8 5C7.73478 5 7.48043 5.10536 7.29289 5.29289C7.10536 5.48043 7 5.73478 7 6V26C7 26.2652 7.10536 26.5196 7.29289 26.7071C7.48043 26.8946 7.73478 27 8 27C8.26522 27 8.51957 26.8946 8.70711 26.7071C8.89464 26.5196 9 26.2652 9 26V6C9 5.73478 8.89464 5.48043 8.70711 5.29289C8.51957 5.10536 8.26522 5 8 5Z"
-                  fill="#2BA149"
-                />
-                <path
-                  d="M22 17H14C12.3431 17 11 18.3431 11 20V22C11 23.6569 12.3431 25 14 25H22C23.6569 25 25 23.6569 25 22V20C25 18.3431 23.6569 17 22 17Z"
-                  fill="#2BA149"
-                />
-                <path
-                  d="M18 7H14C12.3431 7 11 8.34315 11 10V12C11 13.6569 12.3431 15 14 15H18C19.6569 15 21 13.6569 21 12V10C21 8.34315 19.6569 7 18 7Z"
-                  fill="#2BA149"
-                />
-              </svg>
-
-              <Select
-                className="pl-6"
-                id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
-                displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
-              >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem value={"Industry"}>Industry</MenuItem>
+                <MenuItem value={"Industry"}>Industry</MenuItem>
+                <MenuItem value={"Industry"}>Industry</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -322,27 +350,62 @@ const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
                 className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary"
                 width="18"
                 height="18"
-                viewBox="0 0 25 25"
+                viewBox="0 0 23 22"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M20.1866 2.64326C20.2316 2.67846 20.2766 2.71365 20.323 2.74992C20.8843 3.19829 21.4337 3.68789 21.8882 4.24639C21.9259 4.28992 21.9635 4.33345 22.0022 4.3783C23.4415 6.06077 24.3602 8.07345 24.7758 10.2452C24.7843 10.2862 24.7927 10.3272 24.8014 10.3695C25.0802 11.7601 25.0585 13.4084 24.7758 14.796C24.7658 14.8464 24.7559 14.8967 24.7456 14.9486C24.3645 16.8183 23.5944 18.6258 22.4039 20.1225C22.3484 20.193 22.3484 20.193 22.2919 20.2649C21.6964 21.0093 21.0415 21.7077 20.2897 22.2945C20.259 22.3187 20.2283 22.3428 20.1966 22.3677C19.7152 22.7445 19.2244 23.082 18.6913 23.3805C18.6549 23.4012 18.6186 23.4218 18.5812 23.4431C17.4345 24.0908 16.2045 24.5225 14.9174 24.7897C14.8802 24.7975 14.8429 24.8053 14.8046 24.8134C14.0393 24.9622 13.2714 25.0033 12.4939 24.9998C12.4501 24.9997 12.4064 24.9996 12.3613 24.9995C11.6597 24.997 10.9768 24.9619 10.2863 24.8285C10.2414 24.8202 10.1964 24.8118 10.1501 24.8033C8.51843 24.4931 6.90821 23.8705 5.54243 22.9151C5.48469 22.875 5.48469 22.875 5.42579 22.8342C4.87256 22.447 4.36182 22.0322 3.88108 21.5576C3.78844 21.4663 3.69477 21.3762 3.60093 21.2861C1.57833 19.3255 0.388375 16.5941 0.0766467 13.8134C0.0698669 13.7569 0.063087 13.7003 0.0561017 13.6419C-0.256144 10.4639 0.735726 7.17127 2.73542 4.69242C3.02288 4.34261 3.32272 4.00564 3.63457 3.67754C3.67365 3.63621 3.71273 3.59487 3.753 3.55229C4.038 3.25836 4.34525 3.00055 4.66585 2.74669C4.71437 2.70689 4.76289 2.66709 4.81288 2.62609C9.21223 -0.902476 15.7959 -0.853819 20.1866 2.64326ZM4.76595 5.07825C4.18263 5.68742 3.68852 6.36458 3.27513 7.09976C3.24041 7.16145 3.20531 7.22293 3.16978 7.28415C2.60754 8.25389 2.26775 9.30737 2.03608 10.4003C2.02232 10.4606 2.02232 10.4606 2.00828 10.5221C1.43017 13.1099 2.11997 16.0133 3.50495 18.2283C3.67542 18.4883 3.8574 18.7386 4.04708 18.9848C4.06936 19.0138 4.09165 19.0428 4.1146 19.0727C4.72733 19.8574 5.45593 20.5773 6.26433 21.1568C6.30735 21.1883 6.30735 21.1883 6.35124 21.2204C7.83543 22.2984 9.86747 23.1737 11.7301 23.1737C11.7301 22.0815 11.7301 20.9893 11.7301 19.864C11.2707 19.7616 10.8112 19.6592 10.3379 19.5537C9.36214 19.2371 8.49836 18.7603 7.70812 18.1057C7.68075 18.083 7.65337 18.0603 7.62516 18.037C6.18211 16.8225 5.33368 14.9867 5.15651 13.1275C4.98865 11.1552 5.58342 9.1982 6.84443 7.67445C6.95768 7.54586 7.07415 7.42139 7.19248 7.2975C7.254 7.23001 7.254 7.23001 7.31676 7.16115C8.44901 5.96053 10.2021 5.12726 11.8564 5.06737C12.0711 5.06309 12.2856 5.06106 12.5004 5.06088C12.5576 5.06083 12.5576 5.06083 12.6159 5.06078C13.1788 5.06159 13.7096 5.08561 14.2568 5.22895C14.2901 5.23673 14.3234 5.2445 14.3577 5.25251C15.3784 5.49095 16.311 5.99811 17.1443 6.62522C17.4349 6.38278 17.7028 6.12361 17.9692 5.85477C18.0336 5.79 18.0336 5.79 18.0994 5.72392C18.2356 5.58707 18.3716 5.45003 18.5076 5.31299C18.6003 5.21971 18.6931 5.12645 18.7858 5.03321C19.0123 4.80555 19.2386 4.57774 19.4647 4.34982C19.2801 4.10771 19.0849 3.94694 18.8395 3.77127C18.7986 3.74189 18.7577 3.71251 18.7155 3.68225C18.296 3.38647 17.8581 3.13626 17.4022 2.90183C17.3672 2.88352 17.3322 2.86521 17.2962 2.84635C13.1094 0.673987 8.00032 1.7751 4.76595 5.07825ZM20.6507 5.53923C19.902 6.29012 19.1533 7.041 18.3819 7.81464C18.5196 8.05634 18.6568 8.28279 18.8105 8.51278C19.4419 9.48347 19.6816 10.5011 19.9288 11.6415C21.0178 11.6415 22.1069 11.6415 23.2289 11.6415C23.1427 10.842 23.1427 10.842 22.984 10.0642C22.9703 10.0091 22.9565 9.95407 22.9424 9.89734C22.5895 8.50912 21.9083 6.38009 20.6507 5.53923ZM8.37846 8.48692C8.3405 8.52445 8.30255 8.56198 8.26344 8.60065C7.47416 9.43015 6.97317 10.6149 6.83154 11.7449C6.82462 11.7969 6.81771 11.8489 6.81059 11.9025C6.65978 13.3668 7.0917 14.8526 8.00074 16.0046C9.0012 17.2379 10.378 18.0439 11.9601 18.2301C13.551 18.3703 15.0135 17.8888 16.2549 16.8904C16.3457 16.8135 16.436 16.736 16.5256 16.6577C16.5572 16.6304 16.5889 16.603 16.6215 16.5749C17.3587 15.8883 17.8571 14.9291 18.1241 13.9686C18.1405 13.9124 18.157 13.8562 18.174 13.7983C18.3928 12.9154 18.3871 11.841 18.1241 10.9692C18.1135 10.9343 18.103 10.8993 18.0922 10.8634C17.6234 9.34371 16.6285 8.11372 15.2365 7.34922C12.9364 6.13667 10.1819 6.65214 8.37846 8.48692ZM19.9288 13.2963C19.8437 13.6888 19.7586 14.0813 19.671 14.4857C19.0552 16.4483 17.8386 18.0433 16.0197 19.0298C15.1845 19.4621 14.2983 19.6798 13.3802 19.864C13.3802 20.9562 13.3802 22.0484 13.3802 23.1737C14.1737 23.0881 14.1737 23.0881 14.9464 22.9312C15.0009 22.9177 15.0554 22.9041 15.1115 22.8902C16.9138 22.4292 18.5641 21.5487 19.9041 20.2481C19.9834 20.1713 20.0636 20.0958 20.1439 20.0201C21.9602 18.282 22.9509 15.8699 23.2289 13.3997C23.2289 13.3656 23.2289 13.3315 23.2289 13.2963C22.1399 13.2963 21.0508 13.2963 19.9288 13.2963Z"
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M15.9545 1H19.221C20.5726 1 21.6689 2.1059 21.6689 3.47018V6.7641C21.6689 8.12735 20.5726 9.23429 19.221 9.23429H15.9545C14.6019 9.23429 13.5055 8.12735 13.5055 6.7641V3.47018C13.5055 2.1059 14.6019 1 15.9545 1ZM4.11787 1H7.38344C8.73598 1 9.83236 2.1059 9.83236 3.47018V6.7641C9.83236 8.12735 8.73598 9.23429 7.38344 9.23429H4.11787C2.76532 9.23429 1.66895 8.12735 1.66895 6.7641V3.47018C1.66895 2.1059 2.76532 1 4.11787 1ZM4.11787 12.7657H7.38344C8.73598 12.7657 9.83236 13.8716 9.83236 15.2369V18.5298C9.83236 19.8941 8.73598 21 7.38344 21H4.11787C2.76532 21 1.66895 19.8941 1.66895 18.5298V15.2369C1.66895 13.8716 2.76532 12.7657 4.11787 12.7657ZM15.9545 12.7657H19.221C20.5726 12.7657 21.6689 13.8716 21.6689 15.2369V18.5298C21.6689 19.8941 20.5726 21 19.221 21H15.9545C14.6019 21 13.5055 19.8941 13.5055 18.5298V15.2369C13.5055 13.8716 14.6019 12.7657 15.9545 12.7657Z"
+                  stroke="#2BA149"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <Select
+                className="pl-6 text-xs md:text-sm"
+                id="demo-simple-select"
+                value={Category}
+                onChange={(e) => setCategory(e.target.value)}
+                displayEmpty
+                renderValue={(value) => (value ? value : "Category")}
+              >
+                <MenuItem value={"Category"}>Category</MenuItem>
+                <MenuItem value={"Category"}>Category</MenuItem>
+                <MenuItem value={"Category"}>Category</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Box sx={{ width: "100%" }}>
+            <FormControl className="relative" fullWidth>
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary"
+                width="18"
+                height="20"
+                viewBox="0 0 23 29"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1.42318 29C1.54473 29 1.66131 28.9522 1.74727 28.8673C1.83322 28.7823 1.88151 28.667 1.88151 28.5468V23.5404C1.88151 22.5496 2.41593 21.616 3.27576 21.1065L6.86359 18.9773L8.83259 21.4111C8.87295 21.4608 8.92343 21.5016 8.98075 21.5308C9.03808 21.56 9.10097 21.577 9.16534 21.5806L9.19101 21.5815C9.31201 21.5815 9.42934 21.5344 9.51551 21.4492L10.5908 20.3859V28.5468C10.5908 28.667 10.639 28.7823 10.725 28.8673C10.811 28.9522 10.9275 29 11.0491 29C11.1707 29 11.2872 28.9522 11.3732 28.8673C11.4591 28.7823 11.5074 28.667 11.5074 28.5468V19.4858L11.5065 19.4803L11.9648 19.0262L12.4241 19.4803L12.4232 19.4858V28.5468C12.4232 28.667 12.4715 28.7823 12.5574 28.8673C12.6434 28.9522 12.76 29 12.8815 29C13.0031 29 13.1196 28.9522 13.2056 28.8673C13.2916 28.7823 13.3398 28.667 13.3398 28.5468V20.3859L14.4151 21.4492C14.4577 21.4912 14.5083 21.5246 14.564 21.5473C14.6197 21.57 14.6794 21.5816 14.7396 21.5815L14.7653 21.5806C14.8296 21.577 14.8925 21.56 14.9499 21.5308C15.0072 21.5016 15.0577 21.4608 15.098 21.4111L17.067 18.9773L20.6558 21.1065C21.0794 21.3601 21.43 21.7171 21.6739 22.1434C21.9177 22.5696 22.0466 23.0507 22.0482 23.5404V28.5468C22.0482 28.667 22.0965 28.7823 22.1824 28.8673C22.2684 28.9522 22.385 29 22.5065 29C22.6281 29 22.7446 28.9522 22.8306 28.8673C22.9166 28.7823 22.9648 28.667 22.9648 28.5468V23.5404C22.9648 22.2324 22.2599 21.0023 21.126 20.3297L17.2522 18.0318L15.8002 16.4364C15.7397 16.3726 15.6615 16.3278 15.5754 16.3078C15.4893 16.2878 15.3991 16.2935 15.3162 16.324V14.7169C16.0335 14.1976 16.617 13.5186 17.0194 12.7348C17.4218 11.951 17.6319 11.0845 17.6326 10.2054V8.06981L18.3467 4.13487C18.4134 3.77695 18.407 3.40944 18.3278 3.05402C18.2486 2.69859 18.0983 2.36245 17.8856 2.06542C17.6747 1.76709 17.4055 1.51354 17.094 1.31972C16.7824 1.1259 16.4348 0.995721 16.0715 0.936871L10.61 0.0367554C10.219 -0.0277176 9.81853 -0.00719008 9.43639 0.0969102C9.05424 0.201011 8.69962 0.386184 8.39718 0.639552C7.8812 1.07269 7.54742 1.68077 7.46126 2.34461C6.92043 2.44432 6.43093 2.72985 6.07801 3.16133C5.85886 3.42836 5.70309 3.74062 5.62219 4.07508C5.54128 4.40955 5.53729 4.75771 5.61051 5.0939L6.28518 8.21666C6.28609 8.22301 6.29068 8.22573 6.29159 8.23026V10.2045C6.29159 12.0546 7.20643 13.6944 8.60801 14.716V16.3222C8.5256 16.2931 8.43639 16.2883 8.35126 16.3084C8.26614 16.3285 8.18877 16.3727 8.12859 16.4355L6.67751 18.03L2.80368 20.3288C2.24419 20.663 1.78113 21.1341 1.45908 21.6965C1.13702 22.259 0.966818 22.894 0.964844 23.5404V28.5468C0.964844 28.667 1.01313 28.7823 1.09909 28.8673C1.18504 28.9522 1.30162 29 1.42318 29ZM16.3575 18.4026L14.7011 20.4503L12.7477 18.5186L15.3483 17.294L16.3575 18.4026ZM6.79026 3.7324C6.92268 3.56978 7.09037 3.43868 7.28093 3.34877C7.47149 3.25887 7.68004 3.21247 7.89118 3.213C8.14418 3.213 8.34951 2.94921 8.34951 2.69903C8.34903 2.46364 8.39554 2.23046 8.48639 2.01288C8.57723 1.7953 8.71062 1.59759 8.8789 1.4311C9.04719 1.26461 9.24705 1.1326 9.46704 1.04266C9.68702 0.952715 9.9228 0.9066 10.1608 0.906958C10.261 0.907034 10.3609 0.915219 10.4597 0.931433L15.9212 1.83155C16.4162 1.91313 16.847 2.18144 17.1358 2.58663C17.4245 2.99273 17.5345 3.48493 17.4438 3.97352L16.8727 7.11984L15.8955 6.02484V5.05039C15.8955 4.93019 15.8472 4.81491 15.7613 4.72991C15.6753 4.64491 15.5587 4.59716 15.4372 4.59716H8.48701C8.36545 4.59716 8.24887 4.64491 8.16292 4.72991C8.07697 4.81491 8.02868 4.93019 8.02868 5.05039V6.02212L6.99284 7.15973L6.50609 4.90536C6.41718 4.4902 6.52076 4.06235 6.79026 3.7324ZM7.20826 10.2045V8.2783L8.82801 6.49892C8.90369 6.41585 8.9455 6.30796 8.94534 6.19616V5.50362H14.9788V6.19616C14.9788 6.30675 15.0192 6.41371 15.0934 6.4962L16.7159 8.31365V10.2045C16.7156 10.9742 16.5242 11.732 16.1585 12.4115C15.7928 13.0909 15.264 13.6712 14.6186 14.1014L14.6168 14.1023C14.3919 14.2488 14.1548 14.3762 13.9082 14.483C13.7954 14.5329 13.6781 14.5719 13.5617 14.6126C13.2844 14.7106 12.9988 14.7838 12.7083 14.8311C12.6239 14.8447 12.5378 14.8483 12.4525 14.8565C12.1258 14.8891 11.7966 14.8891 11.4698 14.8565C11.3855 14.8474 11.2993 14.8447 11.2159 14.8311C10.926 14.7837 10.641 14.7105 10.3643 14.6126C10.247 14.5719 10.1288 14.532 10.0142 14.4821C9.76883 14.3757 9.53302 14.2489 9.30926 14.1032L9.30284 14.0996C8.65817 13.6693 8.1301 13.0892 7.76491 12.4101C7.39973 11.731 7.20859 10.9737 7.20826 10.2045ZM9.99859 15.4584C10.0527 15.4774 10.1049 15.4992 10.159 15.5164C10.7398 15.7111 11.3488 15.8109 11.9621 15.8119C12.5751 15.8109 13.1838 15.7111 13.7643 15.5164C13.8193 15.4983 13.8724 15.4774 13.9274 15.4575C14.053 15.4112 14.1777 15.3623 14.2996 15.3079C14.3326 15.2934 14.3674 15.2825 14.4004 15.2671V16.7356L11.9648 17.8832L9.52468 16.7338V15.268C9.55676 15.2834 9.59068 15.2934 9.62276 15.3079C9.74559 15.3623 9.87118 15.4121 9.99859 15.4584ZM8.58143 17.294L11.182 18.5186L9.22859 20.4503L7.57218 18.4026L8.58143 17.294Z"
                   fill="#2BA149"
                 />
               </svg>
 
               <Select
-                className="pl-6"
+                className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Country}
-                onChange={handleChangeCountry}
+                value={Employer}
+                onChange={(e) => setEmployer(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "Contry")}
+                renderValue={(value) => (value ? value : "Employer")}
               >
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
-                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem value={"Employer"}>Employer</MenuItem>
+                <MenuItem value={"Employer"}>Employer</MenuItem>
+                <MenuItem value={"Employer"}>Employer</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -353,7 +416,6 @@ const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
               sx={{
                 width: "100%", // Ensure the container is full-width
                 overflow: "visible",
-
                 paddingTop: 0,
                 position: "relative",
                 "& > :not(style) ~ :not(style)": {
@@ -384,6 +446,7 @@ const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
                   "& .MuiInputBase-root": {
                     pl: 3,
                     overflow: "hidden",
+                    fontSize: 11,
                   },
                   ".css-10o2lyd-MuiStack-root": {
                     width: "100%",
@@ -409,99 +472,35 @@ const OverveiwJobTable: React.FC<OverviewJobsTableProps> = ({
       ) : (
         ""
       )}
-      <TableContainer component={Paper}>
-        <Table
-          sx={{ minWidth: 1100, width: "100%" }}
-          aria-label="customized table"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell padding="checkbox">
-                <Checkbox
-                  sx={{
-                    color: "white",
-                    "&.Mui-checked": {
-                      color: "white",
-                    },
-                  }}
-                  checked={selected.length === rows.length && rows.length > 0}
-                  indeterminate={
-                    selected.length > 0 && selected.length < rows.length
-                  }
-                  onChange={handleSelectAll}
-                />
-              </StyledTableCell>
-              <StyledTableCell>Job ID</StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" /> Job Title
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Date
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Employer
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Location
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                View
-              </StyledTableCell>
-              <StyledTableCell>
-                <UnfoldMoreIcon className="text-sm" />
-                Applicant
-              </StyledTableCell>
-
-              <StyledTableCell>Status</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => {
-              const isItemSelected = isSelected(row.id);
-              return (
-                <StyledTableRow key={row.id}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isItemSelected}
-                      onChange={(event) => handleSelectRow(event, row.id)}
-                      color="success"
-                    />
-                  </TableCell>
-
-                  <StyledTableCell align="center" component="th" scope="row">
-                    {row.id}
-                  </StyledTableCell>
-                  <StyledTableCell>{row.job_title}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.reg_date}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.employer_name}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.country}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{row.view}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.applicant}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {handleState(row.status)}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Switch />
-                  </StyledTableCell>
-                </StyledTableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box sx={{ height: 400, overflowX: "auto" }}>
+        <DataGrid
+          sx={{
+            minWidth: "1000px",
+            border: "1px solid rgba(0, 0, 0, 0.12)",
+            "& .MuiDataGrid-container--top [role=row]": {
+              background: "#2ba149", // Custom header background color
+              color: "#ffffff", // Custom header text color
+              fontSize: "16px", // Optional: Larger header font
+            },
+            "& .MuiDataGrid-cell": {
+              fontSize: "12px", // Row font size
+              textAlign: "center",
+            },
+          }}
+          rows={filteredData}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          pageSizeOptions={[5]}
+          checkboxSelection
+          disableRowSelectionOnClick
+        />
+      </Box>
     </>
   );
 };

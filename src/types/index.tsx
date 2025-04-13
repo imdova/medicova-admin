@@ -328,3 +328,10 @@ export interface RowDataCountry {
   Employers_jobs: number;
   revenue: string | number;
 }
+
+// type for phon numer country
+export interface CountryPhone {
+  code: string;
+  label: string;
+  phone: string;
+}

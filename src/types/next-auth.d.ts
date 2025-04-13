@@ -1,6 +1,11 @@
 import NextAuth from "next-auth";
 import { Permission } from "./permissions";
-export type RoleState = "seeker" | "admin" | "employer";
+export type RoleState =
+  | "seeker"
+  | "admin"
+  | "admin jobs"
+  | "admin courses"
+  | "employer";
 
 declare module "next-auth" {
   interface User {
