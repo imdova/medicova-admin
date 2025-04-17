@@ -328,7 +328,7 @@ const OvarviewJobs: React.FC = () => {
         </div>
       </div>
       <div className="mt-3 box-content !p-0">
-        <OverveiwJobTable endPoint={API_GET_JOBS_TABLE_DATA} />
+        <OverveiwJobTable />
       </div>
     </>
   );

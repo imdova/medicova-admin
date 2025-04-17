@@ -4,24 +4,26 @@ import {
   FormControl,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Switch,
   Tab,
   Tabs,
   Typography,
 } from "@mui/material";
+
 import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateField } from "@mui/x-date-pickers/DateField";
 import { Tune } from "@mui/icons-material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import TableDropMenu from "../TableDropMenu";
 import Loader from "../Loader";
-import dayjs, { Dayjs } from "dayjs";
 
 interface CountryState {
   name: string;
@@ -29,7 +31,6 @@ interface CountryState {
 }
 
 interface JobType {
-  id: string;
   companyId: string;
   title: string;
   jobIndustryId: string;
@@ -66,10 +67,6 @@ interface JobType {
   closed: boolean;
   validTo: string; // ISO Date format
   startDateType: "IMMEDIATE" | "FLEXIBLE"; // Restricting the possible values
-  created_at: string;
-  company: {
-    name: string;
-  };
 }
 
 // industry and category type
@@ -83,27 +80,7 @@ export type IndustryCategoryType = {
 };
 // Define Type Employer Profile
 type EmployerProfile = {
-  id: number | null | undefined;
   name: string;
-};
-
-// Define Type countries
-type Timezone = {
-  zoneName: string;
-  gmtOffset: number;
-  gmtOffsetName: string;
-  abbreviation: string;
-  tzName: string;
-};
-type Country = {
-  name: string;
-  isoCode: string;
-  flag: string;
-  phonecode: string;
-  currency: string;
-  latitude: string;
-  longitude: string;
-  timezones: Timezone[];
 };
 
 // handel function status of Employers
@@ -125,7 +102,7 @@ const handleState = (state: string) => {
         stateStyles[normalizedState] || ""
       }`}
     >
-      {state || "status"}
+      {state || "state"}
     </span>
   );
 };
@@ -136,8 +113,9 @@ interface OverviewEmployersTableProps {
 const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
+  const [selected, setSelected] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // table data
@@ -147,18 +125,16 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
   );
   const [categoryData, setCategoryData] = useState<IndustryCategoryType[]>([]);
   const [employersData, setEmployersData] = useState<EmployerProfile[]>([]);
-  const [countriesData, setCountriesData] = useState<Country[]>([]);
-
-  // Filter states
-  const [countryFilter, setCountryFilter] = useState("");
-  const [industryFilter, setIndustryFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [employerFilter, setEmployerFilter] = useState("");
-  const [dateFilter, setDateFilter] = useState<Dayjs | null | undefined>(null);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  //   values of Filters inputs
+  const [Country, setCountry] = useState("");
+  const [Industry, setIndustry] = useState("");
+  const [Category, setCategory] = useState("");
+  const [Employer, setEmployer] = useState("");
 
   // End Points
   const API_GET_JOBS_TABLE_DATA = "http://34.70.58.31/api/v1.0.0/employer/jobs";
@@ -167,123 +143,54 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
   const API_GET_INDUSTRIES =
     "http://34.70.58.31/api/v1.0.0/admin/sys-configurations/industry";
   const API_GET_EMPLOYERS = "http://34.70.58.31/api/v1.0.0/employer/companies";
-  const API_GET_COUNTRIES = "http://34.70.58.31/api/v1.0.0/location/countries";
 
   // Fetch data on component mount
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const [jobsRes, industriesRes, categoryRes, employersRes, countriesRes] =
+
+      const [jobsRes, industriesRes, categoryRes, employersRes] =
         await Promise.all([
           fetch(API_GET_JOBS_TABLE_DATA),
           fetch(API_GET_INDUSTRIES),
           fetch(API_GET_CATEGORY),
           fetch(API_GET_EMPLOYERS),
-          fetch(API_GET_COUNTRIES),
         ]);
 
-      if (!jobsRes.ok) throw new Error("Failed to fetch jobs");
+      if (!jobsRes.ok) {
+        throw new Error("Failed to fetch employers");
+      }
 
-      const [
-        jobsData,
-        industriesData,
-        categoryData,
-        employersData,
-        countriesData,
-      ] = await Promise.all([
-        jobsRes.json(),
-        industriesRes.json(),
-        categoryRes.json(),
-        employersRes.json(),
-        countriesRes.json(),
-      ]);
+      const [jobsData, industriesData, categoryData, employersData] =
+        await Promise.all([
+          jobsRes.json(),
+          industriesRes.json(),
+          categoryRes.json(),
+          employersRes.json(),
+        ]);
 
       setJobsData(jobsData.data);
       setIndustriesData(industriesData.data);
       setCategoryData(categoryData.data);
       setEmployersData(employersData.data);
-      setCountriesData(countriesData);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching overview data:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchData();
   }, []);
-  // handdel add update status toggle
-  const handleStatusToggle = async (id: string, newStatus: string) => {
-    try {
-      // Update the status in the local state first for immediate UI feedback
-      setJobsData((prevData) =>
-        prevData.map((item) =>
-          item.id === id ? { ...item, status: newStatus } : item,
-        ),
-      );
 
-      // Make API call to update status on the server
-      const response = await fetch(`${API_GET_JOBS_TABLE_DATA}/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update status");
-      }
-    } catch (error) {
-      console.error("Error updating status:", error);
-      // Revert local state if API call fails
-      setJobsData((prevData) =>
-        prevData.map((item) =>
-          item.id === id ? { ...item, status: newStatus } : item,
-        ),
-      );
-    }
+  const handleChangeCountry = (event: SelectChangeEvent) => {
+    setCountry(event.target.value as string);
   };
-
-  // Apply all filters to the data
-  const filteredData = jobsData.filter((job) => {
-    // Search filter (matches title or company name)
-    const matchesSearch =
-      job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.company?.name?.toLowerCase().includes(searchQuery.toLowerCase());
-
-    // Country filter
-    const matchesCountry =
-      !countryFilter ||
-      (job.country?.name || "").toLowerCase() === countryFilter.toLowerCase();
-
-    // Industry filter
-    const matchesIndustry =
-      !industryFilter || job.jobIndustryId === industryFilter;
-
-    // Category filter
-    const matchesCategory =
-      !categoryFilter || job.jobCategoryId === categoryFilter;
-
-    // Employer filter
-    const matchesEmployer = !employerFilter || job.companyId === employerFilter;
-
-    // Date filter (if implemented)
-    const matchesDate =
-      !dateFilter ||
-      dayjs(job.created_at).format("YYYY-MM-DD") ===
-        dayjs(dateFilter).format("YYYY-MM-DD");
-
-    return (
-      matchesSearch &&
-      matchesCountry &&
-      matchesIndustry &&
-      matchesCategory &&
-      matchesEmployer &&
-      matchesDate
-    );
-  });
-
+  // Filter data based on selection
+  const filteredData = jobsData.filter((row) =>
+    row.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
   // columns
   const columns: GridColDef[] = [
     {
@@ -291,13 +198,12 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
       headerName: "Job Id",
       flex: 1,
       editable: false,
-      sortable: true,
     },
     {
       field: "title",
       headerName: "Job Title",
-      sortable: true,
       flex: 1,
+      editable: true,
       renderCell: (params) => {
         return params.row.title || "-";
       },
@@ -306,6 +212,7 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
       field: "created_at",
       headerName: "Date",
       flex: 1,
+      editable: true,
       renderCell: (params) => {
         return params.row.created_at || "-";
       },
@@ -323,6 +230,7 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
     {
       field: "Location",
       headerName: "Location",
+      sortable: true,
       flex: 1,
       renderCell: (params) => {
         return params.row.country?.name || "-";
@@ -359,32 +267,22 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
       description: "This column has a value getter and is not sortable.",
       sortable: false,
       flex: 1,
-      width: 150,
-      renderCell: (params) => {
-        const isActive = params.row.status === "active";
-
-        const handleSwitchChange = (
-          event: React.ChangeEvent<HTMLInputElement>,
-        ) => {
-          const newStatus = event.target.checked ? "active" : "inactive";
-          handleStatusToggle(params.row.id, newStatus);
-        };
-
-        return (
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={isActive}
-              onChange={handleSwitchChange}
-              color={isActive ? "success" : "default"}
-            />
-            <TableDropMenu />
-          </div>
-        );
-      },
+      renderCell: () => (
+        <div className="flex items-center gap-2">
+          <Switch />
+          <TableDropMenu />
+        </div>
+      ),
     },
   ];
+
+  console.log(jobsData);
+  console.log(industriesData);
+  console.log(categoryData);
+  console.log(employersData);
   return (
     <>
+      {/* start content table Employers  */}
       <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
         {Filtring ? (
           <Typography
@@ -392,10 +290,15 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
             variant="h6"
             gutterBottom
           >
-            Total Jobs: {filteredData.length}
+            Total Jobs : 19
           </Typography>
         ) : (
-          <Box sx={{ bgcolor: "background.paper", width: "100%" }}>
+          <Box
+            sx={{
+              bgcolor: "background.paper",
+              width: "100%",
+            }}
+          >
             <Tabs
               className="mb-2 w-full text-xs md:mb-0"
               value={value}
@@ -411,13 +314,12 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
             </Tabs>
           </Box>
         )}
-        <SearchInput SetSearchQuery={setSearchQuery} />
-        <ExportButton data={filteredData} />
-      </div>
 
-      {Filtring && (
+        <SearchInput SetSearchQuery={setSearchQuery} />
+        <ExportButton data="Name,Age\nJohn,30\nJane,25" />
+      </div>
+      {Filtring ? (
         <div className="my-4 flex flex-col items-center gap-4 px-2 lg:flex-row">
-          {/* Country Filter */}
           <Box sx={{ width: "100%" }}>
             <FormControl className="relative" fullWidth>
               <svg
@@ -435,23 +337,19 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                value={countryFilter}
-                onChange={(e) => setCountryFilter(e.target.value)}
+                className="pl-6 text-xs md:text-sm"
+                id="demo-simple-select"
+                value={Country}
+                onChange={handleChangeCountry}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Country")}
-                className="pl-6 text-xs md:text-sm"
               >
-                <MenuItem value="">All Countries</MenuItem>
-                {countriesData.map((country) => (
-                  <MenuItem key={country.isoCode} value={country.name}>
-                    {country.name}
-                  </MenuItem>
-                ))}
+                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem value={"Egypt"}>Egypt</MenuItem>
+                <MenuItem value={"Egypt"}>Egypt</MenuItem>
               </Select>
             </FormControl>
           </Box>
-
-          {/* Industry Filter */}
           <Box sx={{ width: "100%" }}>
             <FormControl className="relative" fullWidth>
               <svg
@@ -487,24 +385,21 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
                   </clipPath>
                 </defs>
               </svg>
+
               <Select
-                value={industryFilter}
-                onChange={(e) => setIndustryFilter(e.target.value)}
+                className="pl-6 text-xs md:text-sm"
+                id="demo-simple-select"
+                value={Industry}
+                onChange={(e) => setIndustry(e.target.value)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Industry")}
-                className="pl-6 text-xs md:text-sm"
               >
-                <MenuItem value="">All Industries</MenuItem>
-                {industriesData.map((industry) => (
-                  <MenuItem key={industry.id} value={industry.name}>
-                    {industry.name}
-                  </MenuItem>
-                ))}
+                <MenuItem value={"Industry"}>Industry</MenuItem>
+                <MenuItem value={"Industry"}>Industry</MenuItem>
+                <MenuItem value={"Industry"}>Industry</MenuItem>
               </Select>
             </FormControl>
           </Box>
-
-          {/* Category Filter */}
           <Box sx={{ width: "100%" }}>
             <FormControl className="relative" fullWidth>
               <svg
@@ -525,24 +420,21 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
                   stroke-linejoin="round"
                 />
               </svg>
+
               <Select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="pl-6 text-xs md:text-sm"
+                id="demo-simple-select"
+                value={Category}
+                onChange={(e) => setCategory(e.target.value)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Category")}
-                className="pl-6 text-xs md:text-sm"
               >
-                <MenuItem value="">All Categories</MenuItem>
-                {categoryData.map((category) => (
-                  <MenuItem key={category.id} value={category.name}>
-                    {category.name}
-                  </MenuItem>
-                ))}
+                <MenuItem value={"Category"}>Category</MenuItem>
+                <MenuItem value={"Category"}>Category</MenuItem>
+                <MenuItem value={"Category"}>Category</MenuItem>
               </Select>
             </FormControl>
           </Box>
-
-          {/* Employer Filter */}
           <Box sx={{ width: "100%" }}>
             <FormControl className="relative" fullWidth>
               <svg
@@ -560,109 +452,96 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
               </svg>
 
               <Select
-                value={employerFilter}
-                onChange={(e) => setEmployerFilter(e.target.value)}
+                className="pl-6 text-xs md:text-sm"
+                id="demo-simple-select"
+                value={Employer}
+                onChange={(e) => setEmployer(e.target.value)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Employer")}
-                className="pl-6 text-xs md:text-sm"
               >
-                <MenuItem value="">All Employers</MenuItem>
-                {employersData.map((employer) => (
-                  <MenuItem key={employer.id} value={employer.name}>
-                    {employer.name}
-                  </MenuItem>
-                ))}
+                <MenuItem value={"Employer"}>Employer</MenuItem>
+                <MenuItem value={"Employer"}>Employer</MenuItem>
+                <MenuItem value={"Employer"}>Employer</MenuItem>
               </Select>
             </FormControl>
           </Box>
-          <div className="relative w-full">
-            <svg
-              className="absolute left-2 top-1/2 -translate-y-2/4 text-xl text-primary"
-              width="18"
-              height="18"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M13.3328 1.66666V4.99999M6.66618 1.66666V4.99999M2.49951 8.33332H17.4995M4.16618 3.33332H15.8328C16.7533 3.33332 17.4995 4.07952 17.4995 4.99999V16.6667C17.4995 17.5871 16.7533 18.3333 15.8328 18.3333H4.16618C3.2457 18.3333 2.49951 17.5871 2.49951 16.6667V4.99999C2.49951 4.07952 3.2457 3.33332 4.16618 3.33332Z"
-                stroke="#2BA149"
-                stroke-width="1.67"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            {/* Date Filter */}
-            <Box sx={{ width: "100%" }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer
-                  components={["DateField"]}
-                  sx={{
-                    width: "100%",
-                    padding: 0,
-                    "& .MuiInputBase-root": {
-                      height: "42px", // Match other filter inputs height
-                      fontSize: "14px",
-                      "& input": {
-                        paddingLeft: "30px",
-                      },
-                    },
-                  }}
-                >
-                  <DateField
-                    value={dateFilter}
-                    onChange={(newValue) => setDateFilter(newValue)}
-                    format="LL"
-                    sx={{
-                      width: "100%",
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "rgba(0, 0, 0, 0.23)", // Match default border color
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "rgba(0, 0, 0, 0.87)", // Darker on hover
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#2ba149", // Primary color when focused
-                          borderWidth: "1px",
-                        },
-                      },
-                    }}
-                    slotProps={{
-                      textField: {
-                        size: "small",
-                      },
-                    }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </Box>
-          </div>
 
-          <Box sx={{ width: "100%" }}>
-            <FormControl fullWidth>
-              <Button startIcon={<Tune />} variant="outlined">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer
+              components={["DateField"]}
+              sx={{
+                width: "100%", // Ensure the container is full-width
+                overflow: "visible",
+                paddingTop: 0,
+                position: "relative",
+                "& > :not(style) ~ :not(style)": {
+                  marginTop: 0, // Override the default margin-top
+                },
+              }}
+            >
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary xl:left-8"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13.3328 1.66666V4.99999M6.66618 1.66666V4.99999M2.49951 8.33332H17.4995M4.16618 3.33332H15.8328C16.7533 3.33332 17.4995 4.07952 17.4995 4.99999V16.6667C17.4995 17.5871 16.7533 18.3333 15.8328 18.3333H4.16618C3.2457 18.3333 2.49951 17.5871 2.49951 16.6667V4.99999C2.49951 4.07952 3.2457 3.33332 4.16618 3.33332Z"
+                  stroke="#2BA149"
+                  stroke-width="1.67"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <DateField
+                className="w-full"
+                sx={{
+                  "& .MuiInputBase-root": {
+                    pl: 3,
+                    overflow: "hidden",
+                    fontSize: 11,
+                  },
+                  ".css-10o2lyd-MuiStack-root": {
+                    width: "100%",
+                  },
+                }}
+                format="LL"
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+
+          <Box sx={{ width: "100%", height: "100%" }}>
+            <FormControl className="relative w-full">
+              <Button
+                className="text-xs"
+                startIcon={<Tune />}
+                variant="outlined"
+              >
                 More Filters
               </Button>
             </FormControl>
           </Box>
         </div>
+      ) : (
+        ""
       )}
-
       <div className="relative">
-        {isLoading && <Loader />}
-        <Box sx={{ height: 500, overflowX: "auto" }}>
+        {isLoading ? <Loader /> : ""}
+        <Box sx={{ height: 400, overflowX: "auto" }}>
           <DataGrid
             sx={{
               minWidth: "800px",
               border: "1px solid rgba(0, 0, 0, 0.12)",
               "& .MuiDataGrid-container--top [role=row]": {
-                background: "#2ba149",
-                color: "#ffffff",
-                fontSize: "16px",
+                background: "#2ba149", // Custom header background color
+                color: "#ffffff", // Custom header text color
+                fontSize: "16px", // Optional: Larger header font
               },
               "& .MuiDataGrid-cell": {
-                fontSize: "12px",
+                fontSize: "12px", // Row font size
                 textAlign: "center",
               },
             }}
@@ -670,10 +549,12 @@ const OverveiwJobTable: React.FC<OverviewEmployersTableProps> = ({
             columns={columns}
             initialState={{
               pagination: {
-                paginationModel: { pageSize: 7 },
+                paginationModel: {
+                  pageSize: 5,
+                },
               },
             }}
-            pageSizeOptions={[6]}
+            pageSizeOptions={[5]}
             checkboxSelection
             disableRowSelectionOnClick
             slots={{

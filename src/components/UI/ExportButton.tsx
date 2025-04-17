@@ -11,7 +11,7 @@ import {
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 interface ExportOptions {
-  data: string; // The content to export (e.g., CSV or JSON content).
+  data: any; // The content to export (e.g., CSV or JSON content).
 }
 const ExportButton = ({ data }: ExportOptions) => {
   const handleExport = () => {

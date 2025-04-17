@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import SearchInput from "@/components/UI/SearchInput";
 import ExportButton from "@/components/UI/ExportButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StateType } from "@/types";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -22,27 +22,109 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import TableDropMenu from "../TableDropMenu";
+import Loader from "../Loader";
+import dayjs, { Dayjs } from "dayjs";
 
 interface OverviewEmployersTableProps {
   Filtring?: boolean;
-  endPoint: string;
 }
 
-// handel function status of Employers
-const handleState = (state: StateType) => {
-  const stateStyles: Record<StateType, string> = {
-    Active:
+// Define Type Employer Profile
+type EmployerProfile = {
+  about: string;
+  avatar: string;
+  banner1: string;
+  banner2: string;
+  banner3: string;
+  city: string;
+  companySectorId: string;
+  companyTypeId: string;
+  completencePercent: number;
+  country: {
+    code: string;
+    name: string;
+  };
+  cover: string;
+  created_at: string; // ISO date string
+  deleted_at: string | null;
+  email: string;
+  id: string;
+  isPrivate: boolean;
+  isProfitable: boolean;
+  name: string;
+  phone: string;
+  profileUrl: string;
+  size: "micro" | "small" | "medium" | "large" | string;
+  socialLinks: {
+    facebook?: string;
+    twitter?: string;
+    linkedin?: string;
+    [key: string]: string | undefined;
+  };
+  state: {
+    code: string;
+    name: string;
+  };
+  status: "active" | "inactive" | string;
+  title: string;
+  updated_at: string; // ISO date string
+  username: string | null;
+  visible: boolean;
+  yearFounded: number;
+  _version: number;
+};
+
+type Sectors = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: null;
+  _version: number;
+  name: string;
+};
+type CompanyType = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: null;
+  _version: number;
+  name: string;
+};
+type Timezone = {
+  zoneName: string;
+  gmtOffset: number;
+  gmtOffsetName: string;
+  abbreviation: string;
+  tzName: string;
+};
+
+type Country = {
+  name: string;
+  isoCode: string;
+  flag: string;
+  phonecode: string;
+  currency: string;
+  latitude: string;
+  longitude: string;
+  timezones: Timezone[];
+};
+
+const handleState = (state: string) => {
+  const normalizedState = state.toLowerCase() as Lowercase<StateType>;
+
+  const stateStyles: Record<Lowercase<StateType>, string> = {
+    active:
       "bg-green-50 text-green-700 ring-green-600/20 dark:border-green-500 dark:bg-inputDark dark:text-green-500",
-    Inactive:
+    inactive:
       "bg-red-50 text-red-700 ring-red-600/10 dark:border-red-500 dark:bg-inputDark dark:text-red-500",
-    Processing:
+    processing:
       "bg-orange-50 text-orange-700 ring-orange-600/10 dark:border-orange-500 dark:bg-inputDark dark:text-orange-500",
   };
 
   return (
     <span
       className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
-        stateStyles[state]
+        stateStyles[normalizedState] || ""
       }`}
     >
       {state}
@@ -50,217 +132,280 @@ const handleState = (state: StateType) => {
   );
 };
 
-const columns: GridColDef[] = [
-  {
-    field: "Name",
-    headerName: "Name",
-    width: 180,
-    editable: false,
-    renderCell: (params) => (
-      <div className="flex h-full items-center gap-2">
-        <Avatar
-          src="https://s3-alpha-sig.figma.com/img/39c8/eeff/41c554f6a62904ec9bf12418902c59f3?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QB0DkboDG2NxdJ7XMCnVyueBe242J~mc7bxyzJ9vwSYj5oAQBvZOnCEbBheTOFrhh7kT7TTSEUnMJIr0XdEJJ8de57JmaLm7C9QsKgkA4VSPAnzDjgg3ORcZJZHBWcay2u1yB-iSBMONgplsMXTm2k919bmbDgunsBW2EBZlYDVSnxoQE12OGSDf3A9s-Qobu7rf7jniG5axgGx~NpwbBS0YO0PYVKqNOANq0oKrNlM5xT2q1kUXDsWTOfA91jgRlm2G1R4EUFxBbvyo-hKWUQ~vli3LT6innvyOgo-AZhiM0SOd3U2RB0o3SoIzOhoH6dhvp9~pdGFHlIneilC4hg__"
-          alt="Ralph Edwards"
-          sx={{ width: 32, height: 32, mr: 2 }}
-        />
-        <div>
-          <h3 className="mb-2 text-xs">{params.row.Name}</h3>
-          <p className="text-[8px] leading-none">{params.row.Email}</p>
-        </div>
-      </div>
-    ),
-  },
-  {
-    field: "RegDate",
-    headerName: "Reg Date",
-    flex: 1,
-    editable: true,
-  },
-  {
-    field: "Phone",
-    headerName: "Phone",
-    flex: 1,
-    editable: true,
-  },
-  {
-    field: "Country",
-    headerName: "Country",
-    sortable: true,
-    flex: 1,
-  },
-
-  {
-    field: "Type",
-    headerName: "Type",
-    sortable: true,
-    flex: 1,
-  },
-
-  {
-    field: "Sector",
-    headerName: "Sector",
-    sortable: true,
-    flex: 1,
-  },
-
-  {
-    field: "Plan",
-    headerName: "Plan",
-    sortable: true,
-    flex: 1,
-  },
-  {
-    field: "Jobs",
-    headerName: "Jobs",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    flex: 1,
-  },
-  {
-    field: "Status",
-    headerName: "Status",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    flex: 1,
-    renderCell: (params) => handleState(params.row.Status),
-  },
-
-  {
-    field: "Action",
-    headerName: "Action",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    flex: 1,
-    width: 150,
-    renderCell: () => (
-      <div className="flex items-center gap-2">
-        <Switch />
-        <TableDropMenu />
-      </div>
-    ),
-  },
-];
-// Define TypeScript type for the data structure
-type RowDataEmployer = {
-  id: number;
-  Name: string;
-  Email: string;
-  RegDate: string;
-  Phone: string;
-  Country: string;
-  Type: string;
-  Sector: string;
-  Plan: string;
-  Status: string;
-  Jobs: number;
-};
-
-// Updated employer data with unique entries
-const DummyEmployers: RowDataEmployer[] = [
-  {
-    id: 1,
-    Name: "Saudi German Hospital",
-    Email: "saudigerman@gmail.com",
-    RegDate: "13 July, 2021",
-    Phone: "123456789",
-    Country: "Saudi Arabia",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plan: "Premium",
-    Status: "Active",
-    Jobs: 25,
-  },
-  {
-    id: 2,
-    Name: "Mayo Clinic",
-    Email: "mayoclinic@email.com",
-    RegDate: "22 March, 2020",
-    Phone: "987654321",
-    Country: "United States",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plan: "Standard",
-    Status: "Inactive",
-    Jobs: 40,
-  },
-  {
-    id: 3,
-    Name: "Siemens Healthineers",
-    Email: "siemens@healthcare.com",
-    RegDate: "05 September, 2019",
-    Phone: "456789123",
-    Country: "Germany",
-    Type: "Healthcare Tech",
-    Sector: "Medical Devices",
-    Plan: "Enterprise",
-    Status: "Active",
-    Jobs: 60,
-  },
-  {
-    id: 4,
-    Name: "Apollo Hospitals",
-    Email: "apollo@hospitals.com",
-    RegDate: "30 June, 2022",
-    Phone: "159357486",
-    Country: "India",
-    Type: "Hospital",
-    Sector: "Healthcare",
-    Plan: "Basic",
-    Status: "Active",
-    Jobs: 18,
-  },
-];
-
 const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
-  endPoint,
 }) => {
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // table data
+  const [employerData, setEmployerData] = useState<EmployerProfile[]>([]);
+  const [sectorsData, setSectorsData] = useState<Sectors[]>([]);
+  const [typesData, setTypesData] = useState<CompanyType[]>([]);
+  const [countriesData, setCountriesData] = useState<Country[]>([]);
 
-  // values of Filters inputs
-  const [Country, setCountry] = useState("");
-  const [Sector, setSector] = useState("");
-  const [Type, setType] = useState("");
-  const [Status, setStatus] = useState("");
+  // Filter states
+  const [countryFilter, setCountryFilter] = useState("");
+  const [sectorFilter, setSectorFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState<Dayjs | null | undefined>(null);
+
+  const API_GET_EMPLOYERS_TABLE_DATA =
+    "http://34.70.58.31/api/v1.0.0/employer/companies";
+  const API_GET_SECTOR_TABLE_DATA =
+    "http://34.70.58.31/api/v1.0.0/admin/sys-configurations/company-sector";
+  const API_GET_TYPE_COMPANY_TABLE_DATA =
+    "http://34.70.58.31/api/v1.0.0/admin/sys-configurations/company-type";
+  const API_GET_COUNTRIES = "http://34.70.58.31/api/v1.0.0/location/countries";
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  // Filter data based on selection
-  const filteredData = DummyEmployers.filter((row) =>
-    row.Name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-  // State variables
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [EmployerData, setEmployerData] =
-    useState<RowDataEmployer[]>(filteredData);
+
   // Fetch data on component mount
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        setEmployerData(DummyEmployers);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching overview data:", error);
-        setIsLoading(false);
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+
+      const [employersRes, sectorsRes, typesRes, countriesRes] =
+        await Promise.all([
+          fetch(API_GET_EMPLOYERS_TABLE_DATA),
+          fetch(API_GET_SECTOR_TABLE_DATA),
+          fetch(API_GET_TYPE_COMPANY_TABLE_DATA),
+          fetch(API_GET_COUNTRIES),
+        ]);
+
+      if (
+        !employersRes.ok ||
+        !sectorsRes.ok ||
+        !typesRes.ok ||
+        !countriesRes.ok
+      ) {
+        throw new Error("Failed to fetch employers");
       }
-    };
+
+      const [employersData, sectorsData, typesData, countriesData] =
+        await Promise.all([
+          employersRes.json(),
+          sectorsRes.json(),
+          typesRes.json(),
+          countriesRes.json(),
+        ]);
+
+      setEmployerData(employersData.data);
+      setSectorsData(sectorsData.data);
+      setTypesData(typesData.data);
+      setCountriesData(countriesData);
+    } catch (error) {
+      console.error("Error fetching overview data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
-  // Loading state
-  if (isLoading) {
+
+  // handdel add update status toggle
+  const handleStatusToggle = async (id: string, newStatus: string) => {
+    try {
+      // Update the status in the local state first for immediate UI feedback
+      setEmployerData((prevData) =>
+        prevData.map((item) =>
+          item.id === id ? { ...item, status: newStatus } : item,
+        ),
+      );
+
+      // Make API call to update status on the server
+      const response = await fetch(`${API_GET_EMPLOYERS_TABLE_DATA}/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      // Revert local state if API call fails
+      setEmployerData((prevData) =>
+        prevData.map((item) =>
+          item.id === id ? { ...item, status: newStatus } : item,
+        ),
+      );
+    }
+  };
+
+  // Apply all filters to the data
+  const filteredData = employerData.filter((row) => {
+    // Search filter
+    const matchesSearch =
+      row.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.email?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    // Country filter
+    const matchesCountry =
+      !countryFilter ||
+      (row.country?.name || "").toLowerCase() === countryFilter.toLowerCase();
+
+    // Sector filter
+    const matchesSector =
+      !sectorFilter ||
+      sectorsData
+        .find((s) => s.id === row.companySectorId)
+        ?.name.toLowerCase() === sectorFilter.toLowerCase();
+
+    // Type filter
+    const matchesType =
+      !typeFilter ||
+      typesData.find((t) => t.id === row.companyTypeId)?.name.toLowerCase() ===
+        typeFilter.toLowerCase();
+
+    // Status filter
+    const matchesStatus =
+      !statusFilter || row.status.toLowerCase() === statusFilter.toLowerCase();
+
+    // Date filter
+    const matchesDate =
+      !dateFilter ||
+      dayjs(row.created_at).format("YYYY-MM-DD") ===
+        dayjs(dateFilter).format("YYYY-MM-DD");
+
     return (
-      <div className="flex h-96 items-center justify-center">
-        Loading Employers Table data...
-      </div>
+      matchesSearch &&
+      matchesCountry &&
+      matchesSector &&
+      matchesType &&
+      matchesStatus &&
+      matchesDate
     );
-  }
+  });
+  // columns table fields
+  const columns: GridColDef[] = [
+    {
+      field: "name",
+      headerName: "Name",
+      width: 180,
+      editable: false,
+      renderCell: (params) => {
+        return (
+          <div className="flex h-full items-center gap-2">
+            <Avatar
+              src={params.row.avatar}
+              alt={params.row.name}
+              sx={{ width: 32, height: 32, mr: 2 }}
+            />
+            <div>
+              <h3 className="mb-2 text-xs">{params.row.name || "-"}</h3>
+              <p className="text-[8px] leading-none">{params.row.email}</p>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      field: "created_at",
+      headerName: "Reg Date",
+      flex: 1,
+      editable: true,
+      renderCell: (params) => dayjs(params.value || "-").format("YYYY-MM-DD"),
+    },
+    {
+      field: "phone",
+      headerName: "Phone",
+      flex: 1,
+      editable: true,
+      renderCell: (params) => params.row.phone || "",
+    },
+    {
+      field: "country",
+      headerName: "Country",
+      flex: 1,
+      renderCell: (params) => params.row.country?.name || "-",
+    },
+    {
+      field: "companyTypeId",
+      headerName: "Type",
+      sortable: true,
+      flex: 1,
+      renderCell: (params) => {
+        const type = typesData.find((s) => s.id === params.row.companyTypeId);
+        return type ? type.name : "-";
+      },
+    },
+    {
+      field: "companySectorId",
+      headerName: "Sector",
+      sortable: true,
+      flex: 1,
+      renderCell: (params) => {
+        const sector = sectorsData.find(
+          (s) => s.id === params.row.companySectorId,
+        );
+        return sector ? sector.name : "-";
+      },
+    },
+    {
+      field: "Plan",
+      headerName: "Plan",
+      sortable: true,
+      flex: 1,
+      renderCell: () => "-",
+    },
+    {
+      field: "Jobs",
+      headerName: "Jobs",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      flex: 1,
+      renderCell: () => "-",
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      flex: 1,
+      renderCell: (params) => handleState(params.row.status),
+    },
+    {
+      field: "Action",
+      headerName: "Action",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      flex: 1,
+      width: 150,
+      renderCell: (params) => {
+        const isActive = params.row.status === "active";
+
+        const handleSwitchChange = (
+          event: React.ChangeEvent<HTMLInputElement>,
+        ) => {
+          const newStatus = event.target.checked ? "active" : "inactive";
+          handleStatusToggle(params.row.id, newStatus);
+        };
+
+        return (
+          <div className="flex items-center gap-2">
+            <Switch
+              checked={isActive}
+              onChange={handleSwitchChange}
+              color={isActive ? "success" : "default"}
+            />
+            <TableDropMenu />
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
     <>
-      {/* start content table Employers  */}
       <div className="flex flex-col items-start justify-between gap-4 overflow-hidden px-1 py-3 sm:items-center md:flex-row">
         {Filtring ? (
           <Typography
@@ -268,7 +413,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
             variant="h6"
             gutterBottom
           >
-            Total Employrs : 19
+            Total Employers: {filteredData.length}
           </Typography>
         ) : (
           <Box
@@ -293,10 +438,11 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
           </Box>
         )}
         <SearchInput SetSearchQuery={setSearchQuery} />
-        <ExportButton data="Name,Age\nJohn,30\nJane,25" />
+        <ExportButton data={filteredData} />
       </div>
       {Filtring ? (
         <div className="my-4 flex flex-col items-center gap-4 px-2 lg:flex-row">
+          {/* Country Filter */}
           <Box sx={{ width: "100%" }}>
             <FormControl className="relative" fullWidth>
               <svg
@@ -312,27 +458,27 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
                   fill="#2BA149"
                 />
               </svg>
-
               <Select
                 className="pl-6 text-xs md:text-sm"
-                id="demo-simple-select"
-                value={Country}
-                onChange={(e) => setCountry(e.target.value)}
+                id="country-select"
+                value={countryFilter}
+                onChange={(e) => setCountryFilter(e.target.value)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Country")}
               >
-                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
-                  Egypt
+                <MenuItem value="">
+                  <em>All Countries</em>
                 </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
-                  Egypt
-                </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
-                  Egypt
-                </MenuItem>
+                {countriesData.map((country) => (
+                  <MenuItem key={country.isoCode} value={country.name}>
+                    {country.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
+
+          {/* Sector Filter */}
           <Box sx={{ width: "100%" }}>
             <FormControl className="relative" fullWidth>
               <svg
@@ -343,52 +489,32 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <g clip-path="url(#clip0_30_6145)">
-                  <path
-                    d="M11.3911 2.74219C11.3881 2.88392 11.3852 3.02565 11.3821 3.17167C11.3532 4.66756 11.3427 6.16284 11.3422 7.659C11.3411 8.21526 11.3327 8.77002 11.321 9.32631C11.2475 12.9735 11.5161 15.4634 13.8143 18.3613C14.2804 18.9636 14.6637 19.5983 15.0578 20.25C15.2568 20.569 15.2568 20.569 15.4599 20.8944C15.5877 21.0994 15.7155 21.3044 15.8472 21.5156C16.1157 21.9463 16.3843 22.377 16.653 22.8076C16.7672 22.9909 16.8815 23.1742 16.9992 23.363C17.2338 23.7351 17.4753 24.1028 17.7192 24.4688C17.7324 24.8906 17.7324 24.8906 17.5083 25.3125C15.0664 26.5804 11.6306 26.568 9.01806 25.8003C8.60946 25.6488 8.20442 25.4871 7.80517 25.3125C7.63577 25.2385 7.46637 25.1646 7.29184 25.0884C4.69198 23.7907 2.37547 21.2751 1.26034 18.5988C0.252241 15.3113 0.50702 11.9162 2.10986 8.85938C3.87843 5.86471 6.24093 3.97311 9.52234 2.88226C10.1652 2.73297 10.7335 2.73251 11.3911 2.74219ZM4.85369 6.91892C2.69577 9.15837 1.81071 12.1099 1.82178 15.1437C1.86946 17.4083 2.64377 19.0974 4.0083 20.8828C4.11896 21.0283 4.22963 21.1738 4.34365 21.3236C5.95421 23.298 8.21459 24.728 10.7583 25.1016C11.4177 25.1362 12.0756 25.1406 12.7358 25.1411C12.9969 25.145 12.9969 25.145 13.2632 25.1489C14.3397 25.1515 15.2229 25.0274 16.2427 24.6797C15.9428 23.8628 15.5594 23.1573 15.1006 22.4187C14.9573 22.187 14.814 21.9554 14.6664 21.7167C14.5151 21.4739 14.3638 21.2311 14.2124 20.9883C13.334 19.571 13.334 19.571 13.1145 19.2054C12.7618 18.6225 12.4012 18.0867 11.9665 17.5612C10.1343 15.1942 10.5245 12.2796 10.5474 9.42627C10.5457 8.87983 10.5432 8.3334 10.5399 7.78697C10.5337 6.45684 10.5368 5.12698 10.5474 3.79688C8.48694 3.79688 6.29185 5.61894 4.85369 6.91892Z"
-                    fill="#2BA149"
-                  />
-                  <path
-                    d="M25.946 11.1797C26.952 13.9125 26.2328 17.6629 25.1023 20.25C24.0491 22.469 22.1136 24.9611 19.842 26.0244C19.6267 26.0897 19.6267 26.0897 19.407 26.1562C18.8699 25.6625 18.5061 25.1374 18.124 24.5174C17.9983 24.3146 17.8725 24.1118 17.743 23.9029C17.6091 23.685 17.4751 23.4672 17.3371 23.2427C16.4856 21.8636 15.6324 20.4873 14.7449 19.131C14.5409 18.8177 14.5409 18.8177 14.3328 18.4981C14.0726 18.0996 13.8106 17.7024 13.5466 17.3065C13.3709 17.0362 13.3709 17.0362 13.1917 16.7605C13.0363 16.5255 13.0363 16.5255 12.8778 16.2857C12.6205 15.7435 12.6147 15.3587 12.657 14.7656C15.7882 13.7001 18.925 12.6497 22.0868 11.6779C22.3653 11.592 22.6436 11.505 22.9216 11.4171C23.3101 11.2946 23.6998 11.176 24.0896 11.0577C24.3111 10.9894 24.5327 10.9211 24.7609 10.8507C25.3132 10.7578 25.3132 10.7578 25.946 11.1797ZM23.645 12.3093C23.4296 12.3769 23.2143 12.4445 22.9924 12.5141C22.7593 12.589 22.5261 12.6639 22.2859 12.7411C22.0477 12.8163 21.8096 12.8915 21.5642 12.969C20.8007 13.2105 20.0379 13.4541 19.2751 13.6977C18.7588 13.8614 18.2425 14.025 17.726 14.1884C16.4577 14.5901 15.1899 14.9936 13.9226 15.3984C14.1205 15.7645 14.3188 16.1304 14.5172 16.4961C14.6276 16.6999 14.738 16.9036 14.8517 17.1136C15.3399 17.9915 15.8722 18.8377 16.4143 19.6831C16.5226 19.8533 16.6309 20.0234 16.7424 20.1988C17.0672 20.7086 17.3931 21.2177 17.7195 21.7266C17.8187 21.8815 17.9179 22.0364 18.0201 22.196C18.5512 23.0249 19.0837 23.8528 19.6179 24.6797C22.0819 23.5266 23.6552 21.022 24.5749 18.5361C24.6868 18.1954 24.7931 17.8527 24.8913 17.5078C24.9472 17.3165 24.9472 17.3165 25.0042 17.1213C25.1148 16.6057 25.1261 16.1398 25.1229 15.6127C25.1222 15.4155 25.1215 15.2184 25.1208 15.0153C25.119 14.8111 25.1173 14.6069 25.1155 14.3965C25.1145 14.189 25.1136 13.9815 25.1126 13.7678C25.1101 13.2566 25.1066 12.7455 25.1023 12.2344C24.5144 11.9404 24.2658 12.112 23.645 12.3093Z"
-                    fill="#2BA149"
-                  />
-                  <path
-                    d="M12.2349 0.84375C16.3703 0.84375 19.2791 1.73801 22.2931 4.56812C23.6992 5.99077 24.8214 7.60563 25.5239 9.49219C25.4543 9.70102 25.3847 9.90984 25.313 10.125C24.9121 10.3183 24.9121 10.3183 24.3761 10.4818C24.1734 10.5451 23.9706 10.6085 23.7617 10.6738C23.4267 10.7741 23.4267 10.7741 23.085 10.8765C22.6068 11.0239 22.1286 11.1714 21.6504 11.3189C21.3925 11.3976 21.1345 11.4762 20.8688 11.5572C19.9849 11.8278 19.1046 12.1096 18.2243 12.3918C17.7668 12.5376 17.3093 12.6833 16.8517 12.8289C16.5522 12.9244 16.2528 13.0203 15.9536 13.1167C15.5307 13.2525 15.1073 13.3864 14.6837 13.5198C14.44 13.5974 14.1963 13.675 13.9452 13.755C13.2896 13.9219 13.2896 13.9219 12.2349 13.9219C12.2349 9.60609 12.2349 5.29031 12.2349 0.84375ZM13.0786 1.89844C13.0786 5.44852 13.0786 8.99859 13.0786 12.6562C14.5221 12.3675 15.8833 12.054 17.2784 11.6156C17.4669 11.5568 17.6554 11.498 17.8496 11.4375C18.2434 11.3142 18.6371 11.1902 19.0305 11.0657C19.6351 10.8751 20.2408 10.6885 20.8466 10.502C21.2305 10.3812 21.6144 10.2602 21.9981 10.139C22.1796 10.0836 22.3611 10.0282 22.548 9.97115C22.7975 9.89091 22.7975 9.89091 23.0521 9.80906C23.2723 9.74 23.2723 9.74 23.4969 9.66955C23.9148 9.50127 23.9148 9.50127 24.0474 8.85938C22.7154 5.8357 20.095 3.71071 17.0732 2.53125C15.6379 2.02027 14.6696 1.89844 13.0786 1.89844Z"
-                    fill="#2BA149"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_30_6145">
-                    <rect
-                      width="27"
-                      height="27"
-                      fill="white"
-                      transform="translate(0.000488281)"
-                    />
-                  </clipPath>
-                </defs>
+                <path
+                  d="M11.3911 2.74219C11.3881 2.88392 11.3852 3.02565 11.3821 3.17167C11.3532 4.66756 11.3427 6.16284 11.3422 7.659C11.3411 8.21526 11.3327 8.77002 11.321 9.32631C11.2475 12.9735 11.5161 15.4634 13.8143 18.3613C14.2804 18.9636 14.6637 19.5983 15.0578 20.25C15.2568 20.569 15.2568 20.569 15.4599 20.8944C15.5877 21.0994 15.7155 21.3044 15.8472 21.5156C16.1157 21.9463 16.3843 22.377 16.653 22.8076C16.7672 22.9909 16.8815 23.1742 16.9992 23.363C17.2338 23.7351 17.4753 24.1028 17.7192 24.4688C17.7324 24.8906 17.7324 24.8906 17.5083 25.3125C15.0664 26.5804 11.6306 26.568 9.01806 25.8003C8.60946 25.6488 8.20442 25.4871 7.80517 25.3125C7.63577 25.2385 7.46637 25.1646 7.29184 25.0884C4.69198 23.7907 2.37547 21.2751 1.26034 18.5988C0.252241 15.3113 0.50702 11.9162 2.10986 8.85938C3.87843 5.86471 6.24093 3.97311 9.52234 2.88226C10.1652 2.73297 10.7335 2.73251 11.3911 2.74219ZM4.85369 6.91892C2.69577 9.15837 1.81071 12.1099 1.82178 15.1437C1.86946 17.4083 2.64377 19.0974 4.0083 20.8828C4.11896 21.0283 4.22963 21.1738 4.34365 21.3236C5.95421 23.298 8.21459 24.728 10.7583 25.1016C11.4177 25.1362 12.0756 25.1406 12.7358 25.1411C12.9969 25.145 12.9969 25.145 13.2632 25.1489C14.3397 25.1515 15.2229 25.0274 16.2427 24.6797C15.9428 23.8628 15.5594 23.1573 15.1006 22.4187C14.9573 22.187 14.814 21.9554 14.6664 21.7167C14.5151 21.4739 14.3638 21.2311 14.2124 20.9883C13.334 19.571 13.334 19.571 13.1145 19.2054C12.7618 18.6225 12.4012 18.0867 11.9665 17.5612C10.1343 15.1942 10.5245 12.2796 10.5474 9.42627C10.5457 8.87983 10.5432 8.3334 10.5399 7.78697C10.5337 6.45684 10.5368 5.12698 10.5474 3.79688C8.48694 3.79688 6.29185 5.61894 4.85369 6.91892Z"
+                  fill="#2BA149"
+                />
               </svg>
-
               <Select
                 className="pl-6 text-xs md:text-sm"
-                id="demo-simple-select"
-                value={Sector}
-                onChange={(e) => setSector(e.target.value)}
+                id="sector-select"
+                value={sectorFilter}
+                onChange={(e) => setSectorFilter(e.target.value)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Sector")}
               >
-                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
-                  Sector
+                <MenuItem value="">
+                  <em>All Sectors</em>
                 </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
-                  Sector
-                </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
-                  Sector
-                </MenuItem>
+                {sectorsData.map((sector) => (
+                  <MenuItem key={sector.id} value={sector.name}>
+                    {sector.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
+
+          {/* Type Filter */}
           <Box sx={{ width: "100%" }}>
             <FormControl className="relative" fullWidth>
               <svg
@@ -412,27 +538,27 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
                   fill="#2BA149"
                 />
               </svg>
-
               <Select
                 className="pl-6 text-xs md:text-sm"
-                id="demo-simple-select"
-                value={Type}
-                onChange={(e) => setType(e.target.value)}
+                id="type-select"
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Type")}
               >
-                <MenuItem className="text-xs md:text-sm" value={"Type"}>
-                  Type
+                <MenuItem value="">
+                  <em>All Types</em>
                 </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Type"}>
-                  Type
-                </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Type"}>
-                  Type
-                </MenuItem>
+                {typesData.map((type) => (
+                  <MenuItem key={type.id} value={type.name}>
+                    {type.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
+
+          {/* Status Filter */}
           <Box sx={{ width: "100%" }}>
             <FormControl className="relative" fullWidth>
               <svg
@@ -452,71 +578,87 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
               <Select
                 className="pl-6 text-xs md:text-sm"
                 id="demo-simple-select"
-                value={Status}
-                onChange={(e) => setStatus(e.target.value)}
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
                 displayEmpty
                 renderValue={(value) => (value ? value : "Status")}
               >
-                <MenuItem className="text-xs md:text-sm" value={"Status"}>
-                  Status
+                <MenuItem value="">
+                  <em>All Types</em>
                 </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Status"}>
-                  Status
+                <MenuItem className="text-xs md:text-sm" value={"active"}>
+                  Active
                 </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Status"}>
-                  Status
+                <MenuItem className="text-xs md:text-sm" value={"inactive"}>
+                  Inactive
                 </MenuItem>
               </Select>
             </FormControl>
           </Box>
-
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer
-              components={["DateField"]}
-              sx={{
-                width: "100%", // Ensure the container is full-width
-                overflow: "visible",
-
-                paddingTop: 0,
-                position: "relative",
-                "& > :not(style) ~ :not(style)": {
-                  marginTop: 0, // Override the default margin-top
-                },
-              }}
+          <div className="relative w-full">
+            <svg
+              className="absolute left-2 top-1/2 -translate-y-2/4 text-xl text-primary"
+              width="18"
+              height="18"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary xl:left-8"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13.3328 1.66666V4.99999M6.66618 1.66666V4.99999M2.49951 8.33332H17.4995M4.16618 3.33332H15.8328C16.7533 3.33332 17.4995 4.07952 17.4995 4.99999V16.6667C17.4995 17.5871 16.7533 18.3333 15.8328 18.3333H4.16618C3.2457 18.3333 2.49951 17.5871 2.49951 16.6667V4.99999C2.49951 4.07952 3.2457 3.33332 4.16618 3.33332Z"
-                  stroke="#2BA149"
-                  stroke-width="1.67"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-
-              <DateField
-                className="w-full"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    pl: 3,
-                    overflow: "hidden",
-                    fontSize: 11,
-                  },
-                  ".css-10o2lyd-MuiStack-root": {
-                    width: "100%",
-                  },
-                }}
-                format="LL"
+              <path
+                d="M13.3328 1.66666V4.99999M6.66618 1.66666V4.99999M2.49951 8.33332H17.4995M4.16618 3.33332H15.8328C16.7533 3.33332 17.4995 4.07952 17.4995 4.99999V16.6667C17.4995 17.5871 16.7533 18.3333 15.8328 18.3333H4.16618C3.2457 18.3333 2.49951 17.5871 2.49951 16.6667V4.99999C2.49951 4.07952 3.2457 3.33332 4.16618 3.33332Z"
+                stroke="#2BA149"
+                stroke-width="1.67"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               />
-            </DemoContainer>
-          </LocalizationProvider>
+            </svg>
+            {/* Date Filter */}
+            <Box sx={{ width: "100%" }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DateField"]}
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    padding: 0,
+                    "& .MuiInputBase-root": {
+                      height: "42px", // Match other filter inputs height
+                      fontSize: "14px",
+                      "& input": {
+                        paddingLeft: "30px",
+                      },
+                    },
+                  }}
+                >
+                  <DateField
+                    value={dateFilter}
+                    onChange={(newValue) => setDateFilter(newValue)}
+                    format="LL"
+                    sx={{
+                      width: "100%",
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "rgba(0, 0, 0, 0.23)", // Match default border color
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "rgba(0, 0, 0, 0.87)", // Darker on hover
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#2ba149", // Primary color when focused
+                          borderWidth: "1px",
+                        },
+                      },
+                    }}
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                      },
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </Box>
+          </div>
 
           <Box sx={{ width: "100%", height: "100%" }}>
             <FormControl className="relative w-full">
@@ -533,36 +675,42 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
       ) : (
         ""
       )}
-      <Box sx={{ height: 400, overflowX: "auto" }}>
-        <DataGrid
-          sx={{
-            minWidth: "1100px",
-            border: "1px solid rgba(0, 0, 0, 0.12)",
-            "& .MuiDataGrid-container--top [role=row]": {
-              background: "#2ba149", // Custom header background color
-              color: "#ffffff", // Custom header text color
-              fontSize: "16px", // Optional: Larger header font
-            },
-
-            "& .MuiDataGrid-cell": {
-              fontSize: "12px", // Row font size
-              textAlign: "center",
-            },
-          }}
-          rows={filteredData}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
+      <div className="relative">
+        {isLoading ? <Loader /> : ""}
+        <Box sx={{ height: 500, overflowX: "auto" }}>
+          <DataGrid
+            sx={{
+              minWidth: "1100px",
+              border: "1px solid rgba(0, 0, 0, 0.12)",
+              "& .MuiDataGrid-container--top [role=row]": {
+                background: "#2ba149", // Custom header background color
+                color: "#ffffff", // Custom header text color
+                fontSize: "16px", // Optional: Larger header font
               },
-            },
-          }}
-          pageSizeOptions={[5]}
-          checkboxSelection
-          disableRowSelectionOnClick
-        />
-      </Box>
+
+              "& .MuiDataGrid-cell": {
+                fontSize: "12px", // Row font size
+                textAlign: "center",
+              },
+            }}
+            rows={filteredData}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 7,
+                },
+              },
+            }}
+            pageSizeOptions={[6]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            slots={{
+              noRowsOverlay: () => <></>,
+            }}
+          />
+        </Box>
+      </div>
     </>
   );
 };

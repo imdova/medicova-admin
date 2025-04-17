@@ -129,30 +129,35 @@ const OverviewPage: React.FC = () => {
     useState<TopEmployer[]>(dummyTopEmployers);
   const [chartData, setChartData] = useState<ChartData>(dummyChartData);
 
-  // Fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        setEmployerStats(dummyEmployerStats);
-        setTopEmployers(dummyTopEmployers);
-        setChartData(dummyChartData);
-        setIsLoading(false);
+
+        const statsRes = await fetch("/api/employer-stats");
+        const topRes = await fetch("/api/top-employers");
+        const chartRes = await fetch("/api/chart-data");
+
+        if (!statsRes.ok || !topRes.ok || !chartRes.ok) {
+          throw new Error("Failed to fetch one or more endpoints");
+        }
+
+        const statsData = await statsRes.json();
+        const topData = await topRes.json();
+        const chartData = await chartRes.json();
+
+        setEmployerStats(statsData);
+        setTopEmployers(topData);
+        setChartData(chartData);
       } catch (error) {
         console.error("Error fetching overview data:", error);
+      } finally {
         setIsLoading(false);
       }
     };
+
     fetchData();
   }, []);
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="flex h-96 items-center justify-center">
-        Loading overview data...
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-3">
@@ -341,7 +346,7 @@ const OverviewPage: React.FC = () => {
         <div className="border-b bg-white p-4">
           <Typography variant="h6">All Employers</Typography>
         </div>
-        <OverviewEmployersTable endPoint={API_GET_EMPLOYERS_TABLE_DATA} />
+        <OverviewEmployersTable />
       </div>
     </div>
   );
