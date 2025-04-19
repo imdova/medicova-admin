@@ -21,218 +21,331 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import TableDropMenu from "../TableDropMenu";
-
-type rowType = {
-  id: number;
-  name: string;
-  applyDay: string;
-  phone: string;
-  location: string;
-  category: string;
-  specialty: string;
-  careerLevel: string;
-  education: string;
-  age: number;
-  experience: string;
-};
-const columns: GridColDef[] = [
-  {
-    field: "name",
-    headerName: "Name",
-    width: 160,
-    editable: false,
-    renderCell: (params) => (
-      <div className="flex h-full items-center gap-2">
-        <Avatar
-          src="https://s3-alpha-sig.figma.com/img/3d5c/b72f/ae1e058c2ed75ab981a9f8bb62e96a13?Expires=1739145600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=a18VE~FGFT~v8D9-O~88JSK~y9SE~MefKeuzvSlS0w4mGSL22pIspT3NCxcrlQRWIA7Jm9l5T06ss0sTIxZvYVNnjXZsXNS6-vJjjzvlei5he8HJx4rRgyI3A7IhiSRow90EBIWTjk-SHnh0pZ2M6UurtH5ydxPtGDJyLGaG8vjZo86gmxyeJoYXYIHXsyn5~ILsGVMSiXohp5M0oSdpiR4TTYuPpycTV-qtUMqaq9bjDVZNHP9hfy5Ekip9IInRsI8MfB5jJJ-GCtMirfH0lO2s8IX9GjvtB1aSEuV7rcdHolzjeWoLX3KQeTFwAbDCkNZ5NWDVsYYEvhw91DyaJw__"
-          alt="Ralph Edwards"
-          sx={{ width: 32, height: 32, mr: 2 }}
-        />
-        <div>
-          <h3 className="mb-2 text-xs">{params.row.name}</h3>
-        </div>
-      </div>
-    ),
-  },
-  {
-    field: "applyDay",
-    headerName: "Applied Day",
-    flex: 1,
-    editable: true,
-  },
-  {
-    field: "phone",
-    headerName: "Phone",
-    flex: 1,
-    editable: true,
-  },
-  {
-    field: "location",
-    headerName: "Location",
-    sortable: true,
-    flex: 1,
-  },
-
-  {
-    field: "category",
-    headerName: "Category",
-    sortable: true,
-    flex: 1,
-  },
-
-  {
-    field: "specialty",
-    headerName: "Specialty ",
-    sortable: true,
-    flex: 1,
-  },
-
-  {
-    field: "careerLevel",
-    headerName: "CareerLevel",
-    sortable: true,
-    flex: 1,
-  },
-  {
-    field: "education",
-    headerName: "Education",
-    sortable: true,
-    flex: 1,
-  },
-  {
-    field: "age",
-    headerName: "Age",
-    sortable: true,
-    flex: 1,
-    width: 60,
-  },
-  {
-    field: "experience",
-    headerName: "Experience",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    flex: 1,
-  },
-
-  {
-    field: "action",
-    headerName: "Action",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    flex: 1,
-    renderCell: () => (
-      <div className="flex items-center gap-2">
-        <TableDropMenu />
-      </div>
-    ),
-  },
-];
-
-const rows: rowType[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    applyDay: "05 March, 2022",
-    phone: "+11234567890",
-    location: "USA",
-    category: "Engineer",
-    specialty: "Software Development",
-    careerLevel: "Senior",
-    education: "Master of Computer Science",
-    age: 35,
-    experience: "10 years",
-  },
-  {
-    id: 2,
-    name: "Maria Gonzalez",
-    applyDay: "20 June, 2023",
-    phone: "+34987654321",
-    location: "Spain",
-    category: "Designer",
-    specialty: "Graphic Design",
-    careerLevel: "Mid-Level",
-    education: "Bachelor of Fine Arts",
-    age: 28,
-    experience: "5 years",
-  },
-  {
-    id: 3,
-    name: "Ahmed Khan",
-    applyDay: "15 September, 2021",
-    phone: "+923001234567",
-    location: "Pakistan",
-    category: "Doctor",
-    specialty: "Neurology",
-    careerLevel: "Consultant",
-    education: "Doctor of Medicine",
-    age: 40,
-    experience: "15 years",
-  },
-  {
-    id: 4,
-    name: "Emily Smith",
-    applyDay: "10 December, 2022",
-    phone: "+447911223344",
-    location: "UK",
-    category: "Teacher",
-    specialty: "Mathematics",
-    careerLevel: "Experienced",
-    education: "Master of Education",
-    age: 32,
-    experience: "8 years",
-  },
-];
+import dayjs, { Dayjs } from "dayjs";
+import Loader from "../Loader";
 
 interface OverviewEmployersTableProps {
   Filtring?: boolean;
-  endPoint: string;
 }
+
+type CountryOrState = {
+  code: string;
+  name: string;
+};
+
+type Language = {
+  name: string;
+  level: string;
+};
+
+type SocialLinks = {
+  [key: string]: string;
+};
+
+type User = {
+  about: string;
+  active: boolean;
+  avatar: string;
+  birth: string;
+  careerLevel: string;
+  careerLevelId: string;
+  category: string;
+  categoryId: string;
+  city: string;
+  country: CountryOrState;
+  created_at: string;
+  deleted_at: string | null;
+  email: string;
+  firstName: string;
+  hasDrivingLicence: boolean;
+  id: string;
+  isPublic: boolean;
+  languages: Language[];
+  lastEducation: any;
+  lastExperience: any;
+  lastName: string;
+  maritalStatus: string;
+  nationality: string | null;
+  phone: string;
+  resume: string;
+  socialLinks: SocialLinks;
+  speciality: string;
+  specialityId: string;
+  state: CountryOrState;
+  title: string;
+  type: string;
+  updated_at: string;
+  userName: string;
+  whatsapp: string;
+  _version: number;
+};
+type Timezone = {
+  zoneName: string;
+  gmtOffset: number;
+  gmtOffsetName: string;
+  abbreviation: string;
+  tzName: string;
+};
+
+type Country = {
+  name: string;
+  isoCode: string;
+  flag: string;
+  phonecode: string;
+  currency: string;
+  latitude: string;
+  longitude: string;
+  timezones: Timezone[];
+};
+
 const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
   Filtring = false,
-  endPoint,
 }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [value, setValue] = useState(0);
-  const [selected, setSelected] = useState<number[]>([]);
+
+  // table data
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userData, setUserData] = useState<User[]>([]);
+  const [countriesData, setCountriesData] = useState<Country[]>([]);
 
   // values of Filters inputs
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
-  const [sepecialty, setSepecialty] = useState("");
+  const [specialty, setSpecialty] = useState("");
   const [education, setEducation] = useState("");
+  const [dateFilter, setDateFilter] = useState<Dayjs | null | undefined>(null);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  // Filter data based on selection
-  const filteredData = rows.filter((row) =>
-    row.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-  // State variables
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [UserData, setUserData] = useState<rowType[]>(filteredData);
+
+  // End Points
+  const API_GET_USERS_TABLE_DATA =
+    "http://34.70.58.31/api/v1.0.0/seeker/profile";
+  const API_GET_COUNTRIES = "http://34.70.58.31/api/v1.0.0/location/countries";
+
   // Fetch data on component mount
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        setUserData(rows);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching overview data:", error);
-        setIsLoading(false);
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const [usersRes, countriesRes] = await Promise.all([
+        fetch(API_GET_USERS_TABLE_DATA),
+        fetch(API_GET_COUNTRIES),
+      ]);
+
+      if (!usersRes.ok) {
+        throw new Error("Failed to fetch users");
       }
-    };
+
+      const [userData, countriesData] = await Promise.all([
+        usersRes.json(),
+        countriesRes.json(),
+      ]);
+      setUserData(userData.data);
+      setCountriesData(countriesData);
+    } catch (error) {
+      console.error("Error fetching overview data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
     fetchData();
   }, []);
-  // Loading state
-  if (isLoading) {
+
+  // Get unique values for filter dropdowns
+  const uniqueLocations = countriesData;
+  const uniqueCategories = Array.from(
+    new Set(userData.map((user) => user.category || "").filter(Boolean)),
+  );
+  const uniqueSpecialties = Array.from(
+    new Set(userData.map((user) => user.speciality || "").filter(Boolean)),
+  );
+  const uniqueEducations = Array.from(
+    new Set(
+      userData.map((user) => user.lastEducation?.degree || "").filter(Boolean),
+    ),
+  );
+
+  // Apply all filters to the data
+  const filteredData = userData.filter((row) => {
+    // Search filter
+    const matchesSearch =
+      searchQuery === "" ||
+      row.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.lastName?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    // Location filter
+    const matchesLocation =
+      location === "" || row.country?.name?.includes(location);
+
+    // Category filter
+    const matchesCategory = category === "" || row.category?.includes(category);
+
+    // Specialty filter
+    const matchesSpecialty =
+      specialty === "" || row.speciality?.includes(specialty);
+
+    // Education filter
+    const matchesEducation =
+      education === "" || row.lastEducation?.degree?.includes(education);
+
     return (
-      <div className="flex h-96 items-center justify-center">
-        Loading Users Table data...
-      </div>
+      matchesSearch &&
+      matchesLocation &&
+      matchesCategory &&
+      matchesSpecialty &&
+      matchesEducation
     );
-  }
+  });
+
+  // columns table fields
+  const columns: GridColDef[] = [
+    {
+      field: "name",
+      headerName: "Name",
+      width: 180,
+      editable: false,
+      renderCell: (params) => (
+        <div className="flex h-full items-center gap-2">
+          <Avatar
+            src={params.row.avatar}
+            alt={params.row.title}
+            sx={{ width: 32, height: 32, mr: 2 }}
+          />
+          <div>
+            <h3 className="mb-2 flex items-center gap-1 text-xs capitalize">
+              <span>{params.row.firstName}</span>
+              <span>{params.row.lastName}</span>
+            </h3>
+          </div>
+        </div>
+      ),
+    },
+    {
+      field: "created_at",
+      headerName: "Applied Day",
+      flex: 1,
+      renderCell: (params) => dayjs(params.value || "-").format("YYYY-MM-DD"),
+    },
+    {
+      field: "phone",
+      headerName: "Phone",
+      flex: 1,
+    },
+    {
+      field: "location",
+      headerName: "Location",
+      flex: 1,
+      renderCell: (params) => params.row.country?.name || "-",
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      sortable: true,
+      flex: 1,
+      renderCell: (params) => params.value || "-",
+    },
+    {
+      field: "speciality",
+      headerName: "Speciality",
+      flex: 1,
+      renderCell: (params) => params.value || "-",
+    },
+    {
+      field: "careerLevel",
+      headerName: "Career Level",
+      sortable: true,
+      flex: 1,
+    },
+    {
+      field: "lastEducation",
+      headerName: "Education",
+      flex: 1,
+      renderCell: (params) => {
+        const degree = params.row.lastEducation?.degree;
+        const institute = params.row.lastEducation?.inistitute;
+
+        if (!degree || !institute) {
+          return <div className="text-gray-500">-</div>;
+        }
+
+        return (
+          <div className="flex h-full items-center gap-1 text-sm capitalize">
+            {degree} of {institute}
+          </div>
+        );
+      },
+    },
+    {
+      field: "age",
+      headerName: "Age",
+      sortable: true,
+      flex: 1,
+      renderCell: (params) => {
+        const birthDate = params.row.birth;
+        if (!birthDate) return "-";
+
+        const birth = new Date(birthDate);
+        const today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        const hasHadBirthdayThisYear =
+          today.getMonth() > birth.getMonth() ||
+          (today.getMonth() === birth.getMonth() &&
+            today.getDate() >= birth.getDate());
+
+        if (!hasHadBirthdayThisYear) {
+          age--;
+        }
+
+        return age > 0 ? age : "-";
+      },
+    },
+    {
+      field: "experience",
+      headerName: "Experience",
+      description: "This column has a value getter and is not sortable.",
+      sortable: true,
+      flex: 1,
+      renderCell: (params) => {
+        const start = params.row.startDate;
+        const end = params.row.endDate;
+
+        if (!start || !end) return "-";
+
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+        let years = endDate.getFullYear() - startDate.getFullYear();
+        const hasCompletedFullYear =
+          endDate.getMonth() > startDate.getMonth() ||
+          (endDate.getMonth() === startDate.getMonth() &&
+            endDate.getDate() >= startDate.getDate());
+
+        if (!hasCompletedFullYear) {
+          years--;
+        }
+
+        return years > 0 ? `${years} yr${years > 1 ? "s" : ""}` : "-";
+      },
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      flex: 1,
+      renderCell: () => (
+        <div className="flex items-center gap-2">
+          <TableDropMenu />
+        </div>
+      ),
+    },
+  ];
+
   return (
     <>
       {/* start content table Employers  */}
@@ -243,7 +356,7 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
             variant="h6"
             gutterBottom
           >
-            Total Users : {rows.length}
+            Total Users : {filteredData.length}
           </Typography>
         ) : (
           <Box
@@ -269,10 +382,10 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
         )}
 
         <SearchInput SetSearchQuery={setSearchQuery} />
-        <ExportButton data="Name,Age\nJohn,30\nJane,25" />
+        <ExportButton data={filteredData} />
       </div>
       {Filtring ? (
-        <div className="my-4 flex flex-col items-center gap-4 px-2 lg:flex-row">
+        <div className="my-4 flex flex-col items-center gap-3 px-2 lg:flex-row">
           <Box sx={{ width: "100%" }}>
             <FormControl className="relative" fullWidth>
               <svg
@@ -288,24 +401,22 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
                   fill="#2BA149"
                 />
               </svg>
-
               <Select
                 className="pl-6 text-xs md:text-sm"
-                id="demo-simple-select"
+                id="location-select"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "location")}
+                renderValue={(value) => (value ? value : "Location")}
               >
-                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
-                  Egypt
+                <MenuItem value="">
+                  <em>All Locations</em>
                 </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
-                  Egypt
-                </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Egypt"}>
-                  Egypt
-                </MenuItem>
+                {uniqueLocations.map((loc, index) => (
+                  <MenuItem key={index} value={loc.name}>
+                    {loc.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -329,24 +440,22 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
                   stroke-linejoin="round"
                 />
               </svg>
-
               <Select
                 className="pl-6 text-xs md:text-sm"
-                id="demo-simple-select"
+                id="category-select"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "category")}
+                renderValue={(value) => (value ? value : "Category")}
               >
-                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
-                  Sector
+                <MenuItem value="">
+                  <em>All Categories</em>
                 </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
-                  Sector
-                </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Sector"}>
-                  Sector
-                </MenuItem>
+                {uniqueCategories.map((cat) => (
+                  <MenuItem key={cat} value={cat}>
+                    {cat}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -366,24 +475,22 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
                   stroke-width="1.5"
                 />
               </svg>
-
               <Select
                 className="pl-6 text-xs md:text-sm"
-                id="demo-simple-select"
-                value={sepecialty}
-                onChange={(e) => setSepecialty(e.target.value)}
+                id="specialty-select"
+                value={specialty}
+                onChange={(e) => setSpecialty(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "sepecialty")}
+                renderValue={(value) => (value ? value : "Specialty")}
               >
-                <MenuItem className="text-xs md:text-sm" value={"Type"}>
-                  Type
+                <MenuItem value="">
+                  <em>All Specialties</em>
                 </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Type"}>
-                  Type
-                </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"Type"}>
-                  Type
-                </MenuItem>
+                {uniqueSpecialties.map((spec) => (
+                  <MenuItem key={spec} value={spec}>
+                    {spec}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -402,75 +509,81 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
                   fill="#2BA149"
                 />
               </svg>
-
               <Select
                 className="pl-6 text-xs md:text-sm"
-                id="demo-simple-select"
+                id="education-select"
                 value={education}
                 onChange={(e) => setEducation(e.target.value)}
                 displayEmpty
-                renderValue={(value) => (value ? value : "education")}
+                renderValue={(value) => (value ? value : "Education")}
               >
-                <MenuItem className="text-xs md:text-sm" value={"education"}>
-                  education
+                <MenuItem value="">
+                  <em>All Educations</em>
                 </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"education"}>
-                  education
-                </MenuItem>
-                <MenuItem className="text-xs md:text-sm" value={"education"}>
-                  education
-                </MenuItem>
+                {uniqueEducations.map((edu) => (
+                  <MenuItem key={edu} value={edu}>
+                    {edu}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
-
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer
-              components={["DateField"]}
-              sx={{
-                width: "100%", // Ensure the container is full-width
-                overflow: "visible",
-
-                paddingTop: 0,
-                position: "relative",
-                "& > :not(style) ~ :not(style)": {
-                  marginTop: 0, // Override the default margin-top
-                },
-              }}
+          <div className="relative w-full">
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary"
+              width="18"
+              height="18"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-2/4 text-xl text-primary xl:left-8"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13.3328 1.66666V4.99999M6.66618 1.66666V4.99999M2.49951 8.33332H17.4995M4.16618 3.33332H15.8328C16.7533 3.33332 17.4995 4.07952 17.4995 4.99999V16.6667C17.4995 17.5871 16.7533 18.3333 15.8328 18.3333H4.16618C3.2457 18.3333 2.49951 17.5871 2.49951 16.6667V4.99999C2.49951 4.07952 3.2457 3.33332 4.16618 3.33332Z"
-                  stroke="#2BA149"
-                  stroke-width="1.67"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-
-              <DateField
-                className="w-full"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    pl: 3,
-                    overflow: "hidden",
-                    fontSize: 11,
-                  },
-                  ".css-10o2lyd-MuiStack-root": {
-                    width: "100%",
-                  },
-                }}
-                format="LL"
+              <path
+                d="M13.3328 1.66666V4.99999M6.66618 1.66666V4.99999M2.49951 8.33332H17.4995M4.16618 3.33332H15.8328C16.7533 3.33332 17.4995 4.07952 17.4995 4.99999V16.6667C17.4995 17.5871 16.7533 18.3333 15.8328 18.3333H4.16618C3.2457 18.3333 2.49951 17.5871 2.49951 16.6667V4.99999C2.49951 4.07952 3.2457 3.33332 4.16618 3.33332Z"
+                stroke="#2BA149"
+                stroke-width="1.67"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               />
-            </DemoContainer>
-          </LocalizationProvider>
+            </svg>
+            {/* Date Filter */}
+            <Box sx={{ width: "100%" }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DateField"]}
+                  sx={{
+                    width: "100%",
+                    overflow: "visible",
+                    paddingTop: 0,
+                    position: "relative",
+                    "& > :not(style) ~ :not(style)": {
+                      marginTop: 0,
+                    },
+                  }}
+                >
+                  <DateField
+                    value={dateFilter}
+                    onChange={(newValue) => setDateFilter(newValue)}
+                    format="LL"
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        pl: 3,
+                        overflow: "hidden",
+                        fontSize: 11,
+                      },
+                      ".css-10o2lyd-MuiStack-root": {
+                        width: "100%",
+                      },
+                    }}
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                      },
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </Box>
+          </div>
 
           <Box sx={{ width: "100%", height: "100%" }}>
             <FormControl className="relative w-full">
@@ -487,36 +600,42 @@ const OverveiwUsersTable: React.FC<OverviewEmployersTableProps> = ({
       ) : (
         ""
       )}
-      <Box sx={{ height: 400, overflowX: "auto" }}>
-        <DataGrid
-          sx={{
-            minWidth: "1000px",
-            border: "1px solid rgba(0, 0, 0, 0.12)",
-            "& .MuiDataGrid-container--top [role=row]": {
-              background: "#2ba149", // Custom header background color
-              color: "#ffffff", // Custom header text color
-              fontSize: "16px", // Optional: Larger header font
-              textAlign: "center",
-            },
-            "& .MuiDataGrid-cell": {
-              fontSize: "12px", // Row font size
-              textAlign: "center",
-            },
-          }}
-          rows={filteredData}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
+      <div className="relative">
+        {isLoading ? <Loader /> : ""}
+        <Box sx={{ height: 500, overflowX: "auto" }}>
+          <DataGrid
+            sx={{
+              minWidth: "900px",
+              border: "1px solid rgba(0, 0, 0, 0.12)",
+              "& .MuiDataGrid-container--top [role=row]": {
+                background: "#2ba149",
+                color: "#ffffff",
+                fontSize: "16px",
+                textAlign: "center",
               },
-            },
-          }}
-          pageSizeOptions={[5]}
-          checkboxSelection
-          disableRowSelectionOnClick
-        />
-      </Box>
+              "& .MuiDataGrid-cell": {
+                fontSize: "12px",
+                textAlign: "center",
+              },
+            }}
+            rows={filteredData}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 7,
+                },
+              },
+            }}
+            pageSizeOptions={[5]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            slots={{
+              noRowsOverlay: () => <></>,
+            }}
+          />
+        </Box>
+      </div>
     </>
   );
 };

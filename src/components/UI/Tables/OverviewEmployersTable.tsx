@@ -137,7 +137,6 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [value, setValue] = useState(0);
-  const [selected, setSelected] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // table data
   const [employerData, setEmployerData] = useState<EmployerProfile[]>([]);
@@ -152,6 +151,7 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
   const [statusFilter, setStatusFilter] = useState("");
   const [dateFilter, setDateFilter] = useState<Dayjs | null | undefined>(null);
 
+  // End Points
   const API_GET_EMPLOYERS_TABLE_DATA =
     "http://34.70.58.31/api/v1.0.0/employer/companies";
   const API_GET_SECTOR_TABLE_DATA =
@@ -619,14 +619,11 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
                   components={["DateField"]}
                   sx={{
                     width: "100%",
-                    height: "100%",
-                    padding: 0,
-                    "& .MuiInputBase-root": {
-                      height: "42px", // Match other filter inputs height
-                      fontSize: "14px",
-                      "& input": {
-                        paddingLeft: "30px",
-                      },
+                    overflow: "visible",
+                    paddingTop: 0,
+                    position: "relative",
+                    "& > :not(style) ~ :not(style)": {
+                      marginTop: 0,
                     },
                   }}
                 >
@@ -635,18 +632,13 @@ const OverviewEmployersTable: React.FC<OverviewEmployersTableProps> = ({
                     onChange={(newValue) => setDateFilter(newValue)}
                     format="LL"
                     sx={{
-                      width: "100%",
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "rgba(0, 0, 0, 0.23)", // Match default border color
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "rgba(0, 0, 0, 0.87)", // Darker on hover
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#2ba149", // Primary color when focused
-                          borderWidth: "1px",
-                        },
+                      "& .MuiInputBase-root": {
+                        pl: 3,
+                        overflow: "hidden",
+                        fontSize: 11,
+                      },
+                      ".css-10o2lyd-MuiStack-root": {
+                        width: "100%",
                       },
                     }}
                     slotProps={{

@@ -337,10 +337,7 @@ const OvarviewUsers: React.FC = () => {
         </div>
       </div>
       <div className="mt-3 box-content !p-0">
-        <OverveiwUsersTable
-          endPoint={API_GET_USERS_TABLE_DATA}
-          Filtring={true}
-        />
+        <OverveiwUsersTable Filtring={true} />
       </div>
     </>
   );
